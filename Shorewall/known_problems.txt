@@ -29,3 +29,8 @@
     "-" in the ZONES column) in /etc/shorewall/interfaces.
 
     This problem was corrected in Shorewall 4.4.0.2.
+
+6)  MULTICAST=Yes generates an incorrect rule that limits its
+    effectiveness to a small part of the multicast address space.
+
+    
