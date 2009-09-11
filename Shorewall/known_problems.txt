@@ -11,3 +11,12 @@
 
     Fixed in Shorewall 4.4.1.2.
 
+4)  It is currently not possible to specify an address range in the
+    ADDRESS column of /etc/shorewall/masq.
+
+    Fixed in Shorewall 4.4.1.3.
+
+5)  The routestopped file is not being verified by 'shorewall check'.
+
+    Fixed in Shorewall 4.4.1.3.
+

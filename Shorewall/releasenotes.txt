@@ -174,7 +174,11 @@ Shorewall 4.4.1 patch release 3
         P R O B L E M S   C O R R E C T E D   I N   4 . 4 . 1 . 3
 ----------------------------------------------------------------------------
 1)  The routestopped file wasn't verified during 'shorewall check' and
-    'shorewall6 check'
+    'shorewall6 check'.
+
+2)  Previously, it was not possible to specify an IP address range in
+    ADDRESS column of /etc/shorewall/masq. Thanks go to Jessee Shrieve
+    for the patch.
 
 ----------------------------------------------------------------------------
         P R O B L E M S   C O R R E C T E D   I N   4 . 4 . 1 . 2
