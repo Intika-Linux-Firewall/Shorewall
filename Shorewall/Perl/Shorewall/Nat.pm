@@ -104,7 +104,7 @@ sub do_ipsec_options($)
 #
 sub process_one_masq( )
 {
-    my ($interfacelist, $networks, $addresses, $proto, $ports, $ipsec, $mark, $user ) = split_line1 2, 8, 'masq file';
+    my ($interfacelist, $networks, $origaddresses, $proto, $ports, $ipsec, $mark, $user ) = split_line1 2, 8, 'masq file';
 
     if ( $interfacelist eq 'COMMENT' ) {
 	process_comment;
@@ -208,7 +208,9 @@ sub process_one_masq( )
 	#
 	# Parse the ADDRESSES column
 	#
-	if ( $addresses ne '-' ) {
+	if ( $origaddresses ne '-' ) {
+	    my $addresses = $origaddresses;
+
 	    if ( $addresses eq 'random' ) {
 		$randomize = '--random ';
 	    } else {
@@ -226,7 +228,7 @@ sub process_one_masq( )
 		    if ( interface_is_optional $interface ) {
 			add_commands( $chainref,
 				      '',
-				      "if [ \"$variable\" != 0.0.0.0 ]; then" );
+				      qq(if [ "$variable" != 0.0.0.0 ]; then) );
 			incr_cmd_level( $chainref );
 			$detectaddress = 1;
 		    }
@@ -284,7 +286,7 @@ sub process_one_masq( )
 	if ( $add_snat_aliases ) {
 	    my ( $interface, $alias , $remainder ) = split( /:/, $fullinterface, 3 );
 	    fatal_error "Invalid alias ($alias:$remainder)" if defined $remainder;
-	    for my $address ( split_list $addresses, 'address' ) {
+	    for my $address ( split_list $origaddresses, 'address' ) {
 		my ( $addrs, $port ) = split /:/, $address;
 		next unless $addrs;
 		next if $addrs eq 'detect';
