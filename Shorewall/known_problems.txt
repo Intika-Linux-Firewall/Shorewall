@@ -33,3 +33,7 @@
 
     Corrected in Shorewall 4.4.2.4.
 
+6)  Under certain circumstances, optional providers are not detected
+    as being usable.
+
+    Corrected in Shorewall 4.4.2.5.

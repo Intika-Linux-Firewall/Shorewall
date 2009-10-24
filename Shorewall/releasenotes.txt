@@ -1,4 +1,4 @@
-Shorewall 4.4.2 Patch Release 4.
+Shorewall 4.4.2 Patch Release 5.
 
 ----------------------------------------------------------------------------
                R E L E A S E  4 . 4  H I G H L I G H T S
@@ -168,6 +168,23 @@ Shorewall 4.4.2 Patch Release 4.
     a zone could contain <interface>:0.0.0.0/0 along with other hosts;
     now, if the zone has <interface>:0.0.0.0/0 (even with exclusions),
     then it may have no additional members in /etc/shorewall/hosts.
+
+----------------------------------------------------------------------------
+        P R O B L E M S   C O R R E C T E D   I N   4 . 4 . 2 . 5
+----------------------------------------------------------------------------
+
+1)  Under certain circumstances, optional providers were not detected
+    as being usable.
+
+    Additionally, messages issued when an optional provider was not
+    usable were confusing; the message intended to be issued when the
+    provider shared an interface ("WARNING: Gateway <gateway> is not
+    reachable -- Provider <name> (<number>) not Added") was being
+    issued when the provider did not share an interface. Similarly, the
+    message intended to be issued when the provider did not share an
+    interface ("WARNING: Interface <interface> is not usable --
+    Provider <name> (<number>) not Added") was being issued when the
+    provider did share an interface.
 
 ----------------------------------------------------------------------------
         P R O B L E M S   C O R R E C T E D   I N   4 . 4 . 2 . 4
