@@ -1,6 +1,6 @@
 %define name shorewall-lite
 %define version 4.4.2
-%define release 4
+%define release 5
 
 Summary: Shoreline Firewall Lite is an iptables-based firewall for Linux systems.
 Name: %{name}
@@ -98,6 +98,8 @@ fi
 %doc COPYING changelog.txt releasenotes.txt
 
 %changelog
+* Sat Oct 24 2009 Tom Eastep tom@shorewall.net
+- Updated to 4.4.2-5
 * Fri Oct 23 2009 Tom Eastep tom@shorewall.net
 - Updated to 4.4.2-4
 * Tue Oct 13 2009 Tom Eastep tom@shorewall.net
