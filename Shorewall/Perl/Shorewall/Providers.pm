@@ -589,7 +589,7 @@ sub add_an_rtrule( ) {
 
     if ( $optional ) {
 	my $base = uc chain_base( $providers{$provider}{interface} );
-	emit ( '', "if [ -n \$${base}_IS_USABLE ]; then" );
+	emit ( '', qq(if [ -n "\$${base}_IS_USABLE" ]; then) );
 	push_indent;
     }
 
