@@ -1,1 +1,24 @@
-There are no known problems in Shorewall version 4.4.3
+1)  In some simple one-interface configurations, the following Perl
+    run-time error messages is issued:
+
+      Generating Rule Matrix...
+      Use of uninitialized value in concatenation (.) or string at
+      /usr/share/shorewall/Shorewall/Chains.pm line 649.
+      Use of uninitialized value in concatenation (.) or string at
+      /usr/share/shorewall/Shorewall/Chains.pm line 649.
+      Creating iptables-restore input...
+
+    The messages are harmless and can be ignored.
+
+2)  The Shorewall operations log (specified by STARTUP_LOG) is not
+    secured 0600.
+
+    To work around the this issue, simply use chmod to change the
+    file's permissions.
+
+3)  The compiler generates an incorrect test for interface
+    availability in the generated code for adding route rules. The
+    result is that the rules are always added, regardless of the
+    state of the provider's interface.
+
+    Will be corrected in Shorewall 4.4.4.
