@@ -22,3 +22,20 @@
     state of the provider's interface.
 
     Will be corrected in Shorewall 4.4.4.
+
+4)  When TC_WIDE_MARKS=Yes and class numbers are not explicitly
+    specified in /etc/shorewall/tcclasses, duplicate class numbers
+    result. A typical error message is:
+
+    	    ERROR: Command "tc class add dev eth3 parent 1:1 classid
+    	    1:1 htb rate 1024kbit ceil 100000kbit prio 1 quantum 1500"
+    	    Failed
+
+    Note that the class ID of the class being added is a duplicate of
+    the parent's class ID.
+
+    You can work around this problem by explicitly specifying class
+    numbers in the INTERFACE column (e.g., 'eth0:2' or '1:2').
+
+    Will be corrected in Shorewall 4.4.4.
+

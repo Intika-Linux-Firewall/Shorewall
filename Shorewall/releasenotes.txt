@@ -177,7 +177,21 @@ Shorewall 4.4.3 Patch release 1.
         P R O B L E M S   C O R R E C T E D   I N   4 . 4 . 3 . 1
 ----------------------------------------------------------------------------
 
-None.
+1)  Previously, the compiler generated an incorrect test for interface
+    availability in the generated code for adding route rules. The
+    result was that the rules were always added, regardless of the
+    state of the provider's interface. Now, the rules are only added
+    when the interface is available.
+2)  When TC_WIDE_MARKS=Yes and class numbers are not explicitly
+    specified in /etc/shorewall/tcclasses, duplicate class numbers
+    result. A typical error message is:
+
+    	    ERROR: Command "tc class add dev eth3 parent 1:1 classid
+    	    1:1 htb rate 1024kbit ceil 100000kbit prio 1 quantum 1500"
+    	    Failed
+
+    Note that the class ID of the class being added is a duplicate of
+    the parent's class ID.
 
 ----------------------------------------------------------------------------
           P R O B L E M S   C O R R E C T E D   I N   4 . 4 . 3
