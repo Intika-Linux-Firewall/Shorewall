@@ -182,6 +182,7 @@ Shorewall 4.4.3 Patch release 1.
     result was that the rules were always added, regardless of the
     state of the provider's interface. Now, the rules are only added
     when the interface is available.
+
 2)  When TC_WIDE_MARKS=Yes and class numbers are not explicitly
     specified in /etc/shorewall/tcclasses, duplicate class numbers
     result. A typical error message is:
