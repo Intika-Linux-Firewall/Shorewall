@@ -188,7 +188,7 @@ our %config;
 #
 # Config options and global settings that are to be copied to output script
 #
-our @propagateconfig = qw/ DISABLE_IPV6 MODULESDIR MODULE_SUFFIX SUBSYSLOCK /;
+our @propagateconfig = qw/ DISABLE_IPV6 MODULESDIR MODULE_SUFFIX SUBSYSLOCK DONT_LOAD/;
 #
 # From parsing the capabilities file or detecting capabilities
 #
