@@ -170,6 +170,14 @@ Shorewall 4.4.4 Patch Release 2
     then it may have no additional members in /etc/shorewall/hosts.
 
 ---------------------------------------------------------------------------
+        P R O B L E M S   C O R R E C T E D   I N   4 . 4 . 4 . 3
+----------------------------------------------------------------------------
+
+1)  The command 'shorewall reload -c <host>' ignored the DONT_LOAD
+    setting with the result that unwanted modules could be loaded. The
+    'reload' command without the '-c' option worked correctly.
+
+---------------------------------------------------------------------------
         P R O B L E M S   C O R R E C T E D   I N   4 . 4 . 4 . 2
 ----------------------------------------------------------------------------
 
@@ -183,11 +191,7 @@ Shorewall 4.4.4 Patch Release 2
     that iptables-restore errors could occur. Port 0 is now flagged as
     an error.
 
-----------------------------------------------------------------------------
-        P R O B L E M S   C O R R E C T E D   I N   4 . 4 . 4 . 2
-----------------------------------------------------------------------------
-
-1)  The Shorewall6-lite shorecap program was including the wrong
+4)  The Shorewall6-lite shorecap program was including the wrong
     library. Also, Shorewall6 is determining the availablity of the
     mangle table before it ensures that ip6tables is installed. 
 

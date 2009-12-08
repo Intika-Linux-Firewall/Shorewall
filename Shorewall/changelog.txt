@@ -1,14 +1,22 @@
+Changes in Shorewall 4.4.4.3
+
+1)  Fix DONT_LOAD vs 'reload -c'
+
+Changes in Shorewall 4.4.4.2
+
+1)  Disallow port 0
+
+2)  Improve IPv6 address validation and range checking.
+
+3)  Correct Shorewall6 capabilities detection.
+
+4)  Correct handling of DNS names in IPv6.
+
 Changes in Shorewall 4.4.4.1
 
 1)  Fix 15-port change.
 
 2)  Fix handling of interfaces with the 'bridge' option.
-
-3)  Disallow port 0
-
-4)  Improve IPv6 address validation and range checking.
-
-5)  Correct Shorewall6 capabilities detection.
 
 Changes in Shorewall 4.4.4
 

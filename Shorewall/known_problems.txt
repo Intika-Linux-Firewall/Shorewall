@@ -37,9 +37,8 @@
 7)  The command 'shorewall reload -c <host>' ignores the setting of
     DONT_LOAD, causing unwanted modules to be loaded.
 
-    This problem can be worked around on the firewall system by copying
-    /usr/share/shorewall-lite/modules to /etc/shorewall-lite/ and then
-    removing the unwanted modules from the copied file.
+    This defect is corrected in Shorewall 4.4.4.3.
+
 
  
 
