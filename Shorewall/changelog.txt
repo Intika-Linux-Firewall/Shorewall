@@ -1,3 +1,7 @@
+Changes in Shorewall 4.4.5.5
+
+1)  Prevent jump to non-existant chain.
+
 Changes in Shorewall 4.4.5.4
 
 1)  Fix breakage in Shorewall6 'forward' interface option.
