@@ -1,4 +1,4 @@
-Shorewall 4.4.6
+Shorewall 4.4.6 Patch Release 1.
 
 ----------------------------------------------------------------------------
                R E L E A S E  4 . 4  H I G H L I G H T S
@@ -173,6 +173,12 @@ Shorewall 4.4.6
     a zone could contain <interface>:0.0.0.0/0 along with other hosts;
     now, if the zone has <interface>:0.0.0.0/0 (even with exclusions),
     then it may have no additional members in /etc/shorewall/hosts.
+
+----------------------------------------------------------------------------
+      P R O B L E M S   C O R R E C T E D   I N   4 . 4 . 6 . 1
+----------------------------------------------------------------------------
+
+None.
 
 ----------------------------------------------------------------------------
         P R O B L E M S   C O R R E C T E D   I N   4 . 4 . 6
