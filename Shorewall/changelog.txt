@@ -1,6 +1,9 @@
 Changes in Shorewall 4.4.6.1
 
-1)  Do a proper job of parsing octal/hex numbers in the PORT and PROTO columns.
+1)  Do a proper job of parsing octal/hex numbers in the PORT and PROTO
+    columns
+
+2)  Install tcinterfaces and tcpri.
 
 Changes in Shorewall 4.4.6
 
