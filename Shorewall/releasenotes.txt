@@ -178,7 +178,11 @@ Shorewall 4.4.6 Patch Release 1.
       P R O B L E M S   C O R R E C T E D   I N   4 . 4 . 6 . 1
 ----------------------------------------------------------------------------
 
-None.
+1)  Shorewall now properly handles octal and hex numbers in PORT and
+    PROTO columns.
+
+2)  The 'tcinterfaces' and 'tcpri' files are now installed in
+    /etc/shorewall/ and in /usr/share/shorewall/configfiles/.
 
 ----------------------------------------------------------------------------
         P R O B L E M S   C O R R E C T E D   I N   4 . 4 . 6
