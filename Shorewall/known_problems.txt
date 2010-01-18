@@ -1,1 +1,7 @@
-There are no known problems in Shorewall 4.4.6
+1)  The tcinterfaces and tcpri files are not installed in
+    /etc/shorewall/.
+
+    To work around this problem, simply create the files if you want to
+    use them.
+
+    Fixed in Shorewall 4.4.6.1.
