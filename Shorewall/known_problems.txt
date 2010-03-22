@@ -88,3 +88,14 @@
                /var/lib/shorewall/.iptables-restore-input
 
     Corrected in 4.4.7.6.
+
+12) If optimization 4 is enabled, the 'blacklst' chain may be optimized
+    away. If that occurs, then if the 'blacklist' file is subsequently
+    updated, the 'shorewall refresh' command will succeed but the
+    changes will not be included in the active ruleset.
+
+    Workaround: Use 'shorewall restart' to install the changes.
+
+    Will be corrected in 4.4.8.
+
+
