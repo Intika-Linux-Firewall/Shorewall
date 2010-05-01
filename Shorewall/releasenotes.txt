@@ -229,11 +229,13 @@ I I I.  P R O B L E M S   C O R R E C T E D   I N   T H I S  R E L E A S E
     #ZONE      INTERFACE       BROADCAST      OPTIONS
     vpn	       TUN+	       -	      tun+
 
-    /etc/shorewall/netmap:
+    /etc/shorewall/masq:
 
-    #TYPE	NET1		INTEFACE	NET2
-    SNAT	1.2.3.0/24	TUN0		3.4.5.0/24
-    DNAT	3.4.5.0/24	TUN0		1.2.3.0/24
+    #INTERFACE	SOURCE		ADDRESS		PROTO	PORT
+    tun0	192.168.1.0/24	
+
+    Use of tunN in the nat and netmap files also produced invalid
+    iptables-restore input.
 
 4.4.8.4
 

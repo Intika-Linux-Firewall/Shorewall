@@ -645,6 +645,8 @@ sub add_jump( $$$;$$$ ) {
 
     my $param = $goto_ok && $toref && have_capability( 'GOTO_TARGET' ) ? 'g' : 'j';
 
+    $fromref->{dont_optimize} = 1 if $predicate =~ /! -[piosd] /;
+
     if ( defined $index ) {
 	assert( ! $expandports );
 	insert_rule1( $fromref, $index, join( '', $predicate, "-$param $to" ));
@@ -1429,6 +1431,14 @@ sub replace_references1( $$$ ) {
     my $table    = $chainref->{table};
     my $count    = 0;
     my $name     = $chainref->{name};
+    #
+    # The caller has ensured that $matches does not contain /! -[piosd] /
+    #
+    my $hasp     = $matches =~ / -p /; 
+    my $hasi     = $matches =~ / -i /;
+    my $haso     = $matches =~ / -o /;
+    my $hass     = $matches =~ / -s /;
+    my $hasd     = $matches =~ / -d /;
 
     $name =~ s/\+/\\+/;
     #
@@ -1447,9 +1457,14 @@ sub replace_references1( $$$ ) {
 		for ( @{$fromref->{rules}} ) {
 		    if ( defined && /^-A $fromname .*-[jg] $name\b/ ) {
 			#
-			# Prevent multiple '-p' matches
+			# Prevent multiple '-p', '-i', '-o', '-s' and '-d' matches
 			#
-			s/ -p [^ ]+ / /	if / -p / && $matches =~ / -p /;
+			s/( !)? -p [^ ]+ / / if $hasp;
+			s/( !)? -i [^ ]+ / / if $hasi;
+			s/( !)? -o [^ ]+ / / if $haso;
+			s/( !)? -s [^ ]+ / / if $hass;
+			s/( !)? -d [^ ]+ / / if $hasd;
+
 			s/\s+-([jg]) $name(\b)/$matches -$1 ${target}$2/;
 			add_reference( $fromref, $chain_table{$table}{$target} );
 			$count++;
@@ -1470,9 +1485,14 @@ sub replace_references1( $$$ ) {
 		for ( @{$fromref->{rules}} ) {
 		    if ( defined && /^-A $fromname .*-[jg] $name\b/ ) {
 			#
-			# Prevent multiple '-p' matches
+			# Prevent multiple '-p', '-i', '-o', '-s' and '-d' matches
 			#
-			s/ -p [^ ]+ / /	if / -p / && $matches =~ / -p /;
+			s/( !)? -p [^ ]+ / / if $hasp;
+			s/( !)? -i [^ ]+ / / if $hasi;
+			s/( !)? -o [^ ]+ / / if $haso;
+			s/( !)? -s [^ ]+ / / if $hass;
+			s/( !)? -d [^ ]+ / / if $hasd;
+
 			s/\s+-[jg] $name(\b)/$matches -j ${target}$1/;
 			$count++;
 		    }
