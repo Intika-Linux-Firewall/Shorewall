@@ -580,6 +580,8 @@ sub add_rule($$;$)
     } else {
 	push_rule( $chainref, $rule );
     }
+
+    1;
 }
 
 #
