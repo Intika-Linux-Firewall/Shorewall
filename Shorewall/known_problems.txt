@@ -1,1 +1,7 @@
-There are no known problems in Shorewall 4.4.9
+1)  Under Shorewall 4.4.9, if a Perl extension script ends with a call
+    to add_rule(), that script will fail will fail unless 'trace' is
+    specified for the command.
+
+    Your Perl extension scripts should always end with a line that
+    consists of '1;' to ensure that your script doesn't inadvertently
+    return 'false'.
