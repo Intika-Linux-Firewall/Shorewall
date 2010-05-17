@@ -5,3 +5,9 @@
     Your Perl extension scripts should always end with a line that
     consists of '1;' to ensure that your script doesn't inadvertently
     return 'false'.
+
+2)  In all Shorewall 4.4 versions, startup errors (those occuring
+    before the state of the firewall is changed) are not logged to the
+    STARTUP_LOG.
+
+    Corrected in Shorewall 4.4.9.1

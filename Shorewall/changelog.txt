@@ -2,6 +2,8 @@ Changes in Shorewall 4.4.9.1
 
 1)  Avoid 'regression' in return value from add_rule()
 
+2)  Log startup errors
+
 Changes in Shorewall 4.4.9
 
 1)  Auto-detection of bridges.

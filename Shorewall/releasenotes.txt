@@ -231,6 +231,10 @@ I I I.  P R O B L E M S   C O R R E C T E D   I N   T H I S  R E L E A S E
     always best practice to conclude your Perl extension scripts with a
     line consisting of ';'.
 
+2)  In all Shorewall 4.4 versions, startup errors (those occuring
+    before the state of the firewall is changed) are were logged to the
+    STARTUP_LOG.
+
 4.4.9
 
 1)  Logical interface names in the EXTERNAL column of
