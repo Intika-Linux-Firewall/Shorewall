@@ -231,6 +231,10 @@ I I I.  P R O B L E M S   C O R R E C T E D   I N   T H I S  R E L E A S E
     or 'dst' was previously ignored when generating the resulting
     iptables rule.
 
+2 ) Since Shorewall 4.4.9, the SAME target in tcrules has generated
+    invalid iptables-restore (ip6tables-restore) input. Such rules now
+    generate correct input.
+
 4.4.12.2
 
 1)  Earlier releases allowed CONTINUE rules with exclusion. These rules
