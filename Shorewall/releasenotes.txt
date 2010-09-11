@@ -1,5 +1,5 @@
 ----------------------------------------------------------------------------
-                   S H O R E W A L L  4 . 4 . 1 2 . 2
+                   S H O R E W A L L  4 . 4 . 1 2 . 3
 ----------------------------------------------------------------------------
 
 I.    RELEASE 4.4 HIGHLIGHTS
@@ -223,6 +223,13 @@ VI.   PROBLEMS CORRECTED AND NEW FEATURES IN PRIOR RELEASES
 ----------------------------------------------------------------------------
 I I I.  P R O B L E M S   C O R R E C T E D   I N   T H I S  R E L E A S E
 ----------------------------------------------------------------------------
+
+4.4.12.3
+
+1)  When a comma-separated list of 'src' and/or 'dst' was specified in
+    an ipset invocation (e.g., "+fooset[src,src]), all but the first 'src'
+    or 'dst' was previously ignored when generating the resulting
+    iptables rule.
 
 4.4.12.2
 

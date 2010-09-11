@@ -35,3 +35,18 @@
     generate valid but incorrect iptables (ip6tables) input.
 
     Corrected in Shorewall 4.4.12.2 -- these rules are now disallowed.
+
+9)  When a comma-separated list of 'src' and/or 'dst' was specified in
+    an ipset invocation (e.g., "+fooset[src,src]), all but the first 'src'
+    or 'dst' was previously ignored when generating the resulting
+    iptables rule.
+
+    Workaround: If you simply need src,src or dst,dst, you can use the
+    alternative syntax. Instead of +fooset[src,src], use +fooset[2] in
+    the SOURCE column or +fooset[2] in the DEST column.
+
+10) Since Shorewall 4.4.9, the SAME target in tcrules has generated
+    invalid iptables-restore (ip6tables-restore) input.
+
+    Workaround: None Available. Will be corrected in Shorewall 4.4.13.
+
