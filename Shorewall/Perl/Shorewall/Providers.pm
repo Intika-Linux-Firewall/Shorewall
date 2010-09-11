@@ -959,12 +959,12 @@ sub handle_stickiness( $ ) {
 			$rule1 =~ s/-j sticky/-m mark --mark $mark\/$mask -m recent --name $list --set/;
 		    }
 
-		    $rule1 =~ s/-A tcpre //;
+		    $rule1 =~ s/-A //;
 
 		    add_rule $chainref, $rule1;
 
 		    if ( $rule2 ) {
-			$rule2 =~ s/-A tcpre //;
+			$rule2 =~ s/-A //;
 			add_rule $chainref, $rule2;
 		    }
 		}
@@ -986,12 +986,12 @@ sub handle_stickiness( $ ) {
 			$rule1 =~ s/-j sticko/-m mark --mark $mark -m recent --name $list --rdest --set/;
 		    }
 
-		    $rule1 =~ s/-A tcout //;
+		    $rule1 =~ s/-A //;
 
 		    add_rule $chainref, $rule1;
 
 		    if ( $rule2 ) {
-			$rule2 =~ s/-A tcout //;
+			$rule2 =~ s/-A //;
 			add_rule $chainref, $rule2;
 		    }
 		}
