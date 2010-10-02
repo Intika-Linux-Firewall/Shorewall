@@ -35,3 +35,8 @@
     > 2 or < -1.
 
     Fixed in 4.4.13.2.
+
+6)  When running one of the -lite packages, the log reading commands
+    (show log, logwatch and dump) show no log record.
+
+    Fixed in 4.4.13.3.
