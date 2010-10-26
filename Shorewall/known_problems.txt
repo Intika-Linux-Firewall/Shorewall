@@ -40,3 +40,8 @@
     (show log, logwatch and dump) show no log record.
 
     Fixed in 4.4.13.3.
+
+7)  In /etc/shorewall/interfaces, if nets=(a.b.c.d/e) is entered then a
+    fatal error is erroneously raised.
+
+    Workaround: Remove the parentheses (e.g., nets=a.b.c.d/e). 
