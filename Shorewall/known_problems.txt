@@ -45,3 +45,14 @@
     fatal error is erroneously raised.
 
     Workaround: Remove the parentheses (e.g., nets=a.b.c.d/e). 
+
+8)  If 10 or more interfaces are configured in Complex Traffic Shaping
+    (/etc/shorewall/tcdevices), the following compilation diagnostic
+    is issued:
+
+        Argument "a" isn't numeric in sprintf at
+	/usr/share/shorewall/Shorewall/Config.pm line 893.
+ 
+    and an invalid TC configuration is generated.
+
+    Fixed in 4.4.14.
