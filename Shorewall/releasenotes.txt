@@ -218,6 +218,17 @@ VI.   PROBLEMS CORRECTED AND NEW FEATURES IN PRIOR RELEASES
 I I I.  P R O B L E M S   C O R R E C T E D   I N   T H I S  R E L E A S E
 ----------------------------------------------------------------------------
 
+Post-4.4.11.6
+
+1)  Previously, if 10 or more interfaces were configured in Complex
+    Traffic Shaping (/etc/shorewall/tcdevices), the following
+    compilation diagnostic was generated:
+
+        Argument "a" isn't numeric in sprintf at
+	/usr/share/shorewall/Shorewall/Config.pm line 893.
+ 
+    and an invalid TC configuration was generated.
+
 4.4.11.6
 
 1)  The Shorewall-lite and Shorewall6-lite Debian init scripts contained a

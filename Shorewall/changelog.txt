@@ -1,3 +1,7 @@
+Changes post 4.4.11.6
+
+1) Fix 10+ TC Interfaces.
+
 Changes in Shorewall 4.4.11.6
 
 1)  Fix log reading in -lite packages.

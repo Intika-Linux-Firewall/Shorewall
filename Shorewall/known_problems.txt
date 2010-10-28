@@ -147,3 +147,17 @@
     showed an empty log when issued to one of the -lite packages.
 
     Corrected in Shorewall 4.4.11.6
+
+22) If 10 or more interfaces are configured in Complex Traffic Shaping
+    (/etc/shorewall/tcdevices), the following compilation diagnostic
+    is issued:
+
+        Argument "a" isn't numeric in sprintf at
+	/usr/share/shorewall/Shorewall/Config.pm line 893.
+ 
+    and an invalid TC configuration is generated.
+
+    A fix is available at
+    http://shorewall.git.sourceforge.net/git/gitweb.cgi?p=shorewall/shorewall;a=commitdiff;h=20bb781874c739c01b798d2db31b6c1d9cfefe96
+
+
