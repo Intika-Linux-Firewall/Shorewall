@@ -122,7 +122,6 @@ our %EXPORT_TAGS = ( internal => [ qw( create_temp_script
 				       $debug
 				       %config
 				       %globals
-				       %params
 
 		                       F_IPV4
 		                       F_IPV6
@@ -133,7 +132,7 @@ our %EXPORT_TAGS = ( internal => [ qw( create_temp_script
 
 Exporter::export_ok_tags('internal');
 
-our $VERSION = '4.4_15';
+our $VERSION = '4.4_14';
 
 #
 # describe the current command, it's present progressive, and it's completion.
@@ -269,10 +268,6 @@ our @includestack;
 # Allow nested opens
 #
 our @openstack;
-#
-# From the params file
-#
-our %params;
 
 our $currentline;             # Current config file line image
 our $currentfile;             # File handle reference
@@ -709,8 +704,6 @@ sub initialize( $ ) {
     $shorewall_dir = '';      #Shorewall Directory
 
     $debug = 0;
-
-    %params = ();
 }
 
 INIT {
@@ -1858,15 +1851,14 @@ sub read_a_line(;$) {
 
 	    my $count = 0;
 	    #
-	    # Expand Shell Variables using %params
+	    # Expand Shell Variables using %ENV
 	    #
 	    #                            $1      $2      $3           -     $4
 	    while ( $currentline =~ m( ^(.*?) \$({)? ([a-zA-Z]\w*) (?(2)}) (.*)$ )x ) {
-		my $val = $params{$3};
+		my $val = $ENV{$3};
 
 		unless ( defined $val ) {
-		    $params{$3} = $ENV{$3} if $ENV{$3};
-		    fatal_error "Undefined shell variable (\$$3)" unless exists $params{$3};
+		    fatal_error "Undefined shell variable (\$$3)" unless exists $ENV{$3};
 		    $val = '';
 		}
 
@@ -2878,29 +2870,6 @@ sub unsupported_yes_no_warning( $ ) {
 }
 
 #
-# Process the params file
-#
-sub get_params() {
-    my $fn = find_file 'params';
-
-    if ( $fn ) {
-	progress_message1 "Processing $fn ...";
-
-	my @params = `$globals{SHAREDIRPL}/getparams $fn`;
-
-	fatal_error "Processing of $fn failed" if $?;
-
-	for ( @params ) {
-	    if ( /^(?:(.*?)=)(.*)$/ ) {
-		$params{$1} = $2 unless $1 eq '_';
-	    } else {
-		assert(0);
-	    }
-	} 
-    }
-}
-
-#
 # - Read the shorewall.conf file
 # - Read the capabilities file, if any
 # - establish global hashes %config , %globals and %capabilities
@@ -2916,8 +2885,6 @@ sub get_configuration( $ ) {
     @originalinc = @INC unless $once++;
 
     ensure_config_path;
-
-    get_params;
 
     process_shorewall_conf;
 
