@@ -111,6 +111,11 @@ None.
 13) If the current environment exported the VERBOSITY variable with a
     non-zero value, startup would fail.
 
+2)  If a route exists for an entire RFC1918 network (10.0.0.0/24,
+    172.20.0.0/12 or 192.168.0.0/16) then setting
+    NULL_ROUTE_RFC1918=Yes would cause the route to replace with a
+    'unreachable' one.
+
 ----------------------------------------------------------------------------
            I I.  K N O W N   P R O B L E M S   R E M A I N I N G
 ----------------------------------------------------------------------------
