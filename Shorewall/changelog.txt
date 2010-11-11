@@ -4,6 +4,8 @@ Changes in Shorewall 4.4.14.1
 
 2)  Fix NULL_ROUTE_RFC1918
 
+3)  Fix problem of appending incorrect files.
+
 Changes in Shorewall 4.4.14
 
 1)  Support ipset lists.

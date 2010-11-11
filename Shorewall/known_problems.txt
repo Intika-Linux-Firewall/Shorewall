@@ -1,3 +1,21 @@
 1)  On systems running Upstart, shorewall-init cannot reliably start the
     firewall before interfaces are brought up.
 
+2)  If a route exists for an entire RFC1918 subnet (10.0.0.0/8,
+    172.20.0.0/12 or 192.168.0.0/16), then setting
+    NULL_ROUTE_RFC1918=Yes will cause the route to be replaced with an
+    'unreachable' one.
+
+3)  Shorewall6 fails to start correctly if all the following are true:
+
+    - Shorewall was installed using the tarball. It may have
+      subsequently been installed using a distribution-specific package
+      or the rpm from shorewall.net without first unstalling the
+      tarball components.
+
+    - Shorewall6 was installed using a distribution-specific package or
+      the rpm from shorewall.net.
+
+    - The file /etc/shorewall6/init was not created.
+
+
