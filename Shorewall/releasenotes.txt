@@ -229,6 +229,8 @@ Post-4.4.11.6
  
     and an invalid TC configuration was generated.
 
+2)  The macro.JAP macro generated a fatal error when invoked.
+
 4.4.11.6
 
 1)  The Shorewall-lite and Shorewall6-lite Debian init scripts contained a
