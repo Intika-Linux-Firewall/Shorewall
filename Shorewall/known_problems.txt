@@ -19,3 +19,9 @@
                 /etc/shorewall6/params).
 
     Corrected in 4.4.15.1.
+
+4)  When logical interface names are used, proxy ARP does not
+    work. Symptoms include numerous Perl runtime error Messages.
+
+    Workaround: Don't use proxy arp involving an interface with a
+    logical name that is different from its physical name.
