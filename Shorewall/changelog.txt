@@ -4,6 +4,8 @@ Changes post 4.4.11.6
 
 2) Fix macro.JAP
 
+3)  Fix broken logical naming with Proxy ARP.
+
 Changes in Shorewall 4.4.11.6
 
 1)  Fix log reading in -lite packages.

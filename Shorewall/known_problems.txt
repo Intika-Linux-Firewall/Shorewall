@@ -161,3 +161,11 @@
     http://shorewall.git.sourceforge.net/git/gitweb.cgi?p=shorewall/shorewall;a=commitdiff;h=20bb781874c739c01b798d2db31b6c1d9cfefe96
 
 
+23) When logical interface names are used, proxy ARP does not
+    work. Symptoms include numerous Perl runtime error Messages.
+
+    Workaround: Don't use proxy arp involving an interface with a
+    logical name that is different from its physical name.
+
+    A fix is available at
+    http://shorewall.git.sourceforge.net/git/gitweb.cgi?p=shorewall/shorewall;a=commit;h=c634cf7de33d7566dcc72307dbf2d7e15e2c46d8.
