@@ -232,7 +232,10 @@ Post-4.4.11.6
 2)  The macro.JAP macro generated a fatal error when invoked.
 
 3)  Previously, proxy ARP with logical interface names did not
-    work. Symptoms included numerous Perl runtime error messages. 
+    work. Symptoms included numerous Perl runtime error messages.
+
+4)  Previously, unknown interface names in the proxyarp and
+    tcinterfaces files resulted in Perl runtime errors.
 
 4.4.11.6
 

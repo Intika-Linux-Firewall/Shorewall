@@ -169,3 +169,6 @@
 
     A fix is available at
     http://shorewall.git.sourceforge.net/git/gitweb.cgi?p=shorewall/shorewall;a=commit;h=c634cf7de33d7566dcc72307dbf2d7e15e2c46d8.
+
+24) Unknown interface names in the proxyarp and tcinterfaces files
+    result in Perl runtime errors.
