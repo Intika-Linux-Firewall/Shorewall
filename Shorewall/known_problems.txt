@@ -25,3 +25,6 @@
 
     Workaround: Don't use proxy arp involving an interface with a
     logical name that is different from its physical name.
+
+5)  Unknown interface names in the proxyarp and tcinterfaces files
+    result in Perl runtime errors.
