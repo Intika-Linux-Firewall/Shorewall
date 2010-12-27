@@ -27,6 +27,10 @@ VI.   PROBLEMS CORRECTED AND NEW FEATURES IN PRIOR RELEASES
        Use of uninitialized value in numeric comparison (<=>) 
        at /usr/share/shorewall/Shorewall/Zones.pm line 1334.
 
+4)  Under very rare circumstances, a chain could be optimized away 
+    even when there are jumps to the chain. This resulted in a
+    start/restart failure.
+
 4.4.15.2
 
 1)  Previously, proxy ARP with logical interface names did not
