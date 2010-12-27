@@ -2039,8 +2039,7 @@ sub logchain( $$$$$$ ) {
 		       $logtag,
 		       'add',
 		       '' );
-
-	add_rule( $logchainref, $exceptionrule . $target );
+	add_jump( $logchainref, $target, 0, $exceptionrule );
     }
 
     $logchainref;
@@ -3848,9 +3847,11 @@ sub expand_rule( $$$$$$$$$$;$ )
 				#
 				# Find/Create a chain that both logs and applies the target action
 				# and jump to the log chain if all of the rule's conditions are met
-				#
+ 				#
+				assert( $target );
+
 				add_jump( $chainref,
-					  logchain( $chainref, $loglevel, $logtag, $exceptionrule , $disposition, $jump ),
+					  logchain( $chainref, $loglevel, $logtag, $exceptionrule , $disposition, $target ),
 					  $builtin_target{$disposition},
 					  $matches,
 					  1 );
