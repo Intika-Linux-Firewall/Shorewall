@@ -6,3 +6,20 @@
     is the Bourne Again Shell (bash).
 
     Corrected in 4.4.16.1.
+
+3)  Startup can fail on a system where module autoloading is not
+    available and where TC_ENABLED=Simple is specified in
+    shorewall.conf.
+
+    Workaround: 
+
+    If LOAD_HELPERS_ONLY=No,
+
+       a) Copy /usr/share/shorewall/modules to /etc/shorewall/
+       b) Add 'loadmodule sch_prio' to the copy
+
+    If LOAD_HELPERS_ONLY=Yes,
+
+       a) Copy /usr/share/shorewall/helpers to /etc/shorewall/
+       b) Add 'loadmodule sch_prio' to the copy
+

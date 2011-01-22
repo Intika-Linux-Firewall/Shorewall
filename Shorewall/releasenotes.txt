@@ -1,5 +1,5 @@
 ----------------------------------------------------------------------------
-                    S H O R E W A L L  4 . 4 . 1 6 . 1
+                    S H O R E W A L L  4 . 4 . 1 6 . 2
 ----------------------------------------------------------------------------
 
 I.    PROBLEMS CORRECTED IN THIS RELEASE
@@ -12,6 +12,12 @@ VI.   PROBLEMS CORRECTED AND NEW FEATURES IN PRIOR RELEASES
 ----------------------------------------------------------------------------
   I.  P R O B L E M S   C O R R E C T E D   I N   T H I S  R E L E A S E
 ----------------------------------------------------------------------------
+4.4.16.2
+
+1)  Startup could previously fail on a system where module autoloading
+    was not available and where TC_ENABLED=Simple was specified in
+    shorewall.conf.
+
 4.4.16.1
 
 1)  Beginning with 4.4.16, compilation would fail if an empty shell
