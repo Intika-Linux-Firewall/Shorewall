@@ -23,3 +23,18 @@
        a) Copy /usr/share/shorewall/helpers to /etc/shorewall/
        b) Add 'loadmodule sch_prio' to the copy
 
+1)  If the SOURCE column in /etc/shorewall6/rules contains [address],
+    a spurious error is generated:
+
+    Example:
+
+      net:[::/0]
+
+      ERROR: Invalid VLSM (0]) : /etc/shorewall6/rules (line 20)
+
+    Workaround:
+
+    Use <address> instead. In the example above, use net:<::/0>.
+
+
+

@@ -1,3 +1,7 @@
+Changes in Shorewall 4.4.16.3
+
+1)  Fix silly bug in expand_rule().
+
 Changes in Shorewall 4.4.16.2
 
 1)  Add sch_prio to modules file.
