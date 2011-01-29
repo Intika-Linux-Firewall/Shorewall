@@ -3509,7 +3509,7 @@ sub expand_rule( $$$$$$$$$$;$ )
 	    $iiface = $1;
 	    $inets  = $2;
 	} elsif ( $source =~ /:/ ) {
-	    if ( $source =~ /^<(.+)>$/ || $source =~ /^<\[.+\]>$/ ) {
+	    if ( $source =~ /^<(.+)>$/ || $source =~ /^\[(.+)\]$/ ) {
 		$inets = $1;
 	    } else {
 		$inets = $source;
