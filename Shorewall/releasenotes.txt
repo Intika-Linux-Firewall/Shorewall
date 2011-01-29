@@ -19,6 +19,14 @@ VI.   PROBLEMS CORRECTED AND NEW FEATURES IN PRIOR RELEASES
 
       ERROR: Invalid VLSM (0]) : /etc/shorewall6/rules (line 20)
 
+2)  Two compiler defects in module loading have been corrected:
+
+    a) Previously, the kernel/net/ipv6/netfilter/ directory was not
+       searched.
+       
+    b) A Perl diagnostic was issued when running on a monolithic kernel
+       when the modutils package was installed.
+
 4.4.16.2
 
 1)  Startup could previously fail on a system where module autoloading
