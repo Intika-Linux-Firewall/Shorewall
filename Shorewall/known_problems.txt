@@ -23,7 +23,7 @@
        a) Copy /usr/share/shorewall/helpers to /etc/shorewall/
        b) Add 'loadmodule sch_prio' to the copy
 
-1)  If the SOURCE column in /etc/shorewall6/rules contains [address],
+4)  If the SOURCE column in /etc/shorewall6/rules contains [address],
     a spurious error is generated:
 
     Example:
