@@ -4,6 +4,8 @@ Changes in Shorewall 4.4.16.3
 
 2)  Correct two defects in compiler module loading.
 
+3)  Ensure that manual and accounting chains aren't too long.
+
 Changes in Shorewall 4.4.16.2
 
 1)  Add sch_prio to modules file.

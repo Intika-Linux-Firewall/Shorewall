@@ -23,8 +23,8 @@
        a) Copy /usr/share/shorewall/helpers to /etc/shorewall/
        b) Add 'loadmodule sch_prio' to the copy
 
-4)  If the SOURCE column in /etc/shorewall6/rules contains [address],
-    a spurious error is generated:
+4)  If the SOURCE column in /etc/shorewall6/rules contains an address
+    enclosed in [...], a spurious error is generated:
 
     Example:
 
@@ -34,7 +34,14 @@
 
     Workaround:
 
-    Use <address> instead. In the example above, use net:<::/0>.
+    Enclose the address in <...>.  In the example above, use
+    net:<::/0>.
+
+3)  Currently, Shorewall does not check the length of the names of
+    accounting chains and manual chains. This can result in 
+    errors when loading the resulting ruleset if a chain name is longer
+    than 29 characters.
+
 
 
 

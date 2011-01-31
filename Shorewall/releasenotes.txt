@@ -27,6 +27,11 @@ VI.   PROBLEMS CORRECTED AND NEW FEATURES IN PRIOR RELEASES
     b) A Perl diagnostic was issued when running on a monolithic kernel
        when the modutils package was installed.
 
+3)  Previously, Shorewall did not check the length of the names of
+    accounting chains and manual chains. This could result in 
+    errors when loading the resulting ruleset. Now, the compiler issues
+    an error for chain names longer than 29 characters.
+
 4.4.16.2
 
 1)  Startup could previously fail on a system where module autoloading
