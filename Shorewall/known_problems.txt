@@ -1,3 +1,7 @@
 1)  On systems running Upstart, shorewall-init cannot reliably secure
     the firewall before interfaces are brought up.
 
+2) The 'local' option in /etc/shorewall6/providers produces an 'ip
+   route add' command containing an IPv4 address.
+
+

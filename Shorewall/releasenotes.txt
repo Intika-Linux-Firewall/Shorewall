@@ -1,5 +1,5 @@
 ----------------------------------------------------------------------------
-                      S H O R E W A L L  4 . 4 . 1 7
+                    S H O R E W A L L  4 . 4 . 1 7 . 1
 ----------------------------------------------------------------------------
 
 I.    PROBLEMS CORRECTED IN THIS RELEASE
@@ -12,6 +12,14 @@ VI.   PROBLEMS CORRECTED AND NEW FEATURES IN PRIOR RELEASES
 ----------------------------------------------------------------------------
   I.  P R O B L E M S   C O R R E C T E D   I N   T H I S  R E L E A S E
 ----------------------------------------------------------------------------
+
+4.4.17.1
+
+1)  Previously, the 'local' option in /etc/shorewall6/providers would
+   produce an 'ip route add' command containing an IPv4 address. It now
+   correctly uses the equivalent IPv6 address.
+
+4.4.17
 
 1)  Previously, Shorewall did not check the length of the names of
     accounting chains and manual chains. This could result in 
