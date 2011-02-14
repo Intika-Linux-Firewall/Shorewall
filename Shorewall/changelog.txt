@@ -2,6 +2,9 @@ Changes in Shorewall 4.4.17.1
 
 1)  Fix the 'local' Provider option in IPv6
 
+2)  Correct an optimizer defect having to do with jumps containing a
+    comment.
+
 Changes in Shorewall 4.4.17
 
 1)  Added sch_tbf to the modules files.
