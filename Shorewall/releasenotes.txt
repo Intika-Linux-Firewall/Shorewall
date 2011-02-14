@@ -19,7 +19,7 @@ VI.   PROBLEMS CORRECTED AND NEW FEATURES IN PRIOR RELEASES
    produce an 'ip route add' command containing an IPv4 address. It now
    correctly uses the equivalent IPv6 address.
 
-3) When optimize lever 4 was set, the optimizer mis-handled rules of the
+3) When optimize level 4 was set, the optimizer mis-handled rules of the
    form:
 
 	-A <chain1> -j <chain2> -m comment ...

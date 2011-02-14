@@ -4,7 +4,7 @@
 2) The 'local' option in /etc/shorewall6/providers produces an 'ip
    route add' command containing an IPv4 address.
 
-3) When optimize lever 4 is set, the optimizer mis-handles rules of the
+3) When optimize level 4 is set, the optimizer mis-handles rules of the
    form:
 
 	-A <chain1> -j <chain2> -m comment ...
