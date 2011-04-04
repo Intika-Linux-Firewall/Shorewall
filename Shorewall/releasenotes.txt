@@ -15,7 +15,13 @@ VI.   PROBLEMS CORRECTED AND NEW FEATURES IN PRIOR RELEASES
 
 4.4.18.2
 
-1)  
+1)  SAVE_IPSETS=Yes didn't work unless there is a dynamic zone defined.
+
+2)  If a logical name was given to a bridge and the ports on the bridge
+    were defined in /etc/shorewall/interfac, then the compiler could
+    generate matches that used the logical name rather than the
+    physical name.
+ 
 4.4.18.1
 
 1)  An issue with params processing on RHEL6 has been corrected. The
