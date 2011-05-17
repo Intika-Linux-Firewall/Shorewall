@@ -106,7 +106,7 @@
 
     Corrected in Shorewall 4.4.19.4.
 
-10) 'shorewall6 refresh issues a harmless 'ip6tables: Chain exists'
+10) 'shorewall6 refresh' issues a harmless 'ip6tables: Chain exists'
     error message.
 
     Corrected in Shorewall 4.4.19.4.
