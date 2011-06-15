@@ -65,3 +65,6 @@
 
     Corrected in 4.4.20.3
  
+8)  AUTOMAKE only searches /etc/shorewall[6] for files newer than the
+    current compiled script (/var/lib/shorewall[6]/firewall) and not
+    the entire CONFIG_PATH.
