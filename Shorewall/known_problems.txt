@@ -62,4 +62,6 @@
 
     Workaround: Add the 'routeback' option to the entry in
     /etc/shorewall/interfaces.
+
+    Corrected in 4.4.20.3
  
