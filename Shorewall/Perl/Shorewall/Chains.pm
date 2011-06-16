@@ -1666,7 +1666,7 @@ sub initialize_chain_table($) {
 	    $builtin_target{AUDIT} = 1;
 	}
 
-	dont_move   new_standard_chain 'reject';
+	dont_move new_standard_chain 'reject';
     }
 }
 
