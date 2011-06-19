@@ -12,12 +12,16 @@ VI.   PROBLEMS CORRECTED AND NEW FEATURES IN PRIOR RELEASES
 ----------------------------------------------------------------------------
   I.  P R O B L E M S   C O R R E C T E D   I N   T H I S  R E L E A S E
 ----------------------------------------------------------------------------
-4.4.20.3
+4.4.20.4
 
 1)  Previously, AUTOMAKE only searched /etc/shorewall[6] for files
     newer than the current compiled script
     (/var/lib/shorewall[6]/firewall). Now it searches the entire
     CONFIG_PATH for such files.
+
+2)  With LOAD_HELPERS_ONLY=Yes, the compiler could use the deprectated
+    --set parameter to the ipset match when --match-set was
+    appropriate. 
 
 4.4.20.3
 

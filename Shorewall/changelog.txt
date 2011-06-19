@@ -2,6 +2,8 @@ Changes in Shorewall 4.4.20.4
 
 1)  Have AUTOMAKE follow CONFIG_PATH
 
+2)  Be sure to detect IPSET_MATCH before OLD_IPSET_MATCH.
+
 Changes in Shorewall 4.4.20.3
 
 1)  Remove deprecated options from the .conf files.
