@@ -251,7 +251,6 @@ our $filter_table;
 my  $comment;
 my  @comments;
 my  $export;
-my  $splitcount;
 
 #
 # Target Types
@@ -588,6 +587,8 @@ sub handle_port_list( $$$$$$ );
 sub handle_port_list( $$$$$$ ) {
     my ($chainref, $rule, $dport, $first, $ports, $rest) = @_;
 
+    our $splitcount;
+
     if ( port_count( $ports ) > 15 ) {
 	#
 	# More than 15 ports specified
@@ -639,6 +640,7 @@ sub handle_port_list( $$$$$$ ) {
 sub handle_icmptype_list( $$$$ ) {
     my ($chainref, $first, $types, $rest) = @_;
     my @ports = split ',', $types;
+    our $splitcount;
     push_rule ( $chainref, join ( '', $first, shift @ports, $rest ) ), $splitcount++ while @ports;
 }
 
@@ -649,6 +651,8 @@ sub handle_icmptype_list( $$$$ ) {
 #
 sub add_rule($$;$) {
     my ($chainref, $rule, $expandports) = @_;
+
+    our $splitcount;
 
     assert( ! reftype $rule );
 
@@ -690,6 +694,13 @@ sub add_rule($$;$) {
     } else {
 	push_rule( $chainref, $rule );
     }
+}
+
+sub add_counted_rule($$) {
+    my ( $chainref, $rule ) = @_;
+    our $splitcount = 0;
+    add_rule( $chainref, $rule, 1 );
+    return $splitcount;
 }
 
 #
@@ -1342,6 +1353,13 @@ sub add_jump( $$$;$$$ ) {
     } else {
 	add_rule ($fromref, join( '', $predicate, "-$param $to" ), $expandports || 0 );
     }
+}
+
+sub add_counted_jump( $$$ ) {
+    my ( $chainref, $to, $rule ) = @_;
+    our $splitcount = 0;
+    add_jump( $chainref, $to, 0, $rule, 1 );
+    return $splitcount - 1;
 }
 
 #
@@ -3869,6 +3887,7 @@ sub expand_rule( $$$$$$$$$$;$ )
     my $table = $chainref->{table};
     my $jump  = $target ? '-j ' . $target : '';
     my $mac;
+    my $rulecount = 0;
 
     our @ends = ();
     #
@@ -3888,10 +3907,6 @@ sub expand_rule( $$$$$$$$$$;$ )
 	incr_cmd_level $chainref;
 	push @ends, $end;
     }
-    #
-    # Clear Split Count
-    #
-    $splitcount = 0;
     #
     # Trim disposition
     #
@@ -4255,8 +4270,8 @@ sub expand_rule( $$$$$$$$$$;$ )
 		    my $source_match = match_source_net( $inet, $restriction, $mac ) if have_capability( 'KLUDGEFREE' );
 
 		    for my $dnet ( mysplit $dnets ) {
-			$source_match = match_source_net( $inet, $restriction, $mac ) unless have_capability( 'KLUDGEFREE' );
-			add_jump( $chainref, $echainref, 0, join( '', $rule, $source_match, match_dest_net( $dnet ), $onet ), 1 );
+			$source_match = match_source_net( $inet, $restriction, $mac ) unless $globals{KLUDGEFREE};
+			$rulecount += add_counted_jump( $chainref, $echainref, join( '', $rule, $source_match, match_dest_net( $dnet ), $onet ) );
 		    }
 
 		    conditional_rule_end( $chainref ) if $cond;
@@ -4264,6 +4279,11 @@ sub expand_rule( $$$$$$$$$$;$ )
 
 		conditional_rule_end( $chainref ) if $cond;
 	    }
+
+	    while ( $rulecount-- > 0 ) {
+		add_reference $chainref, $echainref;
+	    }
+		
 	    #
 	    # Generate RETURNs for each exclusion
 	    #
@@ -4299,7 +4319,7 @@ sub expand_rule( $$$$$$$$$$;$ )
 	    #
 	    # Generate Final Rule
 	    #
-	    add_rule $fromref = $echainref, $exceptionrule . $jump , 1 unless $disposition eq 'LOG';
+	    $rulecount = add_counted_rule( $fromref = $echainref, $exceptionrule . $jump ) unless $disposition eq 'LOG';
 
 	    $done = 1;
 	}
@@ -4332,7 +4352,7 @@ sub expand_rule( $$$$$$$$$$;$ )
 			#
 			# No logging -- add the target rule with matches to the rule chain
 			#
-			add_rule( $fromref = $chainref, $matches . $jump , 1 );
+			$rulecount = add_counted_rule( $fromref = $chainref, $matches . $jump );
 		    } elsif ( $disposition eq 'LOG' || $disposition eq 'COUNT' ) {
 			#
 			# The log rule must be added with matches to the rule chain
@@ -4358,7 +4378,7 @@ sub expand_rule( $$$$$$$$$$;$ )
 				       'add',
 				       $matches );
 			
-			add_rule( $fromref = $chainref, $matches . $jump, 1 );
+			$rulecount = add_counted_rule( $fromref = $chainref, $matches . $jump );
 		    } else {
 			#
 			# Find/Create a chain that both logs and applies the target action
@@ -4390,7 +4410,7 @@ sub expand_rule( $$$$$$$$$$;$ )
 	if ( $targetref ) {
 	    $targetref->{referenced} = 1;
 	    
-	    for ( my $i = 0; $i < $splitcount; $i++ ) {
+	    for ( my $i = 0; $i < $rulecount; $i++ ) {
 		add_reference $fromref, $targetref;
 	    }
 	}
