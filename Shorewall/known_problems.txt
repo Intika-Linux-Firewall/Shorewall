@@ -22,5 +22,17 @@
 
     Corrected in Shorewall 4.4.21.
 
+6)  Under rare conditions, long port lists (>15 ports) can result in
+    the following failure when optimization level 4 is enabled.
+
+       Use of uninitialized value in numeric gt (>) 
+       at /usr/share/shorewall/Shorewall/Chains.pm line 1264.
+
+       ERROR: Internal error in
+       Shorewall::Chains::decrement_reference_count at
+       /usr/share/shorewall/Shorewall/Chains.pm line 1264
+
+
+
 
 
