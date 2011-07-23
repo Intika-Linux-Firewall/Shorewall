@@ -251,6 +251,7 @@ our $filter_table;
 my  $comment;
 my  @comments;
 my  $export;
+my  $splitcount;
 
 #
 # Target Types
@@ -621,12 +622,14 @@ sub handle_port_list( $$$$$$ ) {
 		handle_port_list( $chainref, $newrule, 0, $1, $2, $3 );
 	    } else {
 		push_rule ( $chainref, $newrule );
+		$splitcount++;
 	    }
 	}
     } elsif ( $dport && $rule =~  /^(.* --sports\s+)([^ ]+)(.*)$/ ) {
 	handle_port_list( $chainref, $rule, 0, $1, $2, $3 );
     } else {
 	push_rule ( $chainref, $rule );
+	$splitcount++;
     }
 }
 
@@ -636,7 +639,7 @@ sub handle_port_list( $$$$$$ ) {
 sub handle_icmptype_list( $$$$ ) {
     my ($chainref, $first, $types, $rest) = @_;
     my @ports = split ',', $types;
-    push_rule ( $chainref, join ( '', $first, shift @ports, $rest ) ) while @ports;
+    push_rule ( $chainref, join ( '', $first, shift @ports, $rest ) ), $splitcount++ while @ports;
 }
 
 #
@@ -678,9 +681,11 @@ sub add_rule($$;$) {
 		handle_icmptype_list( $chainref, $first, $types, $rest );
 	    } else {
 		push_rule( $chainref, $rule );
+		$splitcount++;
 	    }
 	} else {
 	    push_rule ( $chainref, $rule );
+	    $splitcount++;
 	}
     } else {
 	push_rule( $chainref, $rule );
@@ -3884,6 +3889,10 @@ sub expand_rule( $$$$$$$$$$;$ )
 	push @ends, $end;
     }
     #
+    # Clear Split Count
+    #
+    $splitcount = 0;
+    #
     # Trim disposition
     #
     $disposition =~ s/\s.*//;
@@ -4380,7 +4389,10 @@ sub expand_rule( $$$$$$$$$$;$ )
 	my $targetref = $chain_table{$table}{$target};
 	if ( $targetref ) {
 	    $targetref->{referenced} = 1;
-	    add_reference $fromref, $targetref;
+	    
+	    for ( my $i = 0; $i < $splitcount; $i++ ) {
+		add_reference $fromref, $targetref;
+	    }
 	}
     }
 
