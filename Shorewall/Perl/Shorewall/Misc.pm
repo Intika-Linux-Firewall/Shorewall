@@ -1161,8 +1161,6 @@ sub handle_loopback_traffic() {
 	    }
 	}
     }
-
-    add_ijump $filter_table->{INPUT} , j => 'ACCEPT', i => 'lo';
 }
 
 #
@@ -1197,6 +1195,8 @@ sub add_interface_jumps {
     #
     # Add the jumps to the interface chains from filter FORWARD, INPUT, OUTPUT
     #
+    add_ijump $filter_table->{INPUT} , j => 'ACCEPT', i => 'lo';
+
     for my $interface ( grep $_ ne '%vserver%', @_ ) {
 	my $forwardref   = $filter_table->{forward_chain $interface};
 	my $inputref     = $filter_table->{input_chain $interface};
@@ -1237,6 +1237,8 @@ sub add_interface_jumps {
 		add_ijump $filter_table->{OUTPUT} , j => $outputref , imatch_dest_dev( $interface ) unless get_interface_option( $interface, 'port' );
 	    }
 	}
+
+	$input_jump_added{$interface} = $output_jump_added{$interface} = $forward_jump_added{$interface} = 1;
     }
 
     handle_loopback_traffic;
