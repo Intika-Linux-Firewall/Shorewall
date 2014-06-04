@@ -991,7 +991,10 @@
           When the <emphasis role="bold">ACTION</emphasis> is <emphasis
           role="bold">DNAT</emphasis> or <emphasis
           role="bold">DNAT-</emphasis>, the connections will be assigned to
-          addresses in the range in a round-robin fashion.</para>
+          addresses in the range in a round-robin fashion. <emphasis
+          role="bold">DNAT</emphasis> and <emphasis
+          role="bold">DNAT-</emphasis> do not allow a list of addresses and/or
+          ranges.</para>
 
           <para>If you kernel and iptables have ipset match support then you
           may give the name of an ipset prefaced by "+". The ipset name may be

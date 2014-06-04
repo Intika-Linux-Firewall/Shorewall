@@ -934,6 +934,17 @@
           <para>Restriction: MAC addresses are not allowed (this is a
           Netfilter restriction).</para>
 
+          <para>Like in the <emphasis role="bold">SOURCE</emphasis> column,
+          you may specify a range of IP addresses using the syntax
+          <emphasis>lowaddress</emphasis>-<emphasis>highaddress</emphasis>.
+          When the <emphasis role="bold">ACTION</emphasis> is <emphasis
+          role="bold">DNAT</emphasis> or <emphasis
+          role="bold">DNAT-</emphasis>, the connections will be assigned to
+          addresses in the range in a round-robin fashion. <emphasis
+          role="bold">DNAT</emphasis> and <emphasis
+          role="bold">DNAT-</emphasis> do not allow a list of addresses and/or
+          ranges.</para>
+
           <para>If you kernel and ip6tables have ipset match support then you
           may give the name of an ipset prefaced by "+". The ipset name may be
           optionally followed by a number from 1 to 6 enclosed in square
