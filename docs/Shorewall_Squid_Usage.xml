@@ -257,8 +257,8 @@ MARK(202):P    eth1:!192.168.1.3   0.0.0.0/0   tcp      80</programlisting>
             <para>In <filename> <filename>/etc/shorewall/interfaces</filename>
             </filename>:</para>
 
-            <programlisting>#ZONE   INTERFACE    BROADCAST    OPTIONS
-loc     eth1         detect       <emphasis role="bold">routeback,routefilter=0,logmartians=0</emphasis>        </programlisting>
+            <programlisting>#ZONE   INTERFACE    OPTIONS
+loc     eth1         <emphasis role="bold">routeback,routefilter=0,logmartians=0</emphasis>        </programlisting>
           </listitem>
 
           <listitem>
@@ -327,8 +327,8 @@ MARK(202):P    eth1                0.0.0.0/0   tcp      80</programlisting>
             <para>In <filename> <filename>/etc/shorewall/interfaces</filename>
             </filename>:</para>
 
-            <programlisting>#ZONE   INTERFACE    BROADCAST    OPTIONS
-loc     eth2         detect       <emphasis role="bold">routefilter=0,logmartians=0</emphasis>        </programlisting>
+            <programlisting>#ZONE   INTERFACE    OPTIONS
+loc     eth2         <emphasis role="bold">routefilter=0,logmartians=0</emphasis>        </programlisting>
           </listitem>
 
           <listitem>
@@ -402,8 +402,8 @@ ACCEPT    $FW      net    tcp      80,443</programlisting></para>
 
     <para><filename>/etc/shorewall/interfaces:</filename></para>
 
-    <programlisting>#ZONE        INTERFACE        BROADCAST         OPTIONS
--            lo               -                 -</programlisting>
+    <programlisting>#ZONE        INTERFACE        OPTIONS
+-            lo               -</programlisting>
 
     <para><filename>/etc/shorewall/providers</filename>:</para>
 

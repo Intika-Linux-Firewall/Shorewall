@@ -450,9 +450,9 @@ all             all             ACCEPT
 
         <para><filename>/etc/shorewall/interfaces</filename>:</para>
 
-        <programlisting>#ZONE   INTERFACE       BROADCAST       OPTIONS
-loc     xenbr0          192.168.1.255   dhcp,routeback
-dmz     xenbr1          -               routeback
+        <programlisting>#ZONE   INTERFACE       OPTIONS
+loc     xenbr0          dhcp,routeback
+dmz     xenbr1          routeback
 #LAST LINE -- ADD YOUR ENTRIES BEFORE THIS ONE -- DO NOT REMOVE</programlisting>
 
         <para><filename>/etc/shorewall/rules</filename>:</para>
@@ -601,11 +601,11 @@ OMAK=&lt;IP address at our second home&gt;
 
         <para><filename>/etc/shorewall/interfaces</filename>:</para>
 
-        <programlisting>#ZONE   INTERFACE       BROADCAST               OPTIONS
-net     $EXT_IF         206.124.146.255         dhcp,logmartians,blacklist,tcpflags,nosmurfs
-dmz     $DMZ_IF         192.168.0.255           logmartians
-loc     $INT_IF         192.168.1.255           dhcp,routeback,logmartians
-wifi    $WIFI_IF        192.168.3.255           dhcp,maclist
+        <programlisting>#ZONE   INTERFACE       OPTIONS
+net     $EXT_IF         dhcp,logmartians,blacklist,tcpflags,nosmurfs
+dmz     $DMZ_IF         logmartians
+loc     $INT_IF         dhcp,routeback,logmartians
+wifi    $WIFI_IF        dhcp,maclist
 vpn     tun+            -
 #LAST LINE -- ADD YOUR ENTRIES BEFORE THIS ONE -- DO NOT REMOVE</programlisting>
 

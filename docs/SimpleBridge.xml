@@ -108,9 +108,9 @@
 
     <para><filename>/etc/shorewall/interfaces</filename>:</para>
 
-    <programlisting>#ZONE          INTERFACE       BROADCAST      OPTIONS
-net            eth0            detect         ...
-loc            <emphasis role="bold">br0</emphasis>             10.0.1.255     <emphasis
+    <programlisting>#ZONE          INTERFACE       OPTIONS
+net            eth0            ...
+loc            <emphasis role="bold">br0</emphasis>             <emphasis
         role="bold">routeback</emphasis>,...</programlisting>
 
     <para>So the key points here are:</para>
@@ -140,9 +140,9 @@ loc            <emphasis role="bold">br0</emphasis>             10.0.1.255     <
 
     <para><emphasis role="bold">Note to Shorewall-perl users</emphasis>: You
     should also specify the <emphasis role="bold">bridge</emphasis>
-    option:<programlisting>#ZONE          INTERFACE       BROADCAST      OPTIONS
-net            eth0            detect         ...
-loc            <emphasis role="bold">br0</emphasis>             10.0.1.255     <emphasis
+    option:<programlisting>#ZONE          INTERFACE       OPTIONS
+net            eth0            ...
+loc            <emphasis role="bold">br0</emphasis>             <emphasis
           role="bold">routeback,bridge</emphasis>,...</programlisting></para>
 
     <para>Your entry in <filename>/etc/shorewall/masq</filename> should be

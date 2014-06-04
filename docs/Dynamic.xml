@@ -49,8 +49,7 @@
     support is based on <ulink
     url="http://ipset.netfilter.org/">ipset</ulink>. Most current
     distributions have ipset, but you may need to install the <ulink
-    url="http://xtables-addons.sourceforge.net/">xtables-addons</ulink>.
-    </para>
+    url="http://xtables-addons.sourceforge.net/">xtables-addons</ulink>.</para>
   </section>
 
   <section id="xtables-addons">
@@ -211,9 +210,9 @@
 net          ipv4
 rsyncok:loc  ipv4             <emphasis role="bold">dynamic_shared</emphasis></programlisting><filename>/etc/shorewall/interfaces</filename>:</para>
 
-      <programlisting>#ZONE       INTERFACE      BROADCAST        OPTIONS
-loc         eth0           -                …
-loc         eth1           -                …</programlisting>
+      <programlisting>#ZONE       INTERFACE      OPTIONS
+loc         eth0           …
+loc         eth1           …</programlisting>
 
       <para><filename>/etc/shorewall/hosts</filename>:</para>
 
@@ -308,9 +307,8 @@ rsyncok:
 loc          ipv4
 webok:loc    ipv4</programlisting><filename>/etc/shorewall/interfaces</filename>:</para>
 
-        <programlisting>#ZONE       INTERFACE      BROADCAST        OPTIONS
-loc         eth0           -                …
-</programlisting>
+        <programlisting>#ZONE       INTERFACE      OPTIONS
+loc         eth0           …</programlisting>
 
         <para><filename>/etc/shorewall/hosts</filename>:</para>
 

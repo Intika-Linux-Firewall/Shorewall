@@ -86,8 +86,8 @@ vpn          ipv4</programlisting>
     <para>On system A, the 10.0.0.0/8 will comprise the <emphasis
     role="bold">vpn</emphasis> zone. In /etc/shorewall/interfaces:</para>
 
-    <programlisting>#ZONE      INTERFACE       BROADCAST        OPTIONS
-vpn        tun0            10.255.255.255</programlisting>
+    <programlisting>#ZONE      INTERFACE       OPTIONS
+vpn        tun0</programlisting>
 
     <para>In /etc/shorewall/tunnels on system A, we need the following:</para>
 
@@ -99,8 +99,8 @@ generic:47       net            134.28.54.2</programlisting>
     TCP port 1071 and the Generalized Routing Encapsulation Protocol (47) will
     be accepted to/from the remote gateway.</para>
 
-    <programlisting>#ZONE        INTERFACE        BROADCAST         OPTIONS
-vpn          tun0             192.168.1.255</programlisting>
+    <programlisting>#ZONE        INTERFACE        OPTIONS
+vpn          tun0</programlisting>
 
     <para>In /etc/shorewall/tunnels on system B, we have:</para>
 

@@ -209,7 +209,7 @@ loc1:loc    ipv4</programlisting>
 
         <para><filename>/etc/shorewall/interfaces</filename></para>
 
-        <programlisting>#ZONE               INTERFACE           BROADCAST               OPTIONS
+        <programlisting>#ZONE               INTERFACE           OPTIONS
 loc                 eth1                -</programlisting>
 
         <para><filename>/etc/shorewall/hosts</filename></para>
@@ -247,8 +247,8 @@ loc2        ipv4</programlisting>
 
         <para><filename>/etc/shorewall/interfaces</filename></para>
 
-        <programlisting>#ZONE               INTERFACE           BROADCAST
--                   eth1                192.168.1.255
+        <programlisting>#ZONE               INTERFACE
+-                   eth1
 </programlisting>
 
         <para><filename>/etc/shorewall/hosts</filename></para>
@@ -287,8 +287,8 @@ loc1:loc    ipv4</programlisting>
 
     <para><filename>/etc/shorewall/interfaces</filename></para>
 
-    <programlisting>#ZONE               INTERFACE           BROADCAST
-loc                 eth1                -</programlisting>
+    <programlisting>#ZONE               INTERFACE
+loc                 eth1</programlisting>
 
     <para><filename>/etc/shorewall/hosts</filename><programlisting>#ZONE               HOSTS                  OPTIONS
 loc1                eth1:192.168.1.8/29    broadcast</programlisting></para>

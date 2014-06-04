@@ -1802,7 +1802,7 @@ qt ip link set dev ifb0 up</programlisting></para>
 
       <para><filename>/etc/shorewall/interfaces</filename>:</para>
 
-      <programlisting>#ZONE          INTERFACE         BROADCAST
+      <programlisting>#ZONE          INTERFACE         OPTIONS
 -              ifb0</programlisting>
 
       <para><filename>/etc/shorewall/tcdevices</filename>:</para>

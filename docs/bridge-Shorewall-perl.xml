@@ -596,8 +596,8 @@ all         all         REJECT        info
     is connected to <filename class="devicefile">eth0</filename> and the
     switch to <filename class="devicefile">eth1</filename>:</para>
 
-    <programlisting>#ZONE    INTERFACE      BROADCAST       OPTIONS
-world    br0            detect          bridge
+    <programlisting>#ZONE    INTERFACE      OPTIONS
+world    br0            bridge
 net      br0:eth0
 loc      br0:eth1
 #LAST LINE -- ADD YOUR ENTRIES BEFORE THIS ONE -- DO NOT REMOVE</programlisting>
@@ -645,9 +645,9 @@ br0             192.168.1.0/24  routeback
 
     <para><filename>/etc/shorewall/interfaces</filename>:</para>
 
-    <programlisting>       #ZONE            INTERFACE       BROADCAST       OPTIONS
-       world            br0             -               bridge
-       world            br1             -               bridge
+    <programlisting>       #ZONE            INTERFACE       OPTIONS
+       world            br0             bridge
+       world            br1             bridge
        z1               br0:p+
        z2               br1:p+</programlisting>
 
@@ -657,11 +657,11 @@ br0             192.168.1.0/24  routeback
     configuration may be defined using the following in
     <filename>/etc/shorewall/interfaces</filename>:</para>
 
-    <programlisting>       #ZONE            INTERFACE       BROADCAST       OPTIONS
-       world            br0             -               bridge
-       world            br1             -               bridge
-       z1               br0:x+          -               physical=p+
-       z2               br1:y+          -               physical=p+</programlisting>
+    <programlisting>       #ZONE            INTERFACE       OPTIONS
+       world            br0             bridge
+       world            br1             bridge
+       z1               br0:x+          physical=p+
+       z2               br1:y+          physical=p+</programlisting>
 
     <para>In this configuration, 'x+' is the logical name for ports p+ on
     bridge br0 while 'y+' is the logical name for ports p+ on bridge
@@ -710,11 +710,11 @@ loc                     ipv4</programlisting>
 
       <listitem>
         <para>The <filename>/etc/shorewall/interfaces</filename> file is as
-        follows:<programlisting>#ZONE    INTERFACE      BROADCAST     OPTIONS
-pub      br0            detect        routefilter,bridge
+        follows:<programlisting>#ZONE    INTERFACE      OPTIONS
+pub      br0            routefilter,bridge
 net      br0:eth0 
 dmz      br0:eth2
-loc      eth1           detect</programlisting></para>
+loc      eth1</programlisting></para>
       </listitem>
 
       <listitem>
@@ -887,7 +887,7 @@ col     ipv4     nomark</emphasis></programlisting>
       role="bold">loc</emphasis> spelled backward.</para>
     </note>
 
-    <programlisting>#ZONE     INTERFACES        BROADCAST       OPTIONS
+    <programlisting>#ZONE     INTERFACES        OPTIONS
 net       eth0              ...
 -         br0               ...
 zone1     br0:eth1          ...

@@ -103,8 +103,8 @@ vpn          ipv4</programlisting>
     <para>On system A, the 10.0.0.0/8 will comprise the <emphasis
     role="bold">vpn</emphasis> zone. In /etc/shorewall/interfaces:</para>
 
-    <programlisting>#ZONE        INTERFACE      BROADCAST        OPTIONS
-vpn          tosysb         10.255.255.255</programlisting>
+    <programlisting>#ZONE        INTERFACE      OPTIONS
+vpn          tosysb</programlisting>
 
     <para>In /etc/shorewall/tunnels on system A, we need the following:</para>
 

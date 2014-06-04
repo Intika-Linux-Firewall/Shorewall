@@ -1229,8 +1229,8 @@ ACCEPT     loc       $FW     tcp       80          #Allow Weblet to work</progra
         network interface. If the wireless interface is <filename
         class="devicefile">wlan0</filename>, the entry might look like:</para>
 
-        <programlisting>#ZONE     INTERFACE       BROADCAST          OPTIONS
-loc       wlan0           detect             maclist</programlisting>
+        <programlisting>#ZONE     INTERFACE       OPTIONS
+loc       wlan0           maclist</programlisting>
 
         <para>As shown in the above entry, I recommend using the <ulink
         url="MAC_Validation.html">maclist option</ulink> for the wireless

@@ -203,8 +203,8 @@ loc             ipv4
 
     <para><filename>/etc/shorewall/interfaces</filename>:</para>
 
-    <programlisting>#ZONE           INTERFACE          BROADCAST          OPTION
-net             eth0               -                  tcpflags,routefilter
+    <programlisting>#ZONE           INTERFACE          OPTION
+net             eth0               tcpflags,routefilter
 loc             eth1               -
 <emphasis role="bold">rem             ppp0               -</emphasis></programlisting>
   </section>
@@ -259,8 +259,8 @@ rem2            ipv4    #Remote LAN 2</emphasis></programlisting>
 
     <para><filename>/etc/shorewall/interfaces</filename>:</para>
 
-    <programlisting>#ZONE           INTERFACE          BROADCAST          OPTION
-net             eth0               -                  tcpflags,routefilter
+    <programlisting>#ZONE           INTERFACE          OPTION
+net             eth0               tcpflags,routefilter
 loc             eth1               -
 <emphasis role="bold">-               tun+               -</emphasis></programlisting>
 

@@ -181,10 +181,10 @@ dmz     ipv4</programlisting>
     file. In the three-interface sample, the three zones are defined using
     that file as follows:</para>
 
-    <programlisting>#ZONE      INTERFACE     BROADCAST     OPTIONS
-net        eth0          detect        dhcp,routefilter
-loc        eth1          detect
-dmz        eth2          detect</programlisting>
+    <programlisting>#ZONE      INTERFACE     OPTIONS
+net        eth0          dhcp,routefilter
+loc        eth1
+dmz        eth2</programlisting>
 
     <para>The above file defines the <emphasis>net</emphasis> zone as all IPv4
     hosts interfacing to the firewall through eth0, the
@@ -201,10 +201,10 @@ dmz        eth2          detect</programlisting>
     file or you may use the nets= option in
     <filename>/etc/shorewall/interfaces</filename>:</para>
 
-    <programlisting>#ZONE      INTERFACE     BROADCAST     OPTIONS
-net        eth0          detect        dhcp,routefilter,nets=(!192.168.0.0/23)
-loc        eth1          detect        nets=(192.168.0.0/24)
-dmz        eth2          detect        nets=(192.168.1.0/24)</programlisting>
+    <programlisting>#ZONE      INTERFACE     OPTIONS
+net        eth0          dhcp,routefilter,nets=(!192.168.0.0/23)
+loc        eth1          nets=(192.168.0.0/24)
+dmz        eth2          nets=(192.168.1.0/24)</programlisting>
 
     <para>The above file defines the <emphasis>net</emphasis> zone as all IPv4
     hosts interfacing to the firewall through eth0 <emphasis>except</emphasis>

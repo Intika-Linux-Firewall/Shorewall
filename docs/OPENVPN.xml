@@ -130,7 +130,7 @@ vpn     ipv4</programlisting>
       <para>In <filename>/etc/shorewall/interfaces</filename> on system
       A:</para>
 
-      <programlisting>#ZONE      INTERFACE        BROADCAST     OPTIONS
+      <programlisting>#ZONE      INTERFACE        OPTIONS
 vpn        tun0</programlisting>
     </blockquote>
 
@@ -198,7 +198,7 @@ verb 5</programlisting>
       <para>In <filename>/etc/shorewall/interfaces</filename> on system
       B:</para>
 
-      <programlisting>#ZONE      INTERFACE        BROADCAST     OPTIONS
+      <programlisting>#ZONE      INTERFACE         OPTIONS
 vpn        tun0 </programlisting>
     </blockquote>
 
@@ -269,7 +269,7 @@ road    ipv4</programlisting>
       <para>In <filename>/etc/shorewall/interfaces</filename> on system
       A:</para>
 
-      <programlisting>#ZONE      INTERFACE        BROADCAST     OPTIONS
+      <programlisting>#ZONE      INTERFACE          OPTIONS
 road       tun+</programlisting>
     </blockquote>
 
@@ -355,7 +355,7 @@ home    ipv4</programlisting>
       <para>In <filename>/etc/shorewall/interfaces</filename> on system
       B:</para>
 
-      <programlisting>#ZONE      INTERFACE        BROADCAST     OPTIONS
+      <programlisting>#ZONE      INTERFACE          OPTIONS
 home       tun0</programlisting>
     </blockquote>
 
@@ -586,14 +586,14 @@ net             ipv4            #Internet
 
       <para><filename>/etc/shorewall/interfaces</filename>:</para>
 
-      <programlisting>#ZONE  INTERFACE  BROADCAST OPTIONS
-loc    INT_IF     detect    dhcp,logmartians=1,routefilter=1,physical=$INT_IF,required,wait=5
-net    COM_IF     detect    dhcp,blacklist,optional,routefilter=0,logmartians,proxyarp=0,physical=$COM_IF,nosmurfs
-<emphasis role="bold">vpn    TUN_IF+    detect    physical=tun+,routeback</emphasis>
--      sit1       -         ignore
-<emphasis role="bold">-      mac        -         ignore</emphasis>
--      EXT_IF     -         ignore
--      lo         -         ignore</programlisting>
+      <programlisting>#ZONE  INTERFACE  OPTIONS
+loc    INT_IF     dhcp,logmartians=1,routefilter=1,physical=$INT_IF,required,wait=5
+net    COM_IF     dhcp,blacklist,optional,routefilter=0,logmartians,proxyarp=0,physical=$COM_IF,nosmurfs
+<emphasis role="bold">vpn    TUN_IF+    physical=tun+,routeback</emphasis>
+-      sit1       ignore
+<emphasis role="bold">-      mac        ignore</emphasis>
+-      EXT_IF     ignore
+-      lo         ignore</programlisting>
 
       <para><filename>/etc/shorewall/tunnels</filename>:</para>
 
@@ -617,10 +617,10 @@ rest      ipv6</programlisting>
 
       <para><filename>/etc/shorewall6/interfaces</filename>:</para>
 
-      <programlisting>#ZONE   INTERFACE       BROADCAST       OPTIONS
-net     sit1            detect          tcpflags,forward=1,nosmurfs,routeback
-loc     eth4            detect          tcpflags,forward=1
-<emphasis role="bold">loc     mac             detect          tcpflags,forward=1</emphasis>
+      <programlisting>#ZONE   INTERFACE       OPTIONS
+net     sit1            tcpflags,forward=1,nosmurfs,routeback
+loc     eth4            tcpflags,forward=1
+<emphasis role="bold">loc     mac             tcpflags,forward=1</emphasis>
 rest    eth+</programlisting>
 
       <para>Note that in the IPv6 firewall configuration, the remove Macbook

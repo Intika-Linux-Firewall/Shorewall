@@ -516,8 +516,8 @@ DNAT       net           net:66.249.93.111:993  tcp      80          -         2
 
         <para>In <filename>/etc/shorewall/interfaces</filename>, specify the
         <emphasis role="bold">routeback</emphasis> option on
-        eth0:<programlisting>#ZONE      INTERFACE     BROADCAST            OPTIONS
-net        eth0          detect               <emphasis role="bold">routeback</emphasis></programlisting></para>
+        eth0:<programlisting>#ZONE      INTERFACE     OPTIONS
+net        eth0          <emphasis role="bold">routeback</emphasis></programlisting></para>
 
         <para><filename>/etc/shorewall/masq</filename>;<programlisting>#INTERFACE          SOURCE      ADDRESS          PROTO        PORT
 eth0:66.249.93.111  0.0.0.0/0   206.124.146.176  tcp          993</programlisting></para>
@@ -700,8 +700,8 @@ DNAT       net           net:192.168.4.22       tcp      80,443      -         <
         <listitem>
           <para>In <filename>/etc/shorewall/interfaces</filename>:</para>
 
-          <programlisting>#ZONE    INTERFACE    BROADCAST    OPTIONS
-loc      eth1         detect       <emphasis role="bold">routeback</emphasis>    </programlisting>
+          <programlisting>#ZONE    INTERFACE    OPTIONS
+loc      eth1         <emphasis role="bold">routeback</emphasis>    </programlisting>
         </listitem>
 
         <listitem>
@@ -821,8 +821,8 @@ DNAT       loc           loc:192.168.1.5    tcp      www         -         <emph
 
           <para>In <filename>/etc/shorewall/interfaces</filename>:</para>
 
-          <programlisting>#ZONE    INTERFACE    BROADCAST       OPTIONS
-dmz      eth2         192.168.2.255   <emphasis role="bold">routeback</emphasis> </programlisting>
+          <programlisting>#ZONE    INTERFACE    OPTIONS
+dmz      eth2         <emphasis role="bold">routeback</emphasis> </programlisting>
 
           <para>In <filename>/etc/shorewall/masq</filename>:</para>
 

@@ -416,10 +416,10 @@ all              all                 REJECT     info</programlisting>
     url="manpages/shorewall-interfaces.html">/etc/shorewall/interfaces
     </ulink>file, that file would might contain:</para>
 
-    <programlisting>#ZONE    INTERFACE      BROADCAST     OPTIONS
-net      eth0           detect
-loc      eth1           detect
-dmz      eth2           detect</programlisting>
+    <programlisting>#ZONE    INTERFACE      OPTIONS
+net      eth0
+loc      eth1
+dmz      eth2</programlisting>
 
     <para>Note that the <emphasis role="bold">$FW</emphasis> zone has no entry
     in the /etc/shorewall/interfaces file.</para>
@@ -435,10 +435,10 @@ dmz      eth2           detect</programlisting>
     <example id="multi">
       <title>Multiple Interfaces to a Zone</title>
 
-      <programlisting>#ZONE    INTERFACE      BROADCAST     OPTIONS
-net      eth0           detect
-loc      eth1           detect
-loc      eth2           detect</programlisting>
+      <programlisting>#ZONE    INTERFACE      OPTIONS
+net      eth0
+loc      eth1
+loc      eth2</programlisting>
     </example>
 
     <para><inlinegraphic fileref="images/BD21298_.gif" /></para>
@@ -1816,22 +1816,10 @@ ACCEPT   net             $FW                tcp    ssh     #SSH to the
       <para><filename>/etc/shorewall/interfaces</filename> (The
       <quote>options</quote> will be very site-specific).</para>
 
-      <programlisting>#ZONE    INTERFACE      BROADCAST     OPTIONS
-net      eth0           detect        routefilter
-loc      eth1           detect
-dmz      eth2           detect</programlisting>
-
-      <para>The setup described here requires that your network interfaces be
-      brought up before Shorewall can start. This opens a short window during
-      which you have no firewall protection. If you replace
-      <quote>detect</quote> with the actual broadcast addresses in the entries
-      above, you can bring up Shorewall before you bring up your network
-      interfaces.</para>
-
-      <programlisting>#ZONE    INTERFACE      BROADCAST     OPTIONS
-net      eth0           192.0.2.255
-loc      eth1           192.168.201.7
-dmz      eth2           192.168.202.7</programlisting>
+      <programlisting>#ZONE    INTERFACE      OPTIONS
+net      eth0           routefilter
+loc      eth1
+dmz      eth2</programlisting>
 
       <para><filename>/etc/shorewall/masq</filename> - Local Subnet</para>
 

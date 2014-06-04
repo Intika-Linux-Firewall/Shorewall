@@ -580,16 +580,15 @@ OMAK=&lt;IP address at our second home&gt;
 
         <programlisting>echo 1 &gt; /proc/sys/net/ipv4/netfilter/ip_conntrack_tcp_be_liberal</programlisting>
 
-        <para><filename>/etc/shorewall/interfaces</filename> (don't specify
-        the BROADCAST addresses if you are using Shorewall-perl):</para>
+        <para><filename>/etc/shorewall/interfaces</filename>:</para>
 
-        <programlisting>#ZONE   INTERFACE       BROADCAST               OPTIONS
-net     ${EXT_IF}       detect                  dhcp,logmartians=1,blacklist
-dmz     $DMZ_IF         detect                  logmartians=1
-loc     $INT_IF         detect                  dhcp,logmartians=1,routeback,bridge
-loc     $TEST_IF        detect                  optional
-loc     $TEST1_IF       detect                  optional
-wifi    $WIFI_IF        detect                  dhcp,maclist,mss=1400
+        <programlisting>#ZONE   INTERFACE       OPTIONS
+net     ${EXT_IF}       dhcp,logmartians=1,blacklist
+dmz     $DMZ_IF         logmartians=1
+loc     $INT_IF         dhcp,logmartians=1,routeback,bridge
+loc     $TEST_IF        optional
+loc     $TEST1_IF       optional
+wifi    $WIFI_IF        dhcp,maclist,mss=1400
 vpn     tun+            -
 #LAST LINE -- ADD YOUR ENTRIES BEFORE THIS ONE -- DO NOT REMOVE</programlisting>
 

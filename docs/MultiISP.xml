@@ -832,9 +832,9 @@ ISP2    2       2       main            eth1            130.252.99.254  track,ba
 
       <para><filename>/etc/shorewall/interfaces</filename>:</para>
 
-      <programlisting>#ZONE    INTERFACE    BROADCAST       OPTIONS
-net      eth0         detect          …          
-net      eth1         detect          …</programlisting>
+      <programlisting>#ZONE    INTERFACE    OPTIONS
+net      eth0         …          
+net      eth1         …</programlisting>
 
       <para><filename>/etc/shorewall/policy</filename>:</para>
 
@@ -1991,9 +1991,9 @@ ComcastC 2      -    -          eth0      detect        loose,fallback,load=0.33
       <para>You specify the <option>optional</option> option in
       <filename>/etc/shorewall/interfaces</filename>:</para>
 
-      <programlisting>#ZONE    INTERFACE    BROADCAST       OPTIONS
-net      eth0         detect          <emphasis role="bold">optional</emphasis>         
-net      eth1         detect          <emphasis role="bold">optional</emphasis></programlisting>
+      <programlisting>#ZONE    INTERFACE    OPTIONS
+net      eth0         <emphasis role="bold">optional</emphasis>         
+net      eth1         <emphasis role="bold">optional</emphasis></programlisting>
 
       <section id="lsm">
         <title>Link Status Monitor (LSM)</title>
@@ -2562,11 +2562,11 @@ kvm             all             ACCEPT
 net             all             DROP            info
 all             all             REJECT          info</programlisting></para>
 
-      <para>interfaces:<programlisting>#ZONE    INTERFACE      BROADCAST       OPTIONS                 GATEWAY
+      <para>interfaces:<programlisting>#ZONE    INTERFACE      PTIONS                 GATEWAY
 #
-net     eth0            detect          dhcp,tcpflags,routefilter,blacklist,logmartians,optional,arp_ignore
-net     wlan0           detect          dhcp,tcpflags,routefilter,blacklist,logmartians,optional
-kvm     br0             detect          routeback       #Virtual Machines</programlisting><note>
+net     eth0            dhcp,tcpflags,routefilter,blacklist,logmartians,optional,arp_ignore
+net     wlan0           dhcp,tcpflags,routefilter,blacklist,logmartians,optional
+kvm     br0             routeback       #Virtual Machines</programlisting><note>
           <para><filename class="devicefile">wlan0</filename> is the wireless
           adapter in the notebook. Used when the laptop is in our home but not
           connected to the wired network.</para>

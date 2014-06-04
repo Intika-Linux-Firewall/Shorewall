@@ -172,12 +172,12 @@ MACLIST_LOG_LEVEL=info</programlisting>
 
       <para>/etc/shorewall/interfaces:</para>
 
-      <programlisting>#ZONE   INTERFACE       BROADCAST       OPTIONS
-net     $EXT_IF         206.124.146.255 dhcp,routefilter,logmartians,blacklist,tcpflags,nosmurfs
-loc     $INT_IF         192.168.1.255   dhcp
+      <programlisting>#ZONE   INTERFACE       OPTIONS
+net     $EXT_IF         dhcp,routefilter,logmartians,blacklist,tcpflags,nosmurfs
+loc     $INT_IF         dhcp
 dmz     $DMZ_IF         -
 vpn     tun+            -
-Wifi    $WIFI_IF        -               maclist,dhcp
+Wifi    $WIFI_IF        maclist,dhcp
 #LAST LINE - ADD YOUR ENTRIES ABOVE THIS ONE - DO NOT REMOVE</programlisting>
 
       <para>/etc/shorewall/maclist:</para>

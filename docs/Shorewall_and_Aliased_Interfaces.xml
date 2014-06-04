@@ -298,8 +298,8 @@ loc          ipv4</programlisting>
 
         <para>In <filename>/etc/shorewall/interfaces</filename>:</para>
 
-        <programlisting>#ZONE       INTERFACE  BROADCAST                      OPTIONS
-loc         eth1       -                              <emphasis role="bold">routeback</emphasis>   </programlisting>
+        <programlisting>#ZONE       INTERFACE  OPTIONS
+loc         eth1       <emphasis role="bold">routeback</emphasis>   </programlisting>
 
         <para>In <filename>/etc/shorewall/rules</filename>, simply specify
         ACCEPT rules for the traffic that you want to permit.</para>
@@ -320,7 +320,7 @@ loc2         ipv4</programlisting>
 
         <para>In <filename>/etc/shorewall/interfaces</filename>:</para>
 
-        <programlisting>#ZONE       INTERFACE  BROADCAST                      OPTIONS
+        <programlisting>#ZONE       INTERFACE  OPTIONS
 -           eth1       -   </programlisting>
 
         <para>In <filename>/etc/shorewall/hosts</filename>:</para>
