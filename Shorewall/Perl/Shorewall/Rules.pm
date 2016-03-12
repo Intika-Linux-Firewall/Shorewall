@@ -3427,6 +3427,10 @@ sub process_raw_rule ( ) {
 					   $wild ) ) {
 			    $generated = 1;
 			}
+			#
+			# Clear inline matches
+			#
+			set_inline_matches( '' );
 		    }
 		}
 	    }
