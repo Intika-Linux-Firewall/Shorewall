@@ -3300,7 +3300,7 @@ Comcast 2        0x20000 main       <emphasis role="bold">COM_IF</emphasis>     
         <para>If <emphasis role="bold">detect</emphasis> is specified in the
         ADDRESS column of an entry in <ulink
         url="manpages/shorewall-masq.html">shorewall-masq</ulink> (5) then the
-        firewall still startS if the optional interface in the INTERFACE
+        firewall still starts if the optional interface in the INTERFACE
         column does not have an IP address.</para>
       </listitem>
     </itemizedlist>
