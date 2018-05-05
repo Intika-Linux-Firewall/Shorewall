@@ -1201,11 +1201,17 @@ show_saves_command() {
     echo
 
     for f in ${VARDIR}/*-iptables; do
-	fn=$(basename $f)
-	fn=${fn%-iptables}
-	mtime=$(ls -lt $f | tail -n 1 | cut -d ' ' -f '6 7 8' )
-	[ $fn = "$RESTOREFILE" ] && fn="$fn (default)"
-	echo "   $mtime ${fn%-iptables}"
+	case $f in
+	    *\**)
+	        ;;
+	    *)
+		fn=$(basename $f)
+		fn=${fn%-iptables}
+		mtime=$(ls -lt $f | tail -n 1 | cut -d ' ' -f '6 7 8' )
+		[ $fn = "$RESTOREFILE" ] && fn="$fn (default)"
+		echo "   $mtime ${fn%-iptables}"
+		;;
+	esac
     done
 
     echo
