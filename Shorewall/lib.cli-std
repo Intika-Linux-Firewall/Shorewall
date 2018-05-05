@@ -412,8 +412,12 @@ uptodate() {
 	    elif  [ -n "$(${find} ${dir} -maxdepth $AUTOMAKE -type f -newer $1 -print)" ]; then
 		return 1;
 	    fi
-	elif [ $AUTOMAKE = recursive ]; then
+	elif [ "$AUTOMAKE" = recursive ]; then
 	    if [ -n "$(${find} ${dir} -newer $1 -print -quit)" ]; then
+		return 1;
+	    fi
+	elif [ -z "$AUTOMAKE" ]; then
+	    if [ -n "$(${find} ${dir} -maxdepth 1 -type f -newer $1 -print -quit)" ]; then
 		return 1;
 	    fi
 	elif [ -n "$(${find} ${dir} -maxdepth $AUTOMAKE -type f -newer $1 -print -quit)" ]; then
