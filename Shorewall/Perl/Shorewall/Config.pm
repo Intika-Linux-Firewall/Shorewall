@@ -5459,7 +5459,7 @@ sub update_config_file( $ ) {
 	update_default( 'BLACKLIST_DEFAULT', 'AllowICMPs,dropBcasts,dropNotSyn,dropInvalid' );
     }
 
-    for ( qw/DROP_DEFAULT REJECT_DEFAULT/ ) {
+    for ( qw/DROP_DEFAULT REJECT_DEFAULT BLACKLIST_DEFAULT/ ) {
 	my $policy = $config{ $_ };
 
 	if ( $policy =~ /\bA_(?:Drop|Reject)\b/ ) {
