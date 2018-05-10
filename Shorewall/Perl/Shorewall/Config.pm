@@ -2529,6 +2529,10 @@ sub split_rawline2( $$;$$$ ) {
     # Delete trailing comment
     #
     $currentline =~ s/\s*#.*//;
+    #
+    # Convert ${...} to $...
+    #
+    $currentline =~ s/\$\{(.*?)\}/\$$1/g;
 
     my @result = &split_line2( @_ );
 
