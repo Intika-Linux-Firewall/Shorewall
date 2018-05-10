@@ -6603,7 +6603,7 @@ sub get_configuration( $$$ ) {
     default_yes_no 'BALANCE_PROVIDERS'          , $config{USE_DEFAULT_RT} ? 'Yes' : '';
     default_yes_no 'USE_NFLOG_SIZE'             , '';
 
-    if ( ( $val = $config{AUTOMAKE} ) !~ /^[Rr]ecursive$/ ) {
+    if ( ( $val = ( $config{AUTOMAKE} || '' ) ) !~ /^[Rr]ecursive$/ ) {
 	default_yes_no( 'AUTOMAKE' , '' ) unless $val && $val =~ /^\d{1,2}$/;
     }
 
