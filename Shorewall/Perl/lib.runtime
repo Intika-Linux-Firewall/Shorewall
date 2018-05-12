@@ -192,7 +192,7 @@ find_default_interface() {
 # Determine if Interface is up
 #
 interface_is_up() {
-    [ -n "$($IP -$g_family link list dev $1 2> /dev/null | grep -e '[<,]UP[,>]')" ]
+    [ -n "$($IP -$g_family link list dev $1 2> /dev/null | grep -e '[<,]UP[,>]' | grep -v ' state DOWN ')" ]
 }
 
 #
