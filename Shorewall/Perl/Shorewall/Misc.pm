@@ -810,7 +810,7 @@ sub add_common_rules ( $ ) {
 		    $dbl_dst_target = $dbl_src_target;
 		}		    
 	    } elsif ( $dbl_level ) {
-		my $chainref = set_optflags( new_standard_chain( $dbl_src_target = 'dbl_log' ) , DONT_OPTIMIZE | DONT_DELETE );
+		my $chainref = set_optflags( new_standard_chain( $dbl_src_target = $dbl_dst_target = 'dbl_log' ) , DONT_OPTIMIZE | DONT_DELETE );
 
 		log_rule_limit( $dbl_level,
 				$chainref,
