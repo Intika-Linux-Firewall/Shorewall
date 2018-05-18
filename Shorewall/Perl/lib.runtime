@@ -192,7 +192,7 @@ find_default_interface() {
 # Determine if Interface is up
 #
 interface_is_up() {
-    [ -n "$($IP -$g_family link list dev $1 2> /dev/null | grep -e '[<,]UP[,>]' | grep -v ' state DOWN ')" ]
+    [ -n "$($IP -$g_family link list dev $1 2> /dev/null | grep -e '[<,]UP[,>]')" ]
 }
 
 #
@@ -675,7 +675,7 @@ interface_is_usable() # $1 = interface
     status=0
 
     if ! loopback_interface $1; then
-	if interface_is_up $1 && [ "$(find_first_interface_address_if_any $1)" != 0.0.0.0 ]; then
+	if interface_is_up $1 && [ "$(find_first_interface_address_if_any $1)" != 0.0.0.0 ] && [ -z "$($IP -$g_family link list dev $1 2> /dev/null | fgrep 'state DOWN')" ]; then
 	    if [ "$COMMAND" != enable ]; then
 		[ ! -f ${VARDIR}/${1}_disabled ] && run_isusable_exit $1
 		status=$?
@@ -1101,7 +1101,7 @@ interface_is_usable() # $1 = interface
     status=0
 
     if [ "$1" != lo ]; then
-	if interface_is_up $1 && [ "$(find_first_interface_address_if_any $1)" != :: ]; then
+	if interface_is_up $1 && [ "$(find_first_interface_address_if_any $1)" != :: ] && [ -z "$($IP -$g_family link list dev $1 2> /dev/null | fgrep 'state DOWN')" ]; then
 	    if [ "$COMMAND" != enable ]; then
 		[ ! -f ${VARDIR}/${1}_disabled ] && run_isusable_exit $1
 		status=$?
