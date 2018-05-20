@@ -2529,6 +2529,10 @@ sub split_rawline2( $$;$$$ ) {
     # Delete trailing comment
     #
     $currentline =~ s/\s*#.*//;
+    #
+    # Convert ${...} to $...
+    #
+    $currentline =~ s/\$\{(.*?)\}/\$$1/g;
 
     my @result = &split_line2( @_ );
 
@@ -5459,7 +5463,7 @@ sub update_config_file( $ ) {
 	update_default( 'BLACKLIST_DEFAULT', 'AllowICMPs,dropBcasts,dropNotSyn,dropInvalid' );
     }
 
-    for ( qw/DROP_DEFAULT REJECT_DEFAULT/ ) {
+    for ( qw/DROP_DEFAULT REJECT_DEFAULT BLACKLIST_DEFAULT/ ) {
 	my $policy = $config{ $_ };
 
 	if ( $policy =~ /\bA_(?:Drop|Reject)\b/ ) {
@@ -6599,7 +6603,7 @@ sub get_configuration( $$$ ) {
     default_yes_no 'BALANCE_PROVIDERS'          , $config{USE_DEFAULT_RT} ? 'Yes' : '';
     default_yes_no 'USE_NFLOG_SIZE'             , '';
 
-    if ( ( $val = $config{AUTOMAKE} ) !~ /^[Rr]ecursive$/ ) {
+    if ( ( $val = ( $config{AUTOMAKE} || '' ) ) !~ /^[Rr]ecursive$/ ) {
 	default_yes_no( 'AUTOMAKE' , '' ) unless $val && $val =~ /^\d{1,2}$/;
     }
 
