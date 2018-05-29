@@ -74,6 +74,8 @@ unless ( defined $vendor ) {
 	} elsif ( $id eq 'ubuntu' || $id eq 'debian' ) {
 	    my $init = `ls -l /sbin/init`;
 	    $vendor = $init =~ /systemd/ ? 'debian.systemd' : 'debian.sysvinit';
+	} elsif ( $id eq 'alt' || $id eq 'basealt' || $id eq 'altlinux' ) {
+	    $vendor = 'alt';
 	} else {
 	    $vendor = $id;
 	}
@@ -117,6 +119,9 @@ if ( defined $vendor ) {
 	} else {
 	    $rcfilename = 'shorewallrc.debian.sysvinit';
 	}
+    } elsif ( -f '/etc/altlinux-release' ){
+	$vendor = 'alt';
+	$rcfilename = 'shorewallrc.alt';
     } elsif ( -f '/etc/redhat-release' ){
 	$vendor = 'redhat';
 	$rcfilename = 'shorewallrc.redhat';

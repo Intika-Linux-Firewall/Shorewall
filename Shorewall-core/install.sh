@@ -172,6 +172,9 @@ if [ -z "$BUILD" ]; then
 		    opensuse)
 			BUILD=suse
 			;;
+		    alt|basealt|altlinux)
+			BUILD=alt
+			;;
 		    *)
 			BUILD="$ID"
 			;;
@@ -180,6 +183,8 @@ if [ -z "$BUILD" ]; then
 		BUILD=debian
 	    elif [ -f /etc/gentoo-release ]; then
 		BUILD=gentoo
+	    elif [ -f /etc/altlinux-release ]; then
+		BUILD=alt
 	    elif [ -f /etc/redhat-release ]; then
 		BUILD=redhat
 	    elif [ -f /etc/slackware-version ] ; then
@@ -238,7 +243,7 @@ case "$HOST" in
     apple)
 	echo "Installing Mac-specific configuration...";
 	;;
-    debian|gentoo|redhat|slackware|archlinux|linux|suse|openwrt)
+    debian|gentoo|redhat|slackware|archlinux|linux|suse|openwrt|alt)
 	;;
     *)
 	fatal_error "Unknown HOST \"$HOST\""

@@ -197,6 +197,9 @@ if [ -z "$BUILD" ]; then
 		    opensuse)
 			BUILD=suse
 			;;
+		    alt|basealt|altlinux)
+			BUILD=alt
+			;;
 		    *)
 			BUILD="$ID"
 			;;
@@ -205,6 +208,8 @@ if [ -z "$BUILD" ]; then
 		BUILD=debian
 	    elif [ -f /etc/gentoo-release ]; then
 		BUILD=gentoo
+	    elif [ -f /etc/altlinux-release ]; then
+		BUILD=alt
 	    elif [ -f /etc/redhat-release ]; then
 		BUILD=redhat
 	    elif [ -f /etc/slackware-version ] ; then
@@ -268,6 +273,9 @@ case "$HOST" in
 	;;
     openwrt)
 	echo "Installing OpenWRT-specific configuration..."
+	;;
+    alt)
+	echo "Installing ALT-specific configuration...";
 	;;
     linux)
 	;;

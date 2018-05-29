@@ -109,6 +109,9 @@ if [ -z "$vendor" ]; then
 	    opensuse)
 		vendor=suse
 		;;
+	    alt|basealt|altlinux)
+		vendor=alt
+		;;
 	    *)
 		vendor="$ID"
 		;;
@@ -132,6 +135,8 @@ if [ -z "$vendor" ]; then
 	    if [ -f /etc/debian_version ]; then
 		params[HOST]=debian
 		ls -l /sbin/init | fgrep -q systemd &&  rcfile=shorewallrc.debian.systemd || rcfile=shorewallrc.debian.sysvinit
+	    elif [ -f /etc/altlinux-release ] ; then
+		params[HOST]=alt
 	    elif [ -f /etc/redhat-release ]; then
 		params[HOST]=redhat
 		rcfile=shorewallrc.redhat
