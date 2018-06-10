@@ -28,7 +28,7 @@
         <term>Host Address</term>
 
         <listitem>
-          <para>This address type refer to a single host.</para>
+          <para>This address type refers to a single host.</para>
 
           <para>In IPv4, the format is <emphasis>i.j.k.l</emphasis> where
           <emphasis>i</emphasis> through <emphasis>l</emphasis> are decimal
@@ -77,7 +77,7 @@
     <simplelist>
       <member>[2001:227:e857:1::1]</member>
 
-      <member>[2001:227:e857:1:0:0:0:0:1]/64</member>
+      <member>[2001:227:e857:1::]/64</member>
     </simplelist>
   </refsect1>
 
@@ -158,14 +158,13 @@
 
       <listitem>
         <para>The primary IP address of eth0 in the $FW zone - <emphasis
-        role="bold">$FW:&amp;eth0</emphasis> (see <link
-        linkend="Rvariables">Run-time Address Variables</link> below)</para>
+        role="bold">$FW:&amp;eth0</emphasis> </para>
       </listitem>
 
       <listitem>
         <para>All hosts in Vatican City - <emphasis
-        role="bold">net:^VA</emphasis> (Shorwall 4.5.4 and later - See <ulink
-        url="ISO-3661.html">this article</ulink>).</para>
+        role="bold">net:^VA</emphasis> (Requires the <emphasis>GeoIP
+        Match</emphasis> capability).</para>
       </listitem>
     </orderedlist>
   </refsect1>
@@ -173,26 +172,13 @@
   <refsect1>
     <title>IP Address Ranges</title>
 
-    <para>If you kernel and iptables have iprange match support, you may use
-    IP address ranges in Shorewall configuration file entries; IP address
-    ranges have the syntax &lt;<emphasis>low IP
-    address</emphasis>&gt;-&lt;<emphasis>high IP address</emphasis>&gt;.
-    Example: 192.168.1.5-192.168.1.12.</para>
+    <para>If you kernel and iptables have <emphasis>IP Range match
+    support</emphasis>, you may use IP address ranges in Shorewall
+    configuration file entries; IP address ranges have the syntax
+    &lt;<emphasis>low IP address</emphasis>&gt;-&lt;<emphasis>high IP
+    address</emphasis>&gt;. </para>
 
-    <para>To see if your kernel and iptables have the required support, use
-    the <command>shorewall show capabilities</command> command:</para>
-
-    <programlisting>&gt;~ <command>shorewall show capabilities</command>
-... 
-Shorewall has detected the following iptables/netfilter capabilities:
-   NAT: Available
-   Packet Mangling: Available
-   Multi-port Match: Available
-   Connection Tracking Match: Available
-   Packet Type Match: Not available
-   Policy Match: Available
-   Physdev Match: Available
-   <emphasis role="bold">IP range Match: Available &lt;--------------</emphasis></programlisting>
+    <para>Example: 192.168.1.5-192.168.1.12.</para>
   </refsect1>
 
   <refsect1>
