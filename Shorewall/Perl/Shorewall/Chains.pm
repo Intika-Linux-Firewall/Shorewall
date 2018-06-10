@@ -5868,36 +5868,48 @@ sub do_nfacct( $ ) {
 # Match Source Interface
 #
 sub match_source_dev( $;$ ) {
-    my ( $interface, $nodev ) = @_;;
+    my ( $interface, $nodev ) = @_;
+    my $invert       =  ( $interface =~ s/^!// ) ? '!' : '';
     my $interfaceref =  known_interface( $interface );
     $interface = $interfaceref->{physical} if $interfaceref;
-    return '' if $interface eq '+';
+
+    if ( $interface eq '+' ) {
+	fatal_error "Invalid interface (!+)" if $invert;
+	return '';
+    }
+
     if ( $interfaceref && $interfaceref->{options}{port} ) {
 	if ( $nodev ) {
-	    "-m physdev --physdev-in $interface ";
+	    "${invert}-m physdev --physdev-in $interface ";
 	} else {
 	    my $bridgeref = find_interface $interfaceref->{bridge};
-	    "-i $bridgeref->{physical} -m physdev --physdev-in $interface ";
+	    "-i $bridgeref->{physical} ${invert}-m physdev --physdev-in $interface ";
 	}
     } else {
-	"-i $interface ";
+	"${invert}-i $interface ";
     }
 }
 
 sub imatch_source_dev( $;$ ) {
-    my ( $interface, $nodev ) = @_;;
+    my ( $interface, $nodev ) = @_;
+    my $invert       =  ( $interface =~ s/^!// ) ? '! ' : '';
     my $interfaceref =  known_interface( $interface );
     $interface = $interfaceref->{physical} if $interfaceref;
-    return () if $interface eq '+';
+
+    if ( $interface eq '+' ) {
+	fatal_error "Invalid interface (!+)" if $invert;
+	return ();
+    }
+
     if ( $interfaceref && $interfaceref->{options}{port} ) {
 	if ( $nodev ) {
-	    ( physdev => "--physdev-in $interface" );
+	    ( physdev => "${invert}--physdev-in $interface" );
 	} else {
 	    my $bridgeref = find_interface $interfaceref->{bridge};
-	    ( i => $bridgeref->{physical}, physdev => "--physdev-in $interface" );
+	    ( i => $bridgeref->{physical}, physdev => "${invert}--physdev-in $interface" );
 	}
     } else {
-	( i => $interface );
+	( i => $invert . $interface );
     }
 }
 
@@ -5905,54 +5917,66 @@ sub imatch_source_dev( $;$ ) {
 # Match Dest device
 #
 sub match_dest_dev( $;$ ) {
-    my ( $interface, $nodev ) = @_;;
+    my ( $interface, $nodev ) = @_;
     my $interfaceref =  known_interface( $interface );
+    my $invert       =  ( $interface =~ s/^!// ) ? '! ' : '';
     $interface = $interfaceref->{physical} if $interfaceref;
-    return '' if $interface eq '+';
+
+    if ( $interface eq '+' ) {
+	fatal_error "Invalid interface (!+)" if $invert;
+	return '';
+    }
+
     if ( $interfaceref && $interfaceref->{options}{port} ) {
 	if ( $nodev ) {
 	    if ( have_capability( 'PHYSDEV_BRIDGE' ) ) {
-		"-m physdev --physdev-is-bridged --physdev-out $interface ";
+		"${invert}-m physdev --physdev-is-bridged --physdev-out $interface ";
 	    } else {
-		"-m physdev --physdev-out $interface ";
+		"${invert}-m physdev --physdev-out $interface ";
 	    }
 	} else {
 	    my $bridgeref = find_interface $interfaceref->{bridge};
 
 	    if ( have_capability( 'PHYSDEV_BRIDGE' ) ) {
-		"-o $bridgeref->{physical} -m physdev --physdev-is-bridged --physdev-out $interface ";
+		"-o $bridgeref->{physical} ${invert}-m physdev --physdev-is-bridged --physdev-out $interface ";
 	    } else {
-		"-o $bridgeref->{physical} -m physdev --physdev-out $interface ";
+		"-o $bridgeref->{physical} ${invert}-m physdev --physdev-out $interface ";
 	    }
 	}
     } else {
-	"-o $interface ";
+	"${invert}-o $interface ";
     }
 }
 
 sub imatch_dest_dev( $;$ ) {
-    my ( $interface, $nodev ) = @_;;
+    my ( $interface, $nodev ) = @_;
+    my $invert       =  ( $interface =~ s/^!// ) ? '!' : '';
     my $interfaceref =  known_interface( $interface );
     $interface = $interfaceref->{physical} if $interfaceref;
-    return () if $interface eq '+';
+
+    if ( $interface eq '+' ) {
+	fatal_error "Invalid interface (!+)" if $invert;
+	return ();
+    }
+
     if ( $interfaceref && $interfaceref->{options}{port} ) {
 	if ( $nodev ) {
 	    if ( have_capability( 'PHYSDEV_BRIDGE' ) ) {
-		( physdev => "--physdev-is-bridged --physdev-out $interface" );
+		( physdev => "${invert}--physdev-is-bridged --physdev-out $interface" );
 	    } else {
-		( physdev => "--physdev-out $interface" );
+		( physdev => "${invert}--physdev-out $interface" );
 	    }
 	} else {
 	    my $bridgeref = find_interface $interfaceref->{bridge};
 
 	    if ( have_capability( 'PHYSDEV_BRIDGE' ) ) {
-		( o => $bridgeref->{physical}, physdev => "--physdev-is-bridged --physdev-out $interface" );
+		( o => $bridgeref->{physical}, physdev => "${invert}--physdev-is-bridged --physdev-out $interface" );
 	    } else {
-		( o => $bridgeref->{physical}, physdev => "--physdev-out $interface" );
+		( o => $bridgeref->{physical}, physdev => "${invert}--physdev-out $interface" );
 	    }
 	}
     } else {
-	( o => $interface );
+	( o => $invert . $interface );
     }
 }
 
@@ -7568,6 +7592,11 @@ sub verify_source_interface( $$$$ ) {
     my ( $iiface, $restriction, $table, $chainref ) = @_;
 
     my $rule = '';
+    my $oiiface = $iiface;
+    #
+    # Ignore exclusion for now
+    #
+    $iiface =~ s/^!//;
 
     fatal_error "Unknown Interface ($iiface)" unless known_interface $iiface;
 
@@ -7597,7 +7626,7 @@ sub verify_source_interface( $$$$ ) {
 	}
 
 	$chainref->{restricted} |= $restriction;
-	$rule .= match_source_dev( $iiface );
+	$rule .= match_source_dev( $oiiface );
     }
 
     $rule;
@@ -7692,6 +7721,11 @@ sub verify_dest_interface( $$$$ ) {
     my ( $diface, $restriction, $chainref, $iiface ) = @_;
 
     my $rule = '';
+    my $odiface = $diface;
+    #
+    # Ignore exclusion for now
+    #
+    $diface =~ s/^!//;
 
     fatal_error "Unknown Interface ($diface)" unless known_interface $diface;
 
@@ -7721,7 +7755,7 @@ sub verify_dest_interface( $$$$ ) {
 	}
 
 	$chainref->{restricted} |= $restriction;
-	$rule .= match_dest_dev( $diface );
+	$rule .= match_dest_dev( $odiface );
     }
 
     $rule;
