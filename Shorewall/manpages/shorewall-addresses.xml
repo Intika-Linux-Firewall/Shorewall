@@ -11,7 +11,7 @@
   </refmeta>
 
   <refnamediv>
-    <refname>Addresses</refname>
+    <refname>addresses</refname>
 
     <refpurpose>Specifying addresses within a Shorewall
     configuration</refpurpose>
@@ -113,8 +113,7 @@
         <para>ADDRESS LIST — A list of one or more addresses (host or network)
         or address ranges, separated by commas. In an IPv6 configuration, this
         list must be included in square or angled brackets ("[...]" or
-        "&lt;...&gt;"). The list may have <link
-        linkend="Exclusion">exclusion</link>.</para>
+        "&lt;...&gt;"). The list may have exclusion.</para>
       </listitem>
     </orderedlist>
 
