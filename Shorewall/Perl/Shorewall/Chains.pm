@@ -5289,8 +5289,8 @@ sub do_imac( $ ) {
 #
 sub verify_mark( $ ) {
     my $mark  = $_[0];
-    my $limit = $globals{EXCLUSION_MASK};
-    my $mask  = $globals{TC_MASK};
+    my $limit = $config{TC_EXPERT} ? $globals{TPROXY_MARK} + 1 : $globals{EXCLUSION_MASK};
+    my $mask  = $config{TC_EXPERT} ? $globals{TPROXY_MARK}     : $globals{TC_MASK};
     my $value = numeric_value( $mark );
 
     fatal_error "Invalid Mark or Mask value ($mark)"
