@@ -113,7 +113,6 @@ our @EXPORT = ( qw(
 		    OPTIONS
                     IPTABLES
 		    TARPIT
-		    MARKRULE
                     FILTER_TABLE
                     NAT_TABLE
                     MANGLE_TABLE
@@ -282,7 +281,7 @@ our %EXPORT_TAGS = (
 				       get_interface_address
 				       get_interface_addresses
 				       get_interface_bcasts
-				       get_interface_acastst
+				       get_interface_acasts
 				       interface_gateway
 				       get_interface_gateway
 				       get_interface_mac
@@ -462,7 +461,6 @@ use constant { STANDARD     =>      0x1,       #defined by Netfilter
 	       OPTIONS      =>  0x80000,       #Target Accepts Options
 	       IPTABLES     => 0x100000,       #IPTABLES or IP6TABLES
 	       TARPIT       => 0x200000,       #TARPIT
-	       MARKRULE     => 0x400000,       #MARK-oriented rules
 
 	       FILTER_TABLE =>  0x1000000,
 	       MANGLE_TABLE =>  0x2000000,
@@ -3188,14 +3186,14 @@ sub initialize_chain_table($) {
 		    'ACCEPT+'         => STANDARD + NONAT,
 		    'ACCEPT!'         => STANDARD,
 		    'ADD'             => STANDARD + SET,
-		    'AUDIT'           => STANDARD + AUDIT    + OPTIONS,
+		    'AUDIT'           => STANDARD + AUDIT + OPTIONS,
 		    'A_ACCEPT'        => STANDARD + AUDIT,
-		    'A_ACCEPT+'       => STANDARD + NONAT    + AUDIT,
+		    'A_ACCEPT+'       => STANDARD + NONAT + AUDIT,
 		    'A_ACCEPT!'       => STANDARD + AUDIT,
 		    'A_DROP'          => STANDARD + AUDIT,
 		    'A_DROP!'         => STANDARD + AUDIT,
-		    'NONAT'           => STANDARD + NONAT    + NATONLY,
-		    'CONNMARK'        => STANDARD + MARKRULE + OPTIONS,
+		    'NONAT'           => STANDARD + NONAT  + NATONLY,
+		    'CONNMARK'        => STANDARD + OPTIONS,
 		    'CONTINUE'        => STANDARD,
 		    'CONTINUE!'       => STANDARD,
 		    'COUNT'           => STANDARD,
@@ -3208,8 +3206,8 @@ sub initialize_chain_table($) {
 		    'INLINE'          => INLINERULE,
 		    'IPTABLES'        => IPTABLES,
 		    'LOG'             => STANDARD + LOGRULE  + OPTIONS,
-		    'MARK'            => STANDARD + MARKRULE + OPTIONS,
-		    'NFLOG'           => STANDARD + LOGRULE  + NFLOG + OPTIONS,
+		    'MARK'            => STANDARD + OPTIONS,
+		    'NFLOG'           => STANDARD + LOGRULE + NFLOG + OPTIONS,
 		    'NFQUEUE'         => STANDARD + NFQ + OPTIONS,
 		    'NFQUEUE!'        => STANDARD + NFQ,
 		    'QUEUE'           => STANDARD + OPTIONS,

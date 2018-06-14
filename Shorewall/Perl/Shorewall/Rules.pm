@@ -5422,10 +5422,6 @@ sub process_snat1( $$$$$$$$$$$$ ) {
 	$actiontype = $builtin_target{$target = 'MASQUERADE'};
 	$add_snat_aliases = '';
 	$logaction  = 'MASQ';
-    } elsif ( $action =~ /^((?:CONN)?MARK)(\+)?\((.+)\)$/ ) {
-	$actiontype = $targets{$logaction = $1};
-	$pre_nat = $2;
-	validate_mark( $param = $3 );
     } else {
 	( $target , $params ) = get_target_param1( $action );
 
@@ -5444,7 +5440,7 @@ sub process_snat1( $$$$$$$$$$$$ ) {
 		$target   = 'LOG';
 	    }
 	} else {
-	    fatal_error "Invalid ACTION ($action)" unless $actiontype & ( ACTION | INLINE | MARKRULE );
+	    fatal_error "Invalid ACTION ($action)" unless $actiontype & ( ACTION | INLINE );
 	    $logaction = '';
 	}
     }
@@ -5770,8 +5766,6 @@ sub process_snat1( $$$$$$$$$$$$ ) {
 		} else {
 		    $loglevel = '';
 		}
-	    } elsif ( $actiontype & MARKRULE ) {
-		$target = "$logaction --set-mark $param"
 	    } else {
 		for my $option ( split_list2( $options , 'option' ) ) {
 		    if ( $option eq 'random' ) {
