@@ -153,6 +153,9 @@ our %EXPORT_TAGS = (
 				       STICKY
 				       STICKO
 				       REALPREROUTING
+				       REALINPUT
+				       REALOUTPUT
+				       REALPOSTROUTING
 				       ACTIONCHAIN
 
 				       unreachable_warning
@@ -490,16 +493,19 @@ use constant { NO_RESTRICT         => 0,   # FORWARD chain rule     - Both -i an
 # Mangle Table allowed chains enumeration
 #
 use constant {
-    PREROUTING     => 1,        #Actually tcpre
-    INPUT          => 2,        #Actually tcin
-    FORWARD        => 4,        #Actually tcfor
-    OUTPUT         => 8,        #Actually tcout
-    POSTROUTING    => 16,       #Actually tcpost
-    ALLCHAINS      => 31,
-    STICKY         => 32,
-    STICKO         => 64,
-    REALPREROUTING => 128,
-    ACTIONCHAIN    => 256,
+    PREROUTING      => 1,        #Actually tcpre
+    INPUT           => 2,        #Actually tcin
+    FORWARD         => 4,        #Actually tcfor
+    OUTPUT          => 8,        #Actually tcout
+    POSTROUTING     => 16,       #Actually tcpost
+    STICKY          => 32,
+    STICKO          => 64,
+    REALPREROUTING  => 128,
+    REALINPUT       => 256,
+    REALOUTPUT      => 512,
+    REALPOSTROUTING => 1024,
+    ALLCHAINS       => 2047,
+    ACTIONCHAIN     => 2048,
 };
 
 #

@@ -90,7 +90,43 @@
                 <para>INPUT chain.</para>
               </listitem>
             </varlistentry>
+
+            <varlistentry>
+              <term>NP</term>
+
+              <listitem>
+                <para>PREROUTING chain in the nat table.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>NI</term>
+
+              <listitem>
+                <para>INPUT chain in the nat table.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>NO</term>
+
+              <listitem>
+                <para>OUTPUT chain in the nat table.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>NT</term>
+
+              <listitem>
+                <para>POSTROUTING chain in the nat table.</para>
+              </listitem>
+            </varlistentry>
           </variablelist>
+
+          <para>The nat table designators were added in Shorewall 5.2.1. When
+          a nat table designator is given, only the CONNMARK, MARK, SAVE and
+          RESTORE commands may be used.</para>
 
           <para>Unless otherwise specified for the particular
           <replaceable>command</replaceable>, the default chain is PREROUTING

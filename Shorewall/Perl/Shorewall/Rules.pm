@@ -4077,6 +4077,10 @@ sub process_mangle_rule1( $$$$$$$$$$$$$$$$$$$ ) {
 	O => OUTPUT,
 	T => POSTROUTING,
 	R => REALPREROUTING,
+	NP => REALPREROUTING,
+	NI => REALINPUT,
+	NO => REALOUTPUT,
+	NT => REALPOSTROUTING
 	);
 
     my %chainlabels = ( 1  => 'PREROUTING',
@@ -4085,14 +4089,17 @@ sub process_mangle_rule1( $$$$$$$$$$$$$$$$$$$ ) {
 			8  => 'OUTPUT',
 			16 => 'POSTROUTING' );
 
-    my %chainnames = ( 1   => 'tcpre',
-		       2   => 'tcin',
-		       4   => 'tcfor',
-		       8   => 'tcout',
-		       16  => 'tcpost',
-		       32  => 'sticky',
-		       64  => 'sticko',
-		       128 => 'PREROUTING',
+    my %chainnames = ( 1    => 'tcpre',
+		       2    => 'tcin',
+		       4    => 'tcfor',
+		       8    => 'tcout',
+		       16   => 'tcpost',
+		       32   => 'sticky',
+		       64   => 'sticko',
+		       128  => 'PREROUTING',
+		       256  => 'INPUT',
+		       512  => 'OUTPUT',
+		       1024 => 'POSTROUTING',
 	);
 
     my $inchain        = defined $chainref;
@@ -4116,6 +4123,8 @@ sub process_mangle_rule1( $$$$$$$$$$$$$$$$$$$ ) {
     my $actiontype;
     my $commandref;
     my $prerule        = '';
+    my $table          = 'mangle';
+    my $tabletype      = MANGLE_TABLE;
     #
     # Subroutine for handling MARK and CONNMARK. We use an enclosure so as to keep visibility of the
     # function's local variables without making them static. process_mangle_rule1() is called
@@ -4157,7 +4166,7 @@ sub process_mangle_rule1( $$$$$$$$$$$$$$$$$$$ ) {
 
 	    $option ||= ( $and_or eq '|' ? '--or-mark' : $and_or ? '--and-mark' : '--set-mark' );
 
-	    my $chainref = ensure_chain( 'mangle', $chain = $chainnames{$chain} );
+	    my $chainref = ensure_chain( $table, $chain = $chainnames{$chain} );
 
 	    $restriction |= $chainref->{restriction};
 
@@ -4476,7 +4485,7 @@ sub process_mangle_rule1( $$$$$$$$$$$$$$$$$$$ ) {
 		my ( $tgt,  $options ) = split( ' ', $params, 2 );
 		my $target_type = $builtin_target{$tgt};
 		fatal_error "Unknown target ($tgt)" unless $target_type;
-		fatal_error "The $tgt TARGET is not allowed in the mangle table" unless $target_type & MANGLE_TABLE;
+		fatal_error "The $tgt TARGET is not allowed in the mangle table" unless $target_type & $tabletype;
 		$target        = $params;
 		$usergenerated = 1;
 	    },
@@ -4492,7 +4501,7 @@ sub process_mangle_rule1( $$$$$$$$$$$$$$$$$$$ ) {
 		my ( $tgt,  $options ) = split( ' ', $params, 2 );
 		my $target_type = $builtin_target{$tgt};
 		fatal_error "Unknown target ($tgt)" unless $target_type;
-		fatal_error "The $tgt TARGET is not allowed in the mangle table" unless $target_type & MANGLE_TABLE;
+		fatal_error "The $tgt TARGET is not allowed in the mangle table" unless $target_type & $tabletype;
 		$target        = $params;
 		$usergenerated = 1;
 	    },
@@ -4564,7 +4573,7 @@ sub process_mangle_rule1( $$$$$$$$$$$$$$$$$$$ ) {
 
 	RESTORE    => {
 	    defaultchain   => 0,
-	    allowedchains  => PREROUTING | INPUT | FORWARD | OUTPUT | POSTROUTING,
+	    allowedchains  => PREROUTING | INPUT | FORWARD | OUTPUT | POSTROUTING | REALPREROUTING | REALINPUT | REALOUTPUT | REALPOSTROUTING,
 	    minparams      => 0,
 	    maxparams      => 1,
 	    function       => sub () {
@@ -4600,7 +4609,7 @@ sub process_mangle_rule1( $$$$$$$$$$$$$$$$$$$ ) {
 
 	SAVE       => {
 	    defaultchain   => 0,
-	    allowedchains  => PREROUTING | INPUT | FORWARD | OUTPUT | POSTROUTING,
+	    allowedchains  => PREROUTING | INPUT | FORWARD | OUTPUT | POSTROUTING | REALPREROUTING | REALINPUT | REALOUTPUT | REALPOSTROUTING,
 	    minparams      => 0,
 	    maxparams      => 1,
 	    function       => sub () {
@@ -4846,6 +4855,14 @@ sub process_mangle_rule1( $$$$$$$$$$$$$$$$$$$ ) {
 	fatal_error "A chain designator may not be specified in an action body" if $inaction;
 	my $temp = $designators{$designator};
 	fatal_error "Invalid chain designator ( $designator )" unless $temp;
+
+	if ( $designator =~ /^N/ ) {
+	    fatal_error "Only MARK, CONNMARK, SAVE and RESTORE may be used in the nat table" unless $cmd =~ /^(?:(?:(?:CONN)MARK)|SAVE|RESTORE)[(]?/;
+	    require_capability('MARK_ANYWHERE', "The $designator designator", 's');
+	    $table = 'nat';
+	    $tabletype = NAT_TABLE;
+	}
+
 	$designator = $temp;
     }
 
@@ -4878,12 +4895,21 @@ sub process_mangle_rule1( $$$$$$$$$$$$$$$$$$$ ) {
 
     if ( $source ne '-' ) {
 	if ( $source eq $fw ) {
-	    fatal_error 'Rules with SOURCE $FW must use the OUTPUT chain' if $designator && $designator != OUTPUT;
-	    $chain = OUTPUT;
+	    if ( $designator ) {
+		fatal_error 'Rules with SOURCE $FW must use the OUTPUT chain' unless $designator & ( OUTPUT | REALOUTPUT );
+		$chain = $designator;
+	    } else {
+		$chain = OUTPUT;
+	    }
+
 	    $source = '-';
 	} elsif ( $source =~ s/^($fw):// ) {
-	    fatal_error 'Rules with SOURCE $FW must use the OUTPUT chain' if $designator && $designator != OUTPUT;
-	    $chain = OUTPUT;
+	    if ( $designator ) {
+		fatal_error 'Rules with SOURCE $FW must use the OUTPUT chain' unless $designator & ( OUTPUT | REALOUTPUT );
+		$chain = $designator;
+	    } else {
+		$chain = OUTPUT;
+	    }
 	}
     }
 
@@ -4953,11 +4979,11 @@ sub process_mangle_rule1( $$$$$$$$$$$$$$$$$$$ ) {
 	} else {
 	    $resolve_chain->();
 	    fatal_error "$cmd rules are not allowed in the $chainlabels{$chain} chain" unless $commandref->{allowedchains} & $chain;
-	    unless ( $chain == OUTPUT || $chain == POSTROUTING  ) {
+	    unless ( $chain & ( OUTPUT | POSTROUTING | REALOUTPUT | REALPOSTROUTING ) ) {
 		fatal_error 'A USER/GROUP may only be specified when the SOURCE is $FW' unless $user eq '-';
 	    }
 
-	    $chainref = ensure_chain( 'mangle', $chainnames{$chain} );
+	    $chainref = ensure_chain( $table, $chainnames{$chain} );
 	}
 
 	$restriction |= $chainref->{restriction};
