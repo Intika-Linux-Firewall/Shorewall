@@ -461,8 +461,7 @@
               <listitem>
                 <para>Added in Shorewall 4.5.16. This action allows you to
                 construct most of the rule yourself using iptables syntax. The
-                part that you specify must follow two semicolons (';;')
-		and is
+                part that you specify must follow two semicolons (';;') and is
                 completely free-form. If the target of the rule (the part
                 following 'j') is something that Shorewall supports in the
                 ACTION column, then you may enclose it in parentheses (e.g.,
@@ -1046,7 +1045,7 @@
             </varlistentry>
 
             <varlistentry>
-              <term><replaceable>zone</replaceable>:<replaceable>interface</replaceable></term>
+              <term><replaceable>zone</replaceable>:[!]<replaceable>interface</replaceable></term>
 
               <listitem>
                 <para>When this form is used,
@@ -1059,6 +1058,11 @@
                 Only packets from hosts in the <replaceable>zone</replaceable>
                 that arrive through the named interface will match the
                 rule.</para>
+
+                <para>Beginning with Shorweall 5.2.1, the
+                <replaceable>interface</replaceable> may be preceded with '!'
+                which matches all interfaces associated with the zone except
+                the one specified.</para>
               </listitem>
             </varlistentry>
 
@@ -1397,7 +1401,7 @@
             </varlistentry>
 
             <varlistentry>
-              <term><replaceable>zone</replaceable>:<replaceable>interface</replaceable></term>
+              <term><replaceable>zone</replaceable>:[!]<replaceable>interface</replaceable></term>
 
               <listitem>
                 <para>When this form is used,
@@ -1410,6 +1414,11 @@
                 Only packets to hosts in the <replaceable>zone</replaceable>
                 that are sent through the named interface will match the
                 rule.</para>
+
+                <para>Beginning with Shorweall 5.2.1, the
+                <replaceable>interface</replaceable> may be preceded with '!'
+                which matches all interfaces associated with the zone except
+                the one specified.</para>
               </listitem>
             </varlistentry>
 
@@ -1463,12 +1472,17 @@
             </varlistentry>
 
             <varlistentry>
-              <term><replaceable>zone</replaceable>:<replaceable>interface</replaceable>:<replaceable>address</replaceable>[,...]</term>
+              <term><replaceable>zone</replaceable>:[!]<replaceable>interface</replaceable>:<replaceable>address</replaceable>[,...]</term>
 
               <listitem>
                 <para>This form combines the preceding two and requires that
                 both the outgoing interface and destinationaddress
                 match.</para>
+
+                <para>Beginning with Shorweall 5.2.1, the
+                <replaceable>interface</replaceable> may be preceded with '!'
+                which matches all interfaces associated with the zone except
+                the one specified.</para>
               </listitem>
             </varlistentry>
 
@@ -1483,7 +1497,7 @@
             </varlistentry>
 
             <varlistentry>
-              <term><replaceable>zone</replaceable>:<replaceable>interface</replaceable>:<replaceable>exclusion</replaceable></term>
+              <term><replaceable>zone</replaceable>:[!]<replaceable>interface</replaceable>:<replaceable>exclusion</replaceable></term>
 
               <listitem>
                 <para>This form matches packets to the named
@@ -1491,6 +1505,11 @@
                 <replaceable>interface</replaceable> where the destination
                 address does not match any entry in the
                 <replaceable>exclusion</replaceable>.</para>
+
+                <para>Beginning with Shorweall 5.2.1, the
+                <replaceable>interface</replaceable> may be preceded with '!'
+                which matches all interfaces associated with the zone except
+                the one specified.</para>
               </listitem>
             </varlistentry>
 

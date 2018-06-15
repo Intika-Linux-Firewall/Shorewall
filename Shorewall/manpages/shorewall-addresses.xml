@@ -107,6 +107,10 @@
         <para>INTERFACE — The name of an interface that matches an entry in
         <filename>/etc/shorewall/interfaces</filename>
         (<filename>/etc/shorewall6/interfaces</filename>).</para>
+
+        <para>Beginning with Shorweall 5.2.1, the
+        <replaceable>interface</replaceable> may be preceded with '!' which
+        matches all interfaces except the one specified.</para>
       </listitem>
 
       <listitem>
@@ -157,7 +161,7 @@
 
       <listitem>
         <para>The primary IP address of eth0 in the $FW zone - <emphasis
-        role="bold">$FW:&amp;eth0</emphasis> </para>
+        role="bold">$FW:&amp;eth0</emphasis></para>
       </listitem>
 
       <listitem>
@@ -175,7 +179,7 @@
     support</emphasis>, you may use IP address ranges in Shorewall
     configuration file entries; IP address ranges have the syntax
     &lt;<emphasis>low IP address</emphasis>&gt;-&lt;<emphasis>high IP
-    address</emphasis>&gt;. </para>
+    address</emphasis>&gt;.</para>
 
     <para>Example: 192.168.1.5-192.168.1.12.</para>
   </refsect1>

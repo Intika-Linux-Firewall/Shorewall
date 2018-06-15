@@ -857,15 +857,20 @@ Normal-Service       =&gt; 0x00</programlisting>
 
           <variablelist>
             <varlistentry>
-              <term><replaceable>interface</replaceable></term>
+              <term>[!]<replaceable>interface</replaceable></term>
 
               <listitem>
                 <para>where <replaceable>interface</replaceable> is the
-                logical name of an interface defined in <ulink
+                logical name of an <replaceable>interface</replaceable>
+                defined in <ulink
                 url="/manpages/shorewall-interfaces.html">shorewall-interfaces</ulink>(5).
                 Matches packets entering the firewall from the named
                 interface. May not be used in CLASSIFY rules or in rules using
                 the :T chain qualifier.</para>
+
+                <para>Beginning with Shorweall 5.2.1, the
+                <replaceable>interface</replaceable> may be preceded with '!'
+                which matches all interfaces except the one specified.</para>
               </listitem>
             </varlistentry>
 
@@ -899,23 +904,31 @@ Normal-Service       =&gt; 0x00</programlisting>
             </varlistentry>
 
             <varlistentry>
-              <term><replaceable>interface</replaceable>:<replaceable>address</replaceable>,[...][<replaceable>exclusion</replaceable>]</term>
+              <term>[!]<replaceable>interface</replaceable>:<replaceable>address</replaceable>,[...][<replaceable>exclusion</replaceable>]</term>
 
               <listitem>
                 <para>This form combines the preceding two forms and matches
                 when both the incoming interface and source IP address
                 match.</para>
+
+                <para>Beginning with Shorweall 5.2.1, the
+                <replaceable>interface</replaceable> may be preceded with '!'
+                which matches all interfaces except the one specified.</para>
               </listitem>
             </varlistentry>
 
             <varlistentry>
-              <term><replaceable>interface</replaceable>:<replaceable>exclusion</replaceable></term>
+              <term>[!]<replaceable>interface</replaceable>:<replaceable>exclusion</replaceable></term>
 
               <listitem>
                 <para>This form matches packets arriving through the named
                 <replaceable>interface</replaceable> and whose source IP
                 address does not match any of the addresses in the
                 <replaceable>exclusion</replaceable>.</para>
+
+                <para>Beginning with Shorweall 5.2.1, the
+                <replaceable>interface</replaceable> may be preceded with '!'
+                which matches all interfaces except the one specified.</para>
               </listitem>
             </varlistentry>
 
