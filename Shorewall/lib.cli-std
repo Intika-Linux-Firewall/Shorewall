@@ -1691,7 +1691,7 @@ remote_commands() # $* = original arguments less the command.
     #
     # Handle nonstandard remote VARDIR
     #
-    progress_message2 "Getting VARDIR on system $system..."
+    progress_message3 "Getting VARDIR on system $system..."
     temp=$(rsh_command $program show config 2> /dev/null | grep ^LITEDIR | sed 's/LITEDIR is //')
  
     [ -n "$temp" ] && litedir="$temp"
