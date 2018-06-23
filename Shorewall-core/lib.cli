@@ -2766,7 +2766,7 @@ determine_capabilities() {
 	g_tool=$(mywhich $tool)
 
 	if [ -z "$g_tool" ]; then
-	    fatal-error "No executable $tool binary can be found on your PATH"
+	    fatal_error "No executable $tool binary can be found on your PATH"
 	fi
     fi
 
