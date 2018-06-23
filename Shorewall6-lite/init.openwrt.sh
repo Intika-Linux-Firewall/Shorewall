@@ -1,6 +1,6 @@
 #!/bin/sh /etc/rc.common
 #
-#     The Shoreline Firewall (Shorewall) Packet Filtering Firewall - V4.5
+#     The Shoreline Firewall (Shorewall) Packet Filtering Firewall - V5.2
 #
 #     (c) 1999,2000,2001,2002,2003,2004,2005,2006,2007,2012,2014 - Tom Eastep (teastep@shorewall.net)
 #     (c) 2015 - Matt Darfeuille - (matdarf@gmail.com)

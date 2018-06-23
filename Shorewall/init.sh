@@ -1,7 +1,7 @@
 #!/bin/sh
 RCDLINKS="2,S41 3,S41 6,K41"
 #
-#     The Shoreline Firewall (Shorewall) Packet Filtering Firewall - V4.2
+#     The Shoreline Firewall (Shorewall) Packet Filtering Firewall - V5.2
 #
 #     (c) 1999,2000,2001,2002,2003,2004,2005, 2014 - Tom Eastep (teastep@shorewall.net)
 #

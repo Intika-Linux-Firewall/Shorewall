@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-#     The Shoreline Firewall (Shorewall6) Packet Filtering Firewall - V4.5
+#     The Shoreline Firewall (Shorewall6) Packet Filtering Firewall - V5.2
 #
 #     This program is under GPL [http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt]
 #

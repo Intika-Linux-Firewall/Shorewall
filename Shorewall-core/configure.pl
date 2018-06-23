@@ -1,6 +1,6 @@
 #! /usr/bin/perl -w
 #
-#     Shorewall Packet Filtering Firewall RPM configuration program - V4.5
+#     Shorewall Packet Filtering Firewall configuration program - V5.2
 #
 #     (c) 2012, 2014 - Tom Eastep (teastep@shorewall.net)
 #

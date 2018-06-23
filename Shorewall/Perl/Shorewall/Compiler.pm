@@ -1,6 +1,6 @@
 #! /usr/bin/perl -w
 #
-#     The Shoreline Firewall Packet Filtering Firewall Compiler - V5.0
+#     The Shoreline Firewall Packet Filtering Firewall Compiler - V5.2
 #
 #     This program is under GPL [http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt]
 #
