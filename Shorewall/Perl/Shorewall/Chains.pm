@@ -5386,14 +5386,13 @@ sub do_ratelimit( $$ ) {
     } elsif ( @rates > 2 ) {
 	fatal error "Only two rates may be specified";
     }
-
     my $limit = '';
 
     for my $rate ( @rates ) {
 	#
 	# "-m hashlimit" match for the passed LIMIT/BURST
 	#
-	if ( $rate =~ /^([sd]):{1,2}/ ) {
+	if ( $rate =~ /^[sd](\/\d+)?:{1,2}/ ) {
 	    require_capability 'HASHLIMIT_MATCH', 'Per-ip rate limiting' , 's';
 
 	    my $match = have_capability( 'OLD_HL_MATCH' ) ? 'hashlimit' : 'hashlimit-upto';
@@ -5401,19 +5400,28 @@ sub do_ratelimit( $$ ) {
 
 	    $limit .= "-m hashlimit ";
 	    
-	    if ( $rate =~ /^[sd]:((\w*):)?((\d+)(\/(sec|min|hour|day))?):(\d+)$/ ) {
-		fatal_error "Invalid Rate ($3)" unless $4;
-		fatal_error "Invalid Burst ($7)" unless $7;
-		$limit .= "--$match $3 --hashlimit-burst $7 --hashlimit-name ";
-		$limit .= $2 ? $2 : 'shorewall' . $hashlimitset++;
+	    if ( $rate =~ /^[sd](?:\/(\d+))?:((\w*):)?((\d+)(\/(sec|min|hour|day))?)(?::(\d+))?$/ ) {
+		fatal_error "Invalid Rate ($4)" unless $4;
+
+		$limit .= "--$match $4 ";
+
+		if ( supplied $8 ) {
+		    fatal_error "Invalid Burst ($8)" unless $8;
+		    $limit .= "--hashlimit-burst $8 ";
+		}
+
+		$limit .= "--hashlimit-name ";
+
+		$limit .= $3 ? $3 : 'shorewall' . $hashlimitset++;
+
+		if ( supplied $1 ) {
+		    my $vlsm = numeric_value($1);
+		    fatal_error "Invalid VLSM ($1)" unless $vlsm and $vlsm <= ( $family == F_IPV4 ? VLSMv4 : VLSMv6 );
+		    $limit .= $rate =~ /^s:/ ? " --hashlimit-srcmask $vlsm" : " --hashlimit-dstmask $1";
+		}
+
 		$limit .= ' --hashlimit-mode ';
-		$units = $6;
-	    } elsif ( $rate =~ /^[sd]:((\w*):)?((\d+)(\/(sec|min|hour|day))?)$/ ) {
-		fatal_error "Invalid Rate ($3)" unless $4;
-		$limit .= "--$match $3 --hashlimit-name ";
-		$limit .= $2 ? $2 :  'shorewall' . $hashlimitset++;
-		$limit .= ' --hashlimit-mode ';
-		$units = $6;
+		$units = $7;
 	    } else {
 		fatal_error "Invalid rate ($rate)";
 	    }
