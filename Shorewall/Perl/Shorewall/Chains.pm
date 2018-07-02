@@ -5378,7 +5378,7 @@ sub do_ratelimit( $$ ) {
 
     fatal_error "Rate Limiting not available with $action" if $norate{$action};
 
-    my @rates = split_list $rates, 'rate';
+    my @rates = split_list3 $rates, 'rate';
 
     if ( @rates == 2 ) {
 	$rates[0] = 's:' . $rates[0];
@@ -5399,15 +5399,15 @@ sub do_ratelimit( $$ ) {
 	    my $units;
 
 	    $limit .= "-m hashlimit ";
-	    
-	    if ( $rate =~ /^[sd](?:\/(\d+))?:((\w*):)?((\d+)(\/(sec|min|hour|day))?)(?::(\d+))?$/ ) {
-		fatal_error "Invalid Rate ($4)" unless $4;
+	    #                        1       23         4     5           67    8  9                        10
+	    if ( $rate =~ /^[sd](?:\/(\d+))?:((\w*)(?:\((\d+),(\d+)\))?):((\d+)(\/(sec|min|hour|day))?)(?::(\d+))?$/ ) {
+		fatal_error "Invalid Rate ($6)" unless $6;
 
-		$limit .= "--$match $4 ";
+		$limit .= "--$match $6 ";
 
-		if ( supplied $8 ) {
-		    fatal_error "Invalid Burst ($8)" unless $8;
-		    $limit .= "--hashlimit-burst $8 ";
+		if ( supplied $10 ) {
+		    fatal_error "Invalid Burst ($10)" unless $10;
+		    $limit .= "--hashlimit-burst $10 ";
 		}
 
 		$limit .= "--hashlimit-name ";
@@ -5420,8 +5420,18 @@ sub do_ratelimit( $$ ) {
 		    $limit .= $rate =~ /^s:/ ? " --hashlimit-srcmask $vlsm" : " --hashlimit-dstmask $1";
 		}
 
+		if ( supplied $4 ) {
+		    my ( $htsize, $max ) = ( numeric_value($4), numeric_value($5) );
+
+		    fatal_error "Invalid hash table buckets ($htsize)"          unless $htsize;
+		    fatal_error "Invalid hash max entries($max)"                unless $max;
+		    fatal_error "Hash max entries must be > hash table buckets" unless $max > $htsize;
+
+		    $limit .= " --hashlimit-htable-size $htsize --hashlimit-htable-max $max";
+		}
+
 		$limit .= ' --hashlimit-mode ';
-		$units = $7;
+		$units = $9;
 	    } else {
 		fatal_error "Invalid rate ($rate)";
 	    }
