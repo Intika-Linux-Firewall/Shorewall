@@ -5381,8 +5381,8 @@ sub do_ratelimit( $$ ) {
     my @rates = split_list3 $rates, 'rate';
 
     if ( @rates == 2 ) {
-	$rates[0] = 's:' . $rates[0];
-	$rates[1] = 'd:' . $rates[1];
+	$rates[0] = 's:' . $rates[0] unless $rates[0] =~ /^s:/;
+	$rates[1] = 'd:' . $rates[1] unless $rates[1] =~ /^d:/;
     } elsif ( @rates > 2 ) {
 	fatal error "Only two rates may be specified";
     }
@@ -5392,74 +5392,76 @@ sub do_ratelimit( $$ ) {
 	#
 	# "-m hashlimit" match for the passed LIMIT/BURST
 	#
-	if ( $rate =~ /^[sd](\/\d+)?:{1,2}/ ) {
-	    require_capability 'HASHLIMIT_MATCH', 'Per-ip rate limiting' , 's';
+	my $mode;
+	my $match;
+	my $units;
 
-	    my $match = have_capability( 'OLD_HL_MATCH' ) ? 'hashlimit' : 'hashlimit-upto';
-	    my $units;
+	#                  1          2            34                  5     6              78    9  10                       11
+	if ( $rate =~ /^(?:([sd])(?:\/(\d+))?:)?(?:(([A-Za-z]\w*)?(?:\((\d+),(\d+)\))?:)|:)?((\d+)(\/(sec|min|hour|day))?)(?::(\d+))?$/ ) {
+	    fatal_error "Invalid Rate ($8)" unless $8;
 
-	    $limit .= "-m hashlimit ";
-	    #                        1       23         4     5           67    8  9                        10
-	    if ( $rate =~ /^[sd](?:\/(\d+))?:((\w*)(?:\((\d+),(\d+)\))?):((\d+)(\/(sec|min|hour|day))?)(?::(\d+))?$/ ) {
-		fatal_error "Invalid Rate ($6)" unless $6;
+	    if ( $1 ) {
+		require_capability( 'HASHLIMIT_MATCH' , 'Per-ip rate limiting', 's' );
+		$mode = $1 eq 's' ? 'srcip' : 'dstip';
+	    }
 
-		$limit .= "--$match $6 ";
+	    if ( $mode || $2 || $4 || $5 ) {
+		$limit .= '-m hashlimit ';
+		$match  = have_capability( 'OLD_HL_MATCH' ) ? 'hashlimit' : 'hashlimit-upto';
+	    } else {
+		$limit .= '-m limit ';
+		$match  = 'limit';
+	    }
 
-		if ( supplied $10 ) {
-		    fatal_error "Invalid Burst ($10)" unless $10;
-		    $limit .= "--hashlimit-burst $10 ";
-		}
+	    $limit .= "--$match $7 ";
 
+	    if ( supplied $11 ) {
+		fatal_error "Invalid Burst ($11)" unless $11;
+		$limit .= $match eq 'limit' ? " --limit-burst $11 " : "--hashlimit-burst $11 ";
+	    }
+
+
+	    if ( $mode || $4 ) {
+		require_capability( 'HASHLIMIT_MATCH', 'Specifying a table name', 's' );
 		$limit .= "--hashlimit-name ";
-
-		$limit .= $3 ? $3 : 'shorewall' . $hashlimitset++;
-
-		if ( supplied $1 ) {
-		    my $vlsm = numeric_value($1);
-		    fatal_error "Invalid VLSM ($1)" unless $vlsm and $vlsm <= ( $family == F_IPV4 ? VLSMv4 : VLSMv6 );
-		    $limit .= $rate =~ /^s:/ ? " --hashlimit-srcmask $vlsm" : " --hashlimit-dstmask $1";
-		}
-
-		if ( supplied $4 ) {
-		    my ( $htsize, $max ) = ( numeric_value($4), numeric_value($5) );
-
-		    fatal_error "Invalid hash table buckets ($htsize)"          unless $htsize;
-		    fatal_error "Invalid hash max entries($max)"                unless $max;
-		    fatal_error "Hash max entries must be > hash table buckets" unless $max > $htsize;
-
-		    $limit .= " --hashlimit-htable-size $htsize --hashlimit-htable-max $max";
-		}
-
-		$limit .= ' --hashlimit-mode ';
-		$units = $9;
-	    } else {
-		fatal_error "Invalid rate ($rate)";
+		$limit .= $4 ? $4 : 'shorewall' . $hashlimitset++;
 	    }
 
-	    $limit .= $rate =~ /^s:/ ? 'srcip ' : 'dstip ';
-
-	    if ( $units && $units ne 'sec' ) {
-		my $expire = 60000; # 1 minute in milliseconds
-
-		if ( $units ne 'min' ) {
-		    $expire *= 60; #At least an hour
-		    $expire *= 24 if $units eq 'day';
-		}
-
-		$limit .= "--hashlimit-htable-expire $expire ";
+	    if ( supplied $2 ) {
+		my $vlsm = numeric_value($2);
+		fatal_error "Invalid VLSM ($2)" unless $vlsm and $vlsm <= ( $family == F_IPV4 ? VLSMv4 : VLSMv6 );
+		$limit .= $rate =~ /^s:/ ? " --hashlimit-srcmask $vlsm" : " --hashlimit-dstmask $vlsm";
 	    }
+
+	    if ( supplied $5 ) {
+		require_capability( 'HASHLIMIT_MATCH', 'Specifying hash table size', 's' );
+		my ( $htsize, $max ) = ( numeric_value($5), numeric_value($6) );
+
+		fatal_error "Invalid hash table buckets ($5)"               unless $htsize;
+		fatal_error "Invalid hash max entries($6)"                  unless $max;
+		fatal_error "Hash max entries must be > hash table buckets" unless $max > $htsize;
+
+		$limit .= " --hashlimit-htable-size $htsize --hashlimit-htable-max $max";
+	    }
+
+	    $limit .= " --hashlimit-mode $mode" if $mode;
+	    $limit .= ' ' unless $limit =~ / $/;
+	    $units = $10;
 	} else {
-	    if ( $rate =~ /^((\d+)(\/(sec|min|hour|day))?):(\d+)$/ ) {
-		fatal_error "Invalid Rate ($1)" unless $2;
-		fatal_error "Invalid Burst ($5)" unless $5;
-		$limit = "-m limit --limit $1 --limit-burst $5 ";
-	    } elsif ( $rate =~ /^(\d+)(\/(sec|min|hour|day))?$/ )  {
-		fatal_error "Invalid Rate (${1}${2})" unless $1;
-		$limit = "-m limit --limit $rate ";
-	    } else {
-		fatal_error "Invalid rate ($rate)";
-	    }
+	    fatal_error "Invalid rate ($rate)";
 	}
+
+	if ( $units && $units ne 'sec' ) {
+	    my $expire = 60000; # 1 minute in milliseconds
+
+	    if ( $units ne 'min' ) {
+		$expire *= 60; #At least an hour
+		$expire *= 24 if $units eq 'day';
+	    }
+
+	    $limit .= " --hashlimit-htable-expire $expire ";
+	}
+
     }
 
     $limit;
