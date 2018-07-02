@@ -1900,19 +1900,19 @@
           <simplelist>
             <member>[<emphasis role="bold">-</emphasis>|[{<emphasis
             role="bold">s</emphasis>|<emphasis
-            role="bold">d</emphasis>}:[[<replaceable>name</replaceable>]:]]]<emphasis>rate</emphasis><emphasis
+            role="bold">d</emphasis>}[/<replaceable>vlsm</replaceable>]:[[<replaceable>name</replaceable>][(<replaceable>ht-buckets</replaceable>,<replaceable>ht-max</replaceable>)]:]<emphasis>rate</emphasis><emphasis
             role="bold">/</emphasis>{<emphasis
             role="bold">sec</emphasis>|<emphasis
             role="bold">min</emphasis>|<emphasis
             role="bold">hour</emphasis>|<emphasis
             role="bold">day</emphasis>}[:<emphasis>burst</emphasis>]</member>
 
-            <member>[<replaceable>name</replaceable>1]:<emphasis>rate1</emphasis><emphasis
+            <member>[<replaceable>name</replaceable>1:]<emphasis>rate1</emphasis><emphasis
             role="bold">/</emphasis>{<emphasis
             role="bold">sec</emphasis>|<emphasis
             role="bold">min</emphasis>|<emphasis
             role="bold">hour</emphasis>|<emphasis
-            role="bold">day</emphasis>}[:<emphasis>burst1</emphasis>],[<replaceable>name</replaceable>2]:<emphasis>rate2</emphasis><emphasis
+            role="bold">day</emphasis>}[:<emphasis>burst1</emphasis>],[<replaceable>name</replaceable>2:]<emphasis>rate2</emphasis><emphasis
             role="bold">/</emphasis>{<emphasis
             role="bold">sec</emphasis>|<emphasis
             role="bold">min</emphasis>|<emphasis
@@ -1940,7 +1940,16 @@
           role="bold">shorewallN</emphasis> (where N is a unique integer) is
           assumed. Where more than one rule or POLICY specifies the same name,
           the connections counts for the rules are aggregated and the
-          individual rates apply to the aggregated count.</para>
+          individual rates apply to the aggregated count. Beginning with
+          Shorewall 5.2.1, the <emphasis role="bold">s</emphasis> or <emphasis
+          role="bold">d</emphasis> may be followed by a slash ("/") and an
+          integer <replaceable>vlsm</replaceable>. When a
+          <replaceable>vlsm</replaceable> is specified, all source or
+          destination addresses encountered will be grouped according to the
+          given prefix length and the so-created subnet will be subject to the
+          rate limit.</para>
+
+          <para>Example: <emphasis role="bold">s/24::10/sec</emphasis></para>
 
           <para>Beginning with Shorewall 4.6.5, two<replaceable>
           limit</replaceable>s may be specified, separated by a comma. In this
@@ -1956,6 +1965,17 @@
           enforce the per-source limit and the compiler will pick a unique
           name for the hash table that tracks the per-destination
           limit.</para>
+
+          <para>Beginning with Shorewall 5.2.1, the table name, if any, may be
+          followed by two integers separated by commas and enclosed in
+          parentheses. The first integer
+          (<replaceable>ht-buckets</replaceable>) specifies the number of
+          buckets in the generated hash table. The second integer
+          (<replaceable>ht-max</replaceable>) specifies the maximum number of
+          entries in the hash table.</para>
+
+          <para>Example: <emphasis
+          role="bold">s:netfw(1024,65536):10/sec</emphasis></para>
 
           <para>This column was formerly labelled RATE LIMIT.</para>
         </listitem>
