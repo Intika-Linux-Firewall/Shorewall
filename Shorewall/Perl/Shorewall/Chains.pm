@@ -5417,7 +5417,7 @@ sub do_ratelimit( $$ ) {
 
 	    if ( supplied $11 ) {
 		fatal_error "Invalid Burst ($11)" unless $11;
-		$limit .= $match eq 'limit' ? " --limit-burst $11 " : "--hashlimit-burst $11 ";
+		$limit .= $match eq 'limit' ? "--limit-burst $11 " : "--hashlimit-burst $11 ";
 	    }
 
 
@@ -5430,7 +5430,7 @@ sub do_ratelimit( $$ ) {
 	    if ( supplied $2 ) {
 		my $vlsm = numeric_value($2);
 		fatal_error "Invalid VLSM ($2)" unless $vlsm and $vlsm <= ( $family == F_IPV4 ? VLSMv4 : VLSMv6 );
-		$limit .= $rate =~ /^s:/ ? " --hashlimit-srcmask $vlsm" : " --hashlimit-dstmask $vlsm";
+		$limit .= $mode eq 'srcip' ? " --hashlimit-srcmask $vlsm" : " --hashlimit-dstmask $vlsm";
 	    }
 
 	    if ( supplied $5 ) {
@@ -5445,7 +5445,6 @@ sub do_ratelimit( $$ ) {
 	    }
 
 	    $limit .= " --hashlimit-mode $mode" if $mode;
-	    $limit .= ' ' unless $limit =~ / $/;
 	    $units = $10;
 	} else {
 	    fatal_error "Invalid rate ($rate)";
@@ -5460,8 +5459,9 @@ sub do_ratelimit( $$ ) {
 	    }
 
 	    $limit .= " --hashlimit-htable-expire $expire ";
+	} else {
+	    $limit .= ' ';
 	}
-
     }
 
     $limit;
