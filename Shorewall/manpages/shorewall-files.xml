@@ -376,7 +376,7 @@ br0                -                    routeback</programlisting></para>
   </refsect1>
 
   <refsect1>
-    <title>Line Continuation</title>
+    <title id="Continuation">Line Continuation</title>
 
     <para>Lines may be continued using the usual backslash (<quote>\</quote>)
     followed immediately by a new line character (Enter key).</para>

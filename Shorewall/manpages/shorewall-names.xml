@@ -243,7 +243,7 @@ POP(ACCEPT)    loc                  net:pop.gmail.com</programlisting>
   </refsect1>
 
   <refsect1>
-    <title>Logical Interface Names</title>
+    <title id="Logical">Logical Interface Names</title>
 
     <para>When dealing with a complex configuration, it is often awkward to
     use physical interface names in the Shorewall configuration.</para>
