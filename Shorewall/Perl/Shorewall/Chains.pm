@@ -5895,7 +5895,7 @@ sub do_nfacct( $ ) {
 #
 sub match_source_dev( $;$ ) {
     my ( $interface, $nodev ) = @_;
-    my $invert       =  ( $interface =~ s/^!// ) ? '!' : '';
+    my $invert       =  ( $interface =~ s/^!// ) ? '! ' : '';
     my $interfaceref =  known_interface( $interface );
     $interface = $interfaceref->{physical} if $interfaceref;
 
