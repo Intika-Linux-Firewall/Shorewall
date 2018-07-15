@@ -5444,8 +5444,10 @@ sub do_ratelimit( $$ ) {
 		$limit .= " --hashlimit-htable-size $htsize --hashlimit-htable-max $max";
 	    }
 
-	    $limit .= " --hashlimit-mode $mode" if $mode;
-	    $units = $10;
+	    if ( $mode ) {
+		$limit .= " --hashlimit-mode $mode";
+		$units = $10;
+	    }
 	} else {
 	    fatal_error "Invalid rate ($rate)";
 	}
