@@ -60,7 +60,7 @@ our @routemarked_providers;
 our %routemarked_interfaces;
 our @routemarked_interfaces;
 our %provider_interfaces;
-our @load_interfaces;
+our @load_providers;
 
 our $balancing;
 our $fallback;
@@ -99,7 +99,7 @@ sub initialize( $ ) {
     %routemarked_interfaces = ();
     @routemarked_interfaces = ();
     %provider_interfaces    = ();
-    @load_interfaces        = ();
+    @load_providers         = ();
     $balancing              = 0;
     $balanced_providers     = 0;
     $fallback_providers     = 0;
@@ -185,16 +185,16 @@ sub setup_route_marking() {
 	add_ijump $chainref, j => 'CONNMARK', targetopts => "--save-mark --mask $mask", mark => "! --mark 0/$mask";
     }
 
-    if ( @load_interfaces ) {
+    if ( @load_providers ) {
 	my $chainref1 = new_chain 'mangle', 'balance';
 	my @match;
 
 	add_ijump $chainref,               g => $chainref1, mark => "--mark 0/$mask";
 	add_ijump $mangle_table->{OUTPUT}, j => $chainref1, state_imatch( 'NEW,RELATED' ), mark => "--mark 0/$mask";
 
-	for my $physical ( @load_interfaces ) {
+	for my $provider ( @load_providers ) {
 
-	    my $chainref2 = new_chain( 'mangle', load_chain( $physical ) );
+	    my $chainref2 = new_chain( 'mangle', load_chain( $provider ) );
 
 	    set_optflags( $chainref2, DONT_OPTIMIZE | DONT_MOVE | DONT_DELETE );
 
@@ -446,7 +446,7 @@ sub process_a_provider( $ ) {
     fatal_error 'NAME must be specified' if $table eq '-';
 
     unless ( $pseudo ) {
-	fatal_error "Invalid Provider Name ($table)" unless $table =~ /^[\w]+$/;
+	fatal_error "Invalid Provider Name ($table)" unless $table =~ /^[A-Za-z][\w]*$/;
 
 	my $num = numeric_value $number;
 
@@ -779,7 +779,7 @@ sub process_a_provider( $ ) {
 	push @routemarked_providers, $providers{$table};
     }
 
-    push @load_interfaces, $physical if $load;
+    push @load_providers, $table if $load;
 
     push @providers, $table;
 
@@ -941,8 +941,9 @@ sub add_a_provider( $$ ) {
 	}
     }
 
-    emit( "echo $load > \${VARDIR}/${physical}_load",
-	  'echo ' . in_hex( $mark ) . '/' . in_hex( $globals{PROVIDER_MASK} ) . " > \${VARDIR}/${physical}_mark" ) if $load;
+    emit( "echo $load > \${VARDIR}/${table}_load",
+	  'echo ' . in_hex( $mark ) . '/' . in_hex( $globals{PROVIDER_MASK} ) . " > \${VARDIR}/${table}_mark",
+	  "echo $physical > \${VARDIR}/${table}_interface" ) if $load;
 
     emit( '',
 	  "cat <<EOF >> \${VARDIR}/undo_${table}_routing" );
@@ -1097,7 +1098,7 @@ CEOF
 	    $weight = 1;
 	}
 
-	emit ( "distribute_load $maxload @load_interfaces" ) if $load;
+	emit ( "distribute_load $maxload @load_providers" ) if $load;
 
 	unless ( $shared ) {
 	    emit( "setup_${dev}_tc" ) if $tcdevices->{$interface};
@@ -1244,7 +1245,7 @@ CEOF
 	}
 
 	emit ( '',
-	       "distribute_load $maxload @load_interfaces" ) if $load;
+	       "distribute_load $maxload @load_providers" ) if $load;
 
 	if ( $persistent ) {
 	    emit ( '',
@@ -1615,7 +1616,7 @@ sub finish_providers() {
 	emit(   'fi',
 		'' );
     } else {
-	if ( ( $fallback || @load_interfaces ) && $config{USE_DEFAULT_RT} ) {
+	if ( ( $fallback || @load_providers ) && $config{USE_DEFAULT_RT} ) {
 	    emit  ( q(#),
 		    q(# Delete any default routes in the 'main' table),
 		    q(#),
@@ -1909,7 +1910,7 @@ sub setup_providers() {
 	pop_indent;
 	emit 'fi';
 
-	setup_route_marking if @routemarked_interfaces || @load_interfaces;
+	setup_route_marking if @routemarked_interfaces || @load_providers;
     } else {
 	emit "\nif [ -z \"\$g_noroutes\" ]; then";
 
@@ -2485,7 +2486,7 @@ sub handle_stickiness( $ ) {
 	}
     }
 
-    if ( @routemarked_providers || @load_interfaces ) {
+    if ( @routemarked_providers || @load_providers ) {
 	delete_jumps $mangle_table->{PREROUTING}, $setstickyref unless @{$setstickyref->{rules}};
 	delete_jumps $mangle_table->{OUTPUT},     $setstickoref unless @{$setstickoref->{rules}};
     }
@@ -2493,9 +2494,9 @@ sub handle_stickiness( $ ) {
 
 sub setup_load_distribution() {
     emit ( '',
-	   "distribute_load $maxload @load_interfaces" ,
+	   "distribute_load $maxload @load_providers" ,
 	   ''
-	 ) if @load_interfaces;
+	 ) if @load_providers;
 }
 
 1;

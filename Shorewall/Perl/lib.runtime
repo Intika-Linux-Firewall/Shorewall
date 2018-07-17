@@ -601,26 +601,29 @@ interface_enabled() {
 }
 
 distribute_load() {
+    local provider
     local interface
-    local currentload # Total load of enabled interfaces
-    local load        # Specified load of an enabled interface
-    local mark        # Mark of an enabled interface
-    local totalload   # Total load of all interfaces - usually 1.000000
-    local nload       # Normalized load of an enabled interface
-    local var         # Interface name to embed in a variable name
+    local currentload # Total load of enabled providers
+    local load        # Specified load of an enabled provider
+    local mark        # Mark of an enabled provider
+    local totalload   # Total load of all providers - usually 1.000000
+    local nload       # Normalized load of an enabled provider
 
     totalload=$1
     shift
 
     currentload=0
 
-    for interface in $@; do
+    for provider in $@; do
+
+	interface=$(cat ${VARDIR}/${provider}_interface)
+	eval ${provider}_interface=$interface
+
 	if interface_enabled $interface; then
-	    var=$(echo $interface | sed 's/[.-]/_/g')
-	    load=$(cat ${VARDIR}/${interface}_load)
-	    eval ${var}_load=$load
-	    mark=$(cat ${VARDIR}/${interface}_mark)
-	    eval ${var}_mark=$mark
+	    load=$(cat ${VARDIR}/${provider}_load)
+	    eval ${provider}_load=$load
+	    mark=$(cat ${VARDIR}/${provider}_mark)
+	    eval ${provider}_mark=$mark
 	    currentload=$( bc <<EOF
 scale=8
 $currentload + $load
@@ -630,12 +633,13 @@ EOF
     done
 
     if [ $currentload ]; then
-	for interface in $@; do
-	    qt $g_tool -t mangle -F ~$interface
+	for provider in $@; do
+	    eval interface=\$${provider}_interface
 
-	    var=$(echo $interface | sed 's/[.-]/_/g')
-	    eval load=\$${var}_load
-	    eval mark=\$${var}_mark
+	    qt $g_tool -t mangle -F ~$provider
+
+	    eval load=\$${provider}_load
+	    eval mark=\$${provider}_mark
 
 	    if [ -n "$load" ]; then
 		nload=$(bc <<EOF
@@ -651,10 +655,10 @@ EOF
 
 		case $nload in
 		    .*|0.*)
-			run_iptables -t mangle -A ~$interface -m statistic --mode random --probability $nload -j MARK --set-mark $mark
+			run_iptables -t mangle -A ~$provider -m statistic --mode random --probability $nload -j MARK --set-mark $mark
 			;;
 		    *)
-			run_iptables -t mangle -A ~$interface -j MARK --set-mark $mark
+			run_iptables -t mangle -A ~$provider -j MARK --set-mark $mark
 			;;
 		esac
 	    fi
