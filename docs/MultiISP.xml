@@ -2568,6 +2568,15 @@ exit 0
           of<filename> /etc/shorewall/providers</filename>; <emphasis
           role="bold">detect</emphasis> is not permitted.</para>
         </listitem>
+
+        <listitem>
+          <para>The <emphasis role="bold">optional</emphasis>
+          provider/interface option doesn't work (and is disallowed beginning
+          with Shorewall 5.2.1). If you need failover, you will need to
+          front-end your firewall with a configurable switch and create a
+          separate VLAN for each of your providers, thus providing a separate
+          network interface for each provider.</para>
+        </listitem>
       </orderedlist>
 
       <para>Taken together, b. and h. effectively preclude using this
