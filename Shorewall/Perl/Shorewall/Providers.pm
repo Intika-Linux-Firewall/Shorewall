@@ -636,6 +636,7 @@ sub process_a_provider( $ ) {
     }
 
     fatal_error "A provider interface must have at least one associated zone" unless $tproxy || %{interface_zones($interface)};
+    fatal_error "An interface supporting multiple providers may not be optional" if $shared && $optional;
 
     unless ( $pseudo ) {
 	if ( $local ) {
