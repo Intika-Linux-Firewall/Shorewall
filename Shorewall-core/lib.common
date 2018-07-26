@@ -501,7 +501,7 @@ ip_network() {
 
 #
 # The following hack is supplied to compensate for the fact that many of
-# the popular light-weight Bourne shell derivatives don't support XOR ("^").
+# the popular light-weight Bourne shell derivatives do not support XOR.
 #
 ip_broadcast() {
     local x
