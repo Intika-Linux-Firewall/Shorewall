@@ -151,7 +151,7 @@ fi
 
 remove_file ${SBINDIR}/$PRODUCT
 
-if [ -L ${SHAREDIR}/$PRODUCT/init ]; then
+if [ -h ${SHAREDIR}/$PRODUCT/init ]; then
     if [ $HOST = openwrt ]; then
 	if [ $configure -eq 1 ] && /etc/init.d/$PRODUCT enabled; then
 	    /etc/init.d/$PRODUCT disable

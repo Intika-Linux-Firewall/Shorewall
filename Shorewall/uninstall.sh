@@ -151,7 +151,7 @@ fi
 
 remove_file ${SBINDIR}/$PRODUCT
 
-if [ -L ${SHAREDIR}/$PRODUCT/init ]; then
+if [ -h ${SHAREDIR}/$PRODUCT/init ]; then
     FIREWALL=$(readlink -m -q ${SHAREDIR}/$PRODUCT/init)
 elif [ -n "$INITFILE" ]; then
     FIREWALL=${INITDIR}/${INITFILE}
