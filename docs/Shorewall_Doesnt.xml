@@ -65,9 +65,10 @@
         <itemizedlist>
           <listitem>
             <para>HTTP - better to use <ulink
-            url="Shorewall_Squid_Usage.html">Squid</ulink> and <ulink
-            url="http://dansguardian.org/">Dansguardian</ulink> for
-            that.</para>
+            url="Shorewall_Squid_Usage.html">Squid</ulink>, <ulink
+            url="http://www.e2guardian.org/">E2guardian</ulink>, or <ulink
+            url="http://comparitech.net/parental-control">Parental
+            Control</ulink> for that.</para>
           </listitem>
 
           <listitem>

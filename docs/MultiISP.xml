@@ -18,21 +18,7 @@
     <pubdate><?dbtimestamp format="Y/m/d"?></pubdate>
 
     <copyright>
-      <year>2005</year>
-
-      <year>2006</year>
-
-      <year>2007</year>
-
-      <year>2008</year>
-
-      <year>2009</year>
-
-      <year>2010</year>
-
-      <year>2011</year>
-
-      <year>2012 2013</year>
+      <year>2005-2018</year>
 
       <holder>Thomas M. Eastep,</holder>
 
@@ -67,7 +53,7 @@
     <itemizedlist>
       <listitem>
         <para>The LARTC HOWTO: <ulink
-        url="http://www.lartc.org">http://www.lartc.org</ulink></para>
+        url="http://comparitech.net/lartc">http://comparitech.net/lartc</ulink></para>
       </listitem>
 
       <listitem>
