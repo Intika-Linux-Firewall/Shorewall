@@ -163,8 +163,8 @@ sub setup_route_marking() {
 		add_ijump_extended $mangle_table->{OUTPUT}     , j => $chainref2, $origin,                     mark => "--mark  $mark/$mask";
 
 		if ( have_ipsec ) {
-		    if ( have_capability( 'MARK_ANYWHERE' ) ) {
-			add_ijump_extended $filter_table->{forward_chain($interface)}, j => 'CONNMARK', $origin, targetopts => "--set-mark 0${exmask}",               , state_imatch('NEW'), policy => '--dir in --pol ipsec';
+		    if ( have_capability( 'MARK_ANYWHERE' ) && ( my $chainref = $filter_table->{forward_chain($interface)} ) ) {
+			add_ijump_extended $chainref, j => 'CONNMARK', $origin, targetopts => "--set-mark 0${exmask}",               , state_imatch('NEW'), policy => '--dir in --pol ipsec';
 		    } elsif ( have_capability( 'MANGLE_FORWARD' ) ) {
 			add_ijump_extended $mangle_table->{FORWARD},                   j => 'CONNMARK', $origin, targetopts => "--set-mark 0${exmask}", i => $physical, state_imatch('NEW'), policy => '--dir in --pol ipsec';
 		    }
