@@ -425,7 +425,7 @@ our $VERSION = 'MODULEVERSION';
 #      Established     - ^<z1-z2>
 #      Related         - +<z1-z2>
 #      Invalid         - _<z1-z2>
-#      Untracked       - &<z1-z2>
+#      Untracked       - =<z1-z2>
 #
 our %chain_table;
 our $raw_table;
@@ -2269,7 +2269,7 @@ sub invalid_chain($$) {
 # Name of the untracked chain between an ordered pair of zones
 #
 sub untracked_chain($$) {
-    '&' . &rules_chain(@_);
+    '=' . &rules_chain(@_);
 }
 
 #
