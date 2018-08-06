@@ -3775,7 +3775,7 @@ ipcalc_command() {
     elif [ $# -eq 3 ]; then
 	address=$2
 	vlsm=$(ip_vlsm $3)
-    elif [ $# -eq 0 ]; then
+    elif [ $# -eq 1 ]; then
 	missing_argument
     else
 	too_many_arguments $4
