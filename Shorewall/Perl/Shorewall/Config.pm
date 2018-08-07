@@ -2833,7 +2833,7 @@ sub evaluate_expression( $$$$ ) {
     }
 
     #                         $1      $2   $3                     -     $4
-    while ( $expression =~ m( ^(.*?) \$({)? (\d+|[a-zA-Z_]\w*) (?(2)}) (.*)$ )x ) {
+    while ( $expression =~ m( ^(.*?) \$(\{)? (\d+|[a-zA-Z_]\w*) (?(2)}) (.*)$ )x ) {
 	my ( $first, $var, $rest ) = ( $1, $3, $4);
 
 	if ( $var =~ /^\d+$/ ) {
@@ -2850,7 +2850,7 @@ sub evaluate_expression( $$$$ ) {
 
     if ( $chain ) {
 	#                         $1      $2   $3                     -     $4
-	while ( $expression =~ m( ^(.*?) \@({)? (\d+|[a-zA-Z]\w*) (?(2)}) (.*)$ )x ) {
+	while ( $expression =~ m( ^(.*?) \@(\{)? (\d+|[a-zA-Z]\w*) (?(2)}) (.*)$ )x ) {
 	    my ( $first, $var, $rest ) = ( $1, $3, $4);
 	    $var = numeric_value( $var ) if $var =~ /^\d/;
 	    $val = $var ? $actparams{$var} : $chain;
@@ -2861,7 +2861,7 @@ sub evaluate_expression( $$$$ ) {
     }
 
     #                         $1      $2   $3      -     $4
-    while ( $expression =~ m( ^(.*?) __({)? (\w+) (?(2)}) (.*)$ )x ) {
+    while ( $expression =~ m( ^(.*?) __(\{)? (\w+) (?(2)}) (.*)$ )x ) {
 	my ( $first, $cap, $rest ) = ( $1, $3, $4);
 
 	if ( exists $capdesc{$cap} ) {
@@ -3791,7 +3791,7 @@ sub expand_variables( \$ ) {
     my ( $lineref, $count ) = ( $_[0], 0 );
     my $chain = $actparams{chain};
     #                         $1      $2   $3                   -     $4
-    while ( $$lineref =~ m( ^(.*?) \$({)? (\d+|[a-zA-Z_]\w*) (?(2)}) (.*)$ )x ) {
+    while ( $$lineref =~ m( ^(.*?) \$(\{)? (\d+|[a-zA-Z_]\w*) (?(2)}) (.*)$ )x ) {
 
 	my ( $first, $var, $rest ) = ( $1, $3, $4);
 
@@ -3830,7 +3830,7 @@ sub expand_variables( \$ ) {
 	#
 	$$lineref =~ s/\\@/??/g;
 	#                         $1      $2   $3                     -     $4
-	while ( $$lineref =~ m( ^(.*?) \@({)? (\d+|[a-zA-Z_]\w*) (?(2)}) (.*)$ )x ) {
+	while ( $$lineref =~ m( ^(.*?) \@(\{)? (\d+|[a-zA-Z_]\w*) (?(2)}) (.*)$ )x ) {
 	    my ( $first, $var, $rest ) = ( $1, $3, $4);
 	    my $val = $var ? $actparams{$var} : $actparams{chain};
 	    $usedcaller = USEDCALLER if $var eq 'caller';
@@ -3846,7 +3846,7 @@ sub expand_variables( \$ ) {
 sub expand_shorewallrc_variables( \$ ) {
     my ( $lineref, $count ) = ( $_[0], 0 );
     #                         $1      $2   $3                  -     $4
-    while ( $$lineref =~ m( ^(.*?) \$({)? (\d+|[a-zA-Z]\w*) (?(2)}) (.*)$ )x ) {
+    while ( $$lineref =~ m( ^(.*?) \$(\{)? (\d+|[a-zA-Z]\w*) (?(2)}) (.*)$ )x ) {
 
 	my ( $first, $var, $rest ) = ( $1, $3, $4);
 
