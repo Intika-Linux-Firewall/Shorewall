@@ -1302,7 +1302,7 @@ SHELL cat /etc/shorewall/rules.d/*.rules 2&gt; /dev/null || true</programlisting
 
       <member><filename>macro</filename>.* files</member>
 
-      <member><filename>masq</filename></member>
+      <member><filename>snat</filename></member>
 
       <member><filename>nat</filename></member>
 
