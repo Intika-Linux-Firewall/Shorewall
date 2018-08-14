@@ -280,9 +280,9 @@
         <term>IPv4 Example 1:</term>
 
         <listitem>
-          <para>Drop Teredo packets from the net.</para>
+          <para>Drop 6to4 packets from the net.</para>
 
-          <programlisting>DROP          net:[2001::/32]            all</programlisting>
+          <programlisting>DROP          net:192.88.99.1            all</programlisting>
         </listitem>
       </varlistentry>
 
@@ -290,10 +290,10 @@
         <term>IPv4 Example 2:</term>
 
         <listitem>
-          <para>Don't subject packets from 2001:DB8::/64 to the remaining
+          <para>Don't subject packets from 70.90.191.120/29 to the remaining
           rules in the file.</para>
 
-          <programlisting>WHITELIST     net:[2001:DB8::/64]        all</programlisting>
+          <programlisting>WHITELIST     net:70.90.191.120/29       all</programlisting>
         </listitem>
       </varlistentry>
 
