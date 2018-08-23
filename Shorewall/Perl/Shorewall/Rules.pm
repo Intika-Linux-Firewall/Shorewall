@@ -3137,13 +3137,13 @@ sub process_rule ( $$$$$$$$$$$$$$$$$$$$ ) {
     if ( $actiontype & ( NATRULE | NONAT ) && ! ( $actiontype & NATONLY ) ) {
 	#
 	# Either a DNAT, REDIRECT or ACCEPT+ rule or an Action with NAT;
-	# don't apply rate limiting twice
 	#
 	$rule .= join( '',
 		       do_proto($proto, $ports, $sports),
 		       do_user( $user ) ,
 		       do_test( $mark , $globals{TC_MASK} ) ,
 		       do_connlimit( $connlimit ),
+		       do_ratelimit( $ratelimit, 'ACCEPT' ),
 		       do_time( $time ) ,
 		       do_headers( $headers ) ,
 		       do_condition( $condition , $chain ) ,
@@ -3239,12 +3239,12 @@ sub process_rule ( $$$$$$$$$$$$$$$$$$$$ ) {
 	#   - the destination IP will be the server IP   ($dest)  -- also done above
 	#   - there will be no log level (we log NAT rules in the nat table rather than in the filter table).
 	#   - the target will be ACCEPT.
+	#   - don't apply rate limiting twice
 	#
 	unless ( $actiontype & NATONLY ) {
 	    $rule = join( '',
 			  $matches,
 			  do_proto( $proto, $ports, $sports ),
-			  do_ratelimit( $ratelimit, 'ACCEPT' ),
 			  do_user $user,
 			  do_test( $mark , $globals{TC_MASK} ),
 			  do_condition( $condition , $chain ),
