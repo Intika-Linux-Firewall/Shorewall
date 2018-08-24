@@ -3140,6 +3140,7 @@ sub process_rule ( $$$$$$$$$$$$$$$$$$$$ ) {
 	#
 	$rule .= join( '',
 		       do_proto($proto, $ports, $sports),
+		       do_ratelimit( $ratelimit, 'ACCEPT' ),
 		       do_user( $user ) ,
 		       do_test( $mark , $globals{TC_MASK} ) ,
 		       do_connlimit( $connlimit ),
