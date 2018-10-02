@@ -5574,6 +5574,15 @@ sub process_snat1( $$$$$$$$$$$$ ) {
 	    $chainref = $interface ? ensure_chain('nat',  $pre_nat ? snat_chain $interface : masq_chain $interface) : $nat_table->{INPUT};
 	}
 
+	if ( $chainref->{complete} ) {
+	    if ( $interface ) {
+		warning_message( "Interface $interface entry generated no $toolname rule" );
+	    } else {
+		warning_message( "Entry generated no $toolname rule" );
+	    }
+	    next;
+	}
+
 	$baserule .= do_condition( $condition , $chainref->{name} );
 	#
 	# Handle IPSEC options, if any
