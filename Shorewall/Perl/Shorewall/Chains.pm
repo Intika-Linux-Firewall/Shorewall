@@ -9193,7 +9193,7 @@ sub create_netfilter_load( $ ) {
 	  '',
 	  "cat \${VARDIR}/.${utility}-input | \$command # Use this nonsensical form to appease SELinux",
 	  'if [ $? != 0 ]; then',
-	  qq(    fatal_error "iptables-restore Failed. Input is in \${VARDIR}/.${utility}-input"),
+	  qq(    fatal_error "$utility Failed. Input is in \${VARDIR}/.${utility}-input"),
 	  'fi'
 	);
 
