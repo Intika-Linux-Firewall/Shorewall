@@ -4,7 +4,7 @@
 #
 #     This program is under GPL [http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt]
 #
-#     (c) 2007-2017 - Tom Eastep (teastep@shorewall.net)
+#     (c) 2007-2018 - Tom Eastep (teastep@shorewall.net)
 #
 #	Complete documentation is available at http://shorewall.net
 #
@@ -382,7 +382,7 @@ sub generate_script_3() {
 	my $fn = find_file( $config{LOAD_HELPERS_ONLY} ? 'helpers' : 'modules' );
 
 	if ( -f $fn && ( $config{EXPORTMODULES} || ( $export && ! $fn =~ "^$globals{SHAREDIR}/" ) ) ) {
-	    emit 'echo MODULESDIR="$MODULESDIR" > ${VARDIR}/.modulesdir';
+	    emit 'echo MODULESDIR=\"$MODULESDIR\" > ${VARDIR}/.modulesdir';
 	    emit 'cat > ${VARDIR}/.modules << EOF';
 	    open_file $fn;
 

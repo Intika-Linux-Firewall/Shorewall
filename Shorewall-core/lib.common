@@ -1,7 +1,7 @@
 #
 # Shorewall 5.2 -- /usr/share/shorewall/lib.common
 #
-#     (c) 2010-2017 - Tom Eastep (teastep@shorewall.net)
+#     (c) 2010-2018 - Tom Eastep (teastep@shorewall.net)
 #
 #	Complete documentation is available at http://shorewall.net
 #
@@ -419,7 +419,7 @@ load_kernel_modules() # $1 = Yes, if we are to save moduleinfo in $VARDIR
 	. $modules
 	if [ $savemoduleinfo = Yes ]; then
 	    [ -d ${VARDIR} ] || mkdir -p ${VARDIR}
-	    echo MODULESDIR="$MODULESDIR" > ${VARDIR}/.modulesdir
+	    echo MODULESDIR=\"$MODULESDIR\" > ${VARDIR}/.modulesdir
 	    cp -f $modules ${VARDIR}/.modules
 	fi
     elif [ $savemoduleinfo = Yes ]; then
