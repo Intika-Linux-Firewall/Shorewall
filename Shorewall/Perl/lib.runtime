@@ -963,7 +963,7 @@ add_gateway() # $1 = Delta $2 = Table Number
     local delta
     local dev
 
-    route=`$IP -4 -o route ls table $2 | grep ^default | sed 's/default //; s/[\]//g'`
+    route=`$IP -4 -o route ls table $2 | grep ^default | sed 's/default //; s/linkdown//g; s/[\]//g'`
 
     if [ -z "$route" ]; then
 	run_ip route add default scope global table $2 $1
@@ -997,7 +997,7 @@ delete_gateway() # $! = Description of the Gateway $2 = table number $3 = device
     local gateway
     local dev
 
-    route=`$IP -4 -o route ls table $2 | grep ^default | sed 's/[\]//g'`
+    route=`$IP -4 -o route ls table $2 | grep ^default | sed 's/linkdown//g; s/[\]//g'`
     gateway=$1
 
     if [ -n "$route" ]; then
