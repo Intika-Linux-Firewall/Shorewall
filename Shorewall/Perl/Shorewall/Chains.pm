@@ -3340,10 +3340,17 @@ sub initialize_chain_table($) {
 	set_optflags( $chainref, DONT_OPTIMIZE | DONT_DELETE | DONT_MOVE );
 	add_commands( $chainref, '[ -f ${VARDIR}/.nat_DOCKER ] && cat ${VARDIR}/.nat_DOCKER >&3' );
 	$chainref = new_standard_chain( 'DOCKER-INGRESS'   );
+	set_optflags( $chainref, DONT_OPTIMIZE | DONT_DELETE | DONT_MOVE );
+	add_commands( $chainref, '[ -f ${VARDIR}/.filter_DOCKER-INGRESS           ] && cat ${VARDIR}/.filter_DOCKER-INGRESS   >&3' );
 	$chainref = new_standard_chain( 'DOCKER-ISOLATION' );
 	set_optflags( $chainref, DONT_OPTIMIZE | DONT_DELETE | DONT_MOVE );
-	add_commands( $chainref, '[ -f ${VARDIR}/.filter_DOCKER-INGRESS   ] && cat ${VARDIR}/.filter_DOCKER-INGRESS   >&3' );
-	add_commands( $chainref, '[ -f ${VARDIR}/.filter_DOCKER-ISOLATION ] && cat ${VARDIR}/.filter_DOCKER-ISOLATION >&3' );
+	add_commands( $chainref, '[ -f ${VARDIR}/.filter_DOCKER-ISOLATION         ] && cat ${VARDIR}/.filter_DOCKER-ISOLATION >&3' );
+	$chainref = new_standard_chain( 'DOCKER-ISOLATION-STAGE-1' );
+	set_optflags( $chainref, DONT_OPTIMIZE | DONT_DELETE | DONT_MOVE );
+	add_commands( $chainref, '[ -f ${VARDIR}/.filter_DOCKER-ISOLATION-STAGE-1 ] && cat ${VARDIR}/.filter_DOCKER-ISOLATION-STAGE-1 >&3' );
+	$chainref = new_standard_chain( 'DOCKER-ISOLATION-STAGE-2' );
+	set_optflags( $chainref, DONT_OPTIMIZE | DONT_DELETE | DONT_MOVE );
+	add_commands( $chainref, '[ -f ${VARDIR}/.filter_DOCKER-ISOLATION-STAGE-2 ] && cat ${VARDIR}/.filter_DOCKER-ISOLATION-STAGE-2 >&3' );
     }
 
     my $ruleref = transform_rule( $globals{LOGLIMIT} );
@@ -8620,7 +8627,19 @@ sub save_docker_rules($) {
 	  qq(    $tool -t nat -S POSTROUTING | tail -n +2 | fgrep -v SHOREWALL > \${VARDIR}/.nat_POSTROUTING),
 	  qq(    $tool -t filter -S DOCKER | tail -n +2 > \${VARDIR}/.filter_DOCKER),
 	  qq(    [ -n "\$g_dockeringress" ] && $tool -t filter -S DOCKER-INGRESS   | tail -n +2 > \${VARDIR}/.filter_DOCKER-INGRESS),
-	  qq(    [ -n "\$g_dockernetwork" ] && $tool -t filter -S DOCKER-ISOLATION | tail -n +2 > \${VARDIR}/.filter_DOCKER-ISOLATION)
+	  qq(),
+	  qq(    case "\$g_dockernetwork" in),
+	  qq(        One\)),
+	  qq(            rm -f \${VARDIR}/.filter_DOCKER-ISOLATION*),
+	  qq(            $tool -t filter -S DOCKER-ISOLATION | tail -n +2 > \${VARDIR}/.filter_DOCKER-ISOLATION),
+	  qq(            ;;),
+	  qq(        Two\)),
+	  qq(            rm -f \${VARDIR}/.filter_DOCKER-ISOLATION*),
+	  qq(            $tool -t filter -S DOCKER-ISOLATION-STAGE-1 | tail -n +2 > \${VARDIR}/.filter_DOCKER-ISOLATION-STAGE-1),
+	  qq(            $tool -t filter -S DOCKER-ISOLATION-STAGE-2 | tail -n +2 > \${VARDIR}/.filter_DOCKER-ISOLATION-STAGE-2),
+	  qq(            ;;),
+	  qq(    esac),
+	  qq(),
 	);
 
     if ( known_interface( 'docker0' ) ) {
@@ -8636,7 +8655,7 @@ sub save_docker_rules($) {
 	  q(    rm -f ${VARDIR}/.nat_POSTROUTING),
 	  q(    rm -f ${VARDIR}/.filter_DOCKER),
 	  q(    rm -f ${VARDIR}/.filter_DOCKER-INGRESS),
-	  q(    rm -f ${VARDIR}/.filter_DOCKER-ISOLATION),
+	  q(    rm -f ${VARDIR}/.filter_DOCKER-ISOLATION*),
 	  q(    rm -f ${VARDIR}/.filter_FORWARD),
 	  q(fi)
 	)
@@ -9140,7 +9159,11 @@ sub create_netfilter_load( $ ) {
 			enter_cat_mode;
 		    } elsif ( $name eq 'DOCKER-ISOLATION' ) {
 			enter_cmd_mode;
-			emit( '[ -n "$g_dockernetwork" ] && echo ":DOCKER-ISOLATION - [0:0]" >&3' );
+			emit( '[ "$g_dockernetwork" = One ] && echo ":DOCKER-ISOLATION - [0:0]" >&3' );
+			enter_cat_mode;
+		    } elsif ( $name =~ /^DOCKER-ISOLATION-/ ) {
+			enter_cmd_mode;
+			emit( qq([ "\$g_dockernetwork" = Two ] && echo ":$name - [0:0]" >&3) );
 			enter_cat_mode;
 		    } elsif ( $name eq 'DOCKER-INGRESS' ) {
 			enter_cmd_mode;
@@ -9247,8 +9270,12 @@ sub preview_netfilter_load() {
 			print "\n";
 		    } elsif ( $name eq 'DOCKER-ISOLATION' ) {
 			enter_cmd_mode1 unless $mode == CMD_MODE;
-			print( '[ -n "$g_dockernetwork" ] && echo ":DOCKER-ISOLATION - [0:0]" >&3' );
+			print( '[ "$g_dockernetwork" = One ] && echo ":DOCKER-ISOLATION - [0:0]" >&3' );
 			print "\n";
+			enter_cat_mode1;
+		    } elsif ( $name =~ /^DOCKER-ISOLATION-/ ) {
+			enter_cmd_mode1 unless $mode == CMD_MODE;
+			emit( qq([ "\$g_dockernetwork" = Two ] && echo ":$name - [0:0]" >&3) );
 			enter_cat_mode1;
 		    } elsif ( $name eq 'DOCKER-INGRESS' ) {
 			enter_cmd_mode1 unless $mode == CMD_MODE;
@@ -9341,6 +9368,10 @@ sub create_stop_load( $ ) {
 		    } elsif ( $name eq 'DOCKER-ISOLATION' ) {
 			enter_cmd_mode;
 			emit( '[ -n "$g_dockernetwork" ] && echo ":DOCKER-ISOLATION - [0:0]" >&3' );
+			enter_cat_mode;
+		    } elsif ( $name =~ /^DOCKER-ISOLATION-/ ) {
+			enter_cmd_mode;
+			emit( qq([ "\$g_dockernetwork" = Two ] && echo ":$name - [0:0]" >&3) );
 			enter_cat_mode;
 		    } elsif ( $name eq 'DOCKER-INGRESS' ) {
 			enter_cmd_mode;
