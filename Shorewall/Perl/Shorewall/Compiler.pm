@@ -269,6 +269,7 @@ sub generate_script_2() {
 	      'chain_exists DOCKER nat && chain_exists DOCKER && g_docker=Yes',
 	    );
 	emit( 'chain_exists DOCKER-INGRESS   && g_dockeringress=Yes' );
+	emit( 'chain_exists DOCKER-USER      && g_dockeruser=Yes' );
 	emit( 'if chain_exists DOCKER-ISOLATION; then',
 	      '    g_dockernetwork=One',
 	      'elif chain_exists DOCKER-ISOLATION-STAGE-1; then',

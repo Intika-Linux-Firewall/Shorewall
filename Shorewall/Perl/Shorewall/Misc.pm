@@ -667,15 +667,16 @@ sub create_docker_rules() {
 
     my $chainref = $filter_table->{FORWARD};
 
-    add_commands( $chainref, '[ -n "$g_dockeringress" ] && echo "-A FORWARD -j DOCKER-INGRESS"   >&3', );
+    add_commands( $chainref, '[ -n "$g_dockeringress" ] && echo "-A FORWARD -j DOCKER-INGRESS" >&3', );
+    add_commands( $chainref, '[ -n "$g_dockeruser" ]    && echo "-A FORWARD -j DOCKER-USER"    >&3', );
     add_commands( $chainref ,
 		  '',
 		  'case "$g_dockernetwork" in',
 		  '    One)',
-		  '        echo "-A FORWARD -j DOCKER-ISOLATION"',
+		  '        echo "-A FORWARD -j DOCKER-ISOLATION" >&3',
 		  '        ;;',
 		  '    Two)',
-		  '        echo "-A FORWARD -j DOCKER-ISOLATION-STAGE-1"',
+		  '        echo "-A FORWARD -j DOCKER-ISOLATION-STAGE-1" >&3',
 		  '        ;;',
 		  'esac' );
 

@@ -3342,6 +3342,9 @@ sub initialize_chain_table($) {
 	$chainref = new_standard_chain( 'DOCKER-INGRESS'   );
 	set_optflags( $chainref, DONT_OPTIMIZE | DONT_DELETE | DONT_MOVE );
 	add_commands( $chainref, '[ -f ${VARDIR}/.filter_DOCKER-INGRESS           ] && cat ${VARDIR}/.filter_DOCKER-INGRESS   >&3' );
+	$chainref = new_standard_chain( 'DOCKER-USER'   );
+	set_optflags( $chainref, DONT_OPTIMIZE | DONT_DELETE | DONT_MOVE );
+	add_commands( $chainref, '[ -f ${VARDIR}/.filter_DOCKER-USER              ] && cat ${VARDIR}/.filter_DOCKER-USER      >&3' );
 	$chainref = new_standard_chain( 'DOCKER-ISOLATION' );
 	set_optflags( $chainref, DONT_OPTIMIZE | DONT_DELETE | DONT_MOVE );
 	add_commands( $chainref, '[ -f ${VARDIR}/.filter_DOCKER-ISOLATION         ] && cat ${VARDIR}/.filter_DOCKER-ISOLATION >&3' );
@@ -8627,6 +8630,7 @@ sub save_docker_rules($) {
 	  qq(    $tool -t nat -S POSTROUTING | tail -n +2 | fgrep -v SHOREWALL > \${VARDIR}/.nat_POSTROUTING),
 	  qq(    $tool -t filter -S DOCKER | tail -n +2 > \${VARDIR}/.filter_DOCKER),
 	  qq(    [ -n "\$g_dockeringress" ] && $tool -t filter -S DOCKER-INGRESS   | tail -n +2 > \${VARDIR}/.filter_DOCKER-INGRESS),
+	  qq(    [ -n "\$g_dockeruser" ]    && $tool -t filter -S DOCKER-USER      | tail -n +2 > \${VARDIR}/.filter_DOCKER-USER),
 	  qq(),
 	  qq(    case "\$g_dockernetwork" in),
 	  qq(        One\)),
@@ -8655,6 +8659,7 @@ sub save_docker_rules($) {
 	  q(    rm -f ${VARDIR}/.nat_POSTROUTING),
 	  q(    rm -f ${VARDIR}/.filter_DOCKER),
 	  q(    rm -f ${VARDIR}/.filter_DOCKER-INGRESS),
+	  q(    rm -f ${VARDIR}/.filter_DOCKER-USER),
 	  q(    rm -f ${VARDIR}/.filter_DOCKER-ISOLATION*),
 	  q(    rm -f ${VARDIR}/.filter_FORWARD),
 	  q(fi)
@@ -9169,6 +9174,10 @@ sub create_netfilter_load( $ ) {
 			enter_cmd_mode;
 			emit( '[ -n "$g_dockeringress" ] && echo ":DOCKER-INGRESS - [0:0]" >&3' );
 			enter_cat_mode;
+		    } elsif ( $name eq 'DOCKER-USER' ) {
+			enter_cmd_mode;
+			emit( '[ -n "$g_dockeruser" ] && echo ":DOCKER-USER - [0:0]" >&3' );
+			enter_cat_mode;
 		    } else {		    
 			emit_unindented ":$name - [0:0]";
 		    }
@@ -9282,6 +9291,11 @@ sub preview_netfilter_load() {
 			print( '[ -n "$g_dockeringress" ] && echo ":DOCKER-INGRESS - [0:0]" >&3' );
 			print "\n";
 			enter_cat_mode1;
+		    } elsif ( $name eq 'DOCKER-USER' ) {
+			enter_cmd_mode1 unless $mode == CMD_MODE;
+			print( '[ -n "$g_dockeruser" ] && echo ":DOCKER-USER - [0:0]" >&3' );
+			print "\n";
+			enter_cat_mode1;
 		    } else {		    
 			enter_cmd_mode1 unless $mode == CMD_MODE;
 			print( ":$name - [0:0]\n" );
@@ -9376,6 +9390,10 @@ sub create_stop_load( $ ) {
 		    } elsif ( $name eq 'DOCKER-INGRESS' ) {
 			enter_cmd_mode;
 			emit( '[ -n "$g_dockeringress" ] && echo ":DOCKER-INGRESS - [0:0]" >&3' );
+			enter_cat_mode;
+		    } elsif ( $name eq 'DOCKER-USER' ) {
+			enter_cmd_mode;
+			emit( '[ -n "$g_dockeruser" ] && echo ":DOCKER-USER - [0:0]" >&3' );
 			enter_cat_mode;
 		    } else {		    
 			emit_unindented ":$name - [0:0]";
