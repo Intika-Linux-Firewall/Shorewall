@@ -8532,6 +8532,18 @@ sub enter_cmd_mode() {
 }
 
 #
+# These two assure that we're in a particular mode
+#
+
+sub ensure_cat_mode() {
+    enter_cat_mode unless $mode == CAT_MODE;
+}
+
+sub ensure_cmd_mode() {
+    enter_cmd_mode unless $mode == CMD_MODE;
+}
+
+#
 # Emits the passed rule (input to iptables-restore) or command
 #
 sub emitr( $$ ) {
@@ -8546,7 +8558,7 @@ sub emitr( $$ ) {
 	    #
 	    # A rule
 	    #
-	    enter_cat_mode unless $mode == CAT_MODE;
+	    ensure_cat_mode;
 
 	    if ( $file_comments && ( my $origin = $ruleref->{origin} ) ) {
 		emit_unindented '# ' . $origin;
@@ -8557,7 +8569,7 @@ sub emitr( $$ ) {
 	    #
 	    # A command
 	    #
-	    enter_cmd_mode unless $mode == CMD_MODE;
+	    ensure_cmd_mode;
 
 	    if ( exists $ruleref->{cmd} ) {
 		emit join( '', '    ' x $ruleref->{cmdlevel}, $ruleref->{cmd} );
@@ -8590,6 +8602,14 @@ sub enter_cmd_mode1() {
     $mode = CMD_MODE;
 }
 
+sub ensure_cat_mode1() {
+    enter_cat_mode1 unless $mode == CAT_MODE;
+}
+
+sub ensure_cmd_mode1() {
+    enter_cmd_mode1 unless $mode == CMD_MODE;
+}
+
 sub emitr1( $$ ) {
     my ( $chainref, $ruleref ) = @_;
 
@@ -8598,14 +8618,14 @@ sub emitr1( $$ ) {
 	    #
 	    # A rule
 	    #
-	    enter_cat_mode1 unless $mode == CAT_MODE;
+	    ensure_cat_mode1;
 
 	    print format_rule( $chainref, $ruleref ) . "\n";
 	} else {
 	    #
 	    # A command
 	    #
-	    enter_cmd_mode1 unless $mode == CMD_MODE;
+	    ensure_cmd_mode1;
 
 	    if ( exists $ruleref->{cmd} ) {
 		emitstd $ruleref->{cmd};
@@ -9159,29 +9179,26 @@ sub create_netfilter_load( $ ) {
 
 		if ( $name =~ /^DOCKER/ ) {
 		    if ( $name eq 'DOCKER' ) {
-			enter_cmd_mode;
+			ensure_cmd_mode;
 			emit( '[ -n "$g_docker" ] && echo ":DOCKER - [0:0]" >&3' );
-			enter_cat_mode;
 		    } elsif ( $name eq 'DOCKER-ISOLATION' ) {
-			enter_cmd_mode;
+			ensure_cmd_mode;
 			emit( '[ "$g_dockernetwork" = One ] && echo ":DOCKER-ISOLATION - [0:0]" >&3' );
-			enter_cat_mode;
 		    } elsif ( $name =~ /^DOCKER-ISOLATION-/ ) {
-			enter_cmd_mode;
+			ensure_cmd_mode;
 			emit( qq([ "\$g_dockernetwork" = Two ] && echo ":$name - [0:0]" >&3) );
-			enter_cat_mode;
 		    } elsif ( $name eq 'DOCKER-INGRESS' ) {
-			enter_cmd_mode;
+			ensure_cmd_mode;
 			emit( '[ -n "$g_dockeringress" ] && echo ":DOCKER-INGRESS - [0:0]" >&3' );
-			enter_cat_mode;
 		    } elsif ( $name eq 'DOCKER-USER' ) {
-			enter_cmd_mode;
+			ensure_cmd_mode;
 			emit( '[ -n "$g_dockeruser" ] && echo ":DOCKER-USER - [0:0]" >&3' );
-			enter_cat_mode;
 		    } else {		    
+			ensure_cat_mode;
 			emit_unindented ":$name - [0:0]";
 		    }
 		} else {
+		    ensure_cat_mode;
 		    emit_unindented ":$name - [0:0]";
 		}
 
@@ -9199,17 +9216,19 @@ sub create_netfilter_load( $ ) {
 	#
 	# Then emit the rules
 	#
+	ensure_cat_mode;
+
 	for my $chainref ( @chains ) {
 	    emitr( $chainref, $_ ) for @{$chainref->{rules}};
 	}
 	#
 	# Commit the changes to the table
 	#
-	enter_cat_mode unless $mode == CAT_MODE;
+	ensure_cat_mode;
 	emit_unindented 'COMMIT';
     }
 
-    enter_cmd_mode;
+    ensure_cmd_mode;
 
     pop_indent, emit "fi\n";
     #
@@ -9274,33 +9293,31 @@ sub preview_netfilter_load() {
 		assert( $chainref->{cmdlevel} == 0 , $name );
 		if ( $name =~ /^DOCKER/ ) {
 		    if ( $name eq 'DOCKER' ) {
-			enter_cmd_mode1;
+			ensure_cmd_mode1;
 			print( '[ -n "$g_docker" ] && echo ":DOCKER - [0:0]" >&3' );
 			print "\n";
 		    } elsif ( $name eq 'DOCKER-ISOLATION' ) {
-			enter_cmd_mode1 unless $mode == CMD_MODE;
+			ensure_cmd_mode1;
 			print( '[ "$g_dockernetwork" = One ] && echo ":DOCKER-ISOLATION - [0:0]" >&3' );
 			print "\n";
-			enter_cat_mode1;
 		    } elsif ( $name =~ /^DOCKER-ISOLATION-/ ) {
-			enter_cmd_mode1 unless $mode == CMD_MODE;
-			emit( qq([ "\$g_dockernetwork" = Two ] && echo ":$name - [0:0]" >&3) );
-			enter_cat_mode1;
+			ensure_cmd_mode1;
+			print( qq([ "\$g_dockernetwork" = Two ] && echo ":$name - [0:0]" >&3) );
+			print "\n";
 		    } elsif ( $name eq 'DOCKER-INGRESS' ) {
-			enter_cmd_mode1 unless $mode == CMD_MODE;
+			ensure_cmd_mode1;
 			print( '[ -n "$g_dockeringress" ] && echo ":DOCKER-INGRESS - [0:0]" >&3' );
 			print "\n";
-			enter_cat_mode1;
 		    } elsif ( $name eq 'DOCKER-USER' ) {
-			enter_cmd_mode1 unless $mode == CMD_MODE;
+			ensure_cmd_mode1;
 			print( '[ -n "$g_dockeruser" ] && echo ":DOCKER-USER - [0:0]" >&3' );
 			print "\n";
-			enter_cat_mode1;
-		    } else {		    
-			enter_cmd_mode1 unless $mode == CMD_MODE;
+		    } else {
+			ensure_cmd_mode1;
 			print( ":$name - [0:0]\n" );
 		    }
 		} else {
+		    ensure_cat_mode1;
 		    print( ":$name - [0:0]\n" );
 		}
 
@@ -9310,13 +9327,15 @@ sub preview_netfilter_load() {
 	#
 	# Then emit the rules
 	#
+	ensure_cat_mode1;
+
 	for my $chainref ( @chains ) {
 	    emitr1($chainref, $_ ) for @{$chainref->{rules}};
 	}
 	#
 	# Commit the changes to the table
 	#
-	enter_cat_mode1 unless $mode == CAT_MODE;
+	ensure_cat_mode1;
 	print "COMMIT\n";
     }
 
@@ -9376,29 +9395,26 @@ sub create_stop_load( $ ) {
 		assert( $chainref->{cmdlevel} == 0 , $name );
 		if ( $name =~ /^DOCKER/ ) {
 		    if ( $name eq 'DOCKER' ) {
-			enter_cmd_mode;
+			ensure_cmd_mode;
 			emit( '[ -n "$g_docker" ] && echo ":DOCKER - [0:0]" >&3' );
-			enter_cat_mode;
 		    } elsif ( $name eq 'DOCKER-ISOLATION' ) {
-			enter_cmd_mode;
+			ensure_cmd_mode;
 			emit( '[ -n "$g_dockernetwork" ] && echo ":DOCKER-ISOLATION - [0:0]" >&3' );
-			enter_cat_mode;
 		    } elsif ( $name =~ /^DOCKER-ISOLATION-/ ) {
-			enter_cmd_mode;
+			ensure_cmd_mode;
 			emit( qq([ "\$g_dockernetwork" = Two ] && echo ":$name - [0:0]" >&3) );
-			enter_cat_mode;
 		    } elsif ( $name eq 'DOCKER-INGRESS' ) {
-			enter_cmd_mode;
+			ensure_cmd_mode;
 			emit( '[ -n "$g_dockeringress" ] && echo ":DOCKER-INGRESS - [0:0]" >&3' );
-			enter_cat_mode;
 		    } elsif ( $name eq 'DOCKER-USER' ) {
-			enter_cmd_mode;
+			ensure_cmd_mode;
 			emit( '[ -n "$g_dockeruser" ] && echo ":DOCKER-USER - [0:0]" >&3' );
-			enter_cat_mode;
 		    } else {		    
+			ensure_cat_mode;
 			emit_unindented ":$name - [0:0]";
 		    }
 		} else {
+		    ensure_cat_mode;
 		    emit_unindented ":$name - [0:0]";
 		}
 
@@ -9408,6 +9424,8 @@ sub create_stop_load( $ ) {
 	#
 	# Then emit the rules
 	#
+	ensure_cat_mode;
+
 	for my $chainref ( @chains ) {
 	    emitr( $chainref, $_ ) for @{$chainref->{rules}};
 	}
