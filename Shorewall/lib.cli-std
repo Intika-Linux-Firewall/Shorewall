@@ -456,6 +456,16 @@ compiler() {
 
     ensure_root
     #
+    # Let params and the compiler know the base configuration directory
+    #
+    if [ -n "$g_shorewalldir" ]; then
+	SW_CONFDIR="$g_shorewalldir"
+    else
+	SW_CONFDIR="$g_confdir"
+    fi
+
+    export SW_CONFDIR
+    #
     # We've now set g_shorewalldir so recalculate CONFIG_PATH
     #
     [ -n "$g_haveconfig" ] || ensure_config_path
