@@ -1580,7 +1580,7 @@ sub merge_levels ($$) {
     my $tag      = $supparts[2];
 
     if ( @supparts == 3 ) {
-	return "$subordinate:$tag"    if $target =~ /^(?:NFLOG|ULOG)\b/;
+	return "$subordinate:$tag"    if $target =~ /^NFLOG\b/;
 	return "$target:none!:$tag"   if $level eq 'none!';
 	return "$target:$level:$tag"  if $level =~ /!$/;
 	return $subordinate           if $subparts >= 2;
@@ -1588,7 +1588,7 @@ sub merge_levels ($$) {
     }
 
     if ( @supparts == 2 ) {
-	return $subordinate           if $target =~ /^(?:NFLOG|ULOG)\b/;
+	return $subordinate           if $target =~ /^NFLOG\b/;
 	return "$target:none!"        if $level eq 'none!';
 	return "$target:$level"       if ($level =~ /!$/) || ($subparts < 2);
     }

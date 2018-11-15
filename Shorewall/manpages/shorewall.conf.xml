@@ -91,6 +91,11 @@
       <programlisting>LOG_LEVEL="NFLOG(1,0,1)"</programlisting>
     </note>
 
+    <note>
+      <para>Support for ULOG was removed in Shorewall 5.2.2 as Netfilter has
+      removed support for ULOG logging.</para>
+    </note>
+
     <para>Beginning with Shorewall 5.0.0, the log level may be followed by a
     colon (":") and a <firstterm>log tag</firstterm>. The log tag normally
     follows the packet disposition in Shorewall-generated Netfilter log
@@ -1425,7 +1430,8 @@ net     all  DROP   info</programlisting>then the chain name is 'net-all'
               <listitem>
                 <para>IPv4 only.</para>
 
-                <para>Use ULOG logging to ulogd.</para>
+                <para>Use ULOG logging to ulogd. Support for ULOG was removed
+                in Shorewall 5.2.2.</para>
               </listitem>
             </varlistentry>
 

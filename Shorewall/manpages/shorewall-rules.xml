@@ -905,9 +905,10 @@
               role="bold">ULOG</emphasis>[(<replaceable>ulog-parameters</replaceable>)]</term>
 
               <listitem>
-                <para>IPv4 only. Added in Shorewall 4.5.10. Queues matching
-                packets to a back end logging daemon via a netlink socket then
-                continues to the next rule. See <ulink
+                <para>IPv4 only. Added in Shorewall 4.5.10 and removed in
+                5.2.2. Queues matching packets to a back end logging daemon
+                via a netlink socket then continues to the next rule. See
+                <ulink
                 url="shorewall-logging.html">shorewall-logging(5)</ulink>.</para>
 
                 <para>Similar to<emphasis role="bold">

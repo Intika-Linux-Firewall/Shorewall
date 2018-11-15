@@ -450,13 +450,13 @@ use constant { STANDARD     =>      0x1,       #defined by Netfilter
 	       REDIRECT     =>     0x20,       #'REDIRECT'
 	       ACTION       =>     0x40,       #An action (may be built-in)
 	       MACRO        =>     0x80,       #A Macro
-	       LOGRULE      =>    0x100,       #'LOG','ULOG','NFLOG'
+	       LOGRULE      =>    0x100,       #'LOG','NFLOG'
 	       NFQ          =>    0x200,       #'NFQUEUE'
 	       CHAIN        =>    0x400,       #Manual Chain
 	       SET          =>    0x800,       #SET
 	       AUDIT        =>   0x1000,       #A_ACCEPT, etc
 	       HELPER       =>   0x2000,       #CT:helper
-	       NFLOG        =>   0x4000,       #NFLOG or ULOG
+	       NFLOG        =>   0x4000,       #NFLOG
 	       INLINE       =>   0x8000,       #Inline action
 	       STATEMATCH   =>  0x10000,       #action.Invalid, action.Related, etc.
 	       USERBUILTIN  =>  0x20000,       #Builtin action from user's actions file.
@@ -656,7 +656,6 @@ our %builtin_target = ( ACCEPT      => STANDARD + FILTER_TABLE + NAT_TABLE + MAN
 			TPROXY      => STANDARD                            + MANGLE_TABLE,
 			TRACE       => STANDARD                                           + RAW_TABLE,
 			TTL         => STANDARD                            + MANGLE_TABLE,
-			ULOG        => STANDARD + FILTER_TABLE + NAT_TABLE + MANGLE_TABLE + RAW_TABLE,
 		        );
 
 our %ipset_exists;
@@ -3223,7 +3222,6 @@ sub initialize_chain_table($) {
 		    'REDIRECT'        => NATRULE  + REDIRECT + OPTIONS,
 		    'REDIRECT-'       => NATRULE  + REDIRECT + NATONLY,
 		    'TARPIT'          => STANDARD + TARPIT + OPTIONS,
-		    'ULOG'            => STANDARD + LOGRULE + NFLOG + OPTIONS,
 		    'WHITELIST'       => STANDARD,
 		   );
 
@@ -3281,7 +3279,6 @@ sub initialize_chain_table($) {
 		    'NFLOG'           => STANDARD + LOGRULE + NFLOG + OPTIONS,
 		    'NFQUEUE'         => STANDARD + NFQ + OPTIONS,
 		    'NFQUEUE!'        => STANDARD + NFQ,
-		    'ULOG'            => STANDARD + LOGRULE + NFLOG,
 		    'ADD'             => STANDARD + SET,
 		    'DEL'             => STANDARD + SET,
 		    'WHITELIST'       => STANDARD,
@@ -6756,9 +6753,7 @@ sub log_rule_limit( $$$$$$$$;$ ) {
     }
 
     if ( $config{LOGFORMAT} =~ /^\s*$/ ) {
-	if ( $level =~ '^ULOG' ) {
-	    $prefix = "-j $level ";
-	} elsif  ( $level =~ /^NFLOG/ ) {
+	if  ( $level =~ /^NFLOG/ ) {
 	    $prefix = "-j $level ";
 	} else {
 	    my $flags = $globals{LOGPARMS};
@@ -6803,9 +6798,7 @@ sub log_rule_limit( $$$$$$$$;$ ) {
 	    warning_message "Log Prefix shortened to \"$prefix\"";
 	}
 
-	if ( $level =~ '^ULOG' ) {
-	    $prefix = "-j $level --ulog-prefix \"$prefix\" ";
-	} elsif  ( $level =~ /^NFLOG/ ) {
+	if  ( $level =~ /^NFLOG/ ) {
 	    $prefix = "-j $level --nflog-prefix \"$prefix\" ";
 	} elsif ( $level =~ '^LOGMARK' ) {
 	    $prefix = join( '', substr( $prefix, 0, 12 ) , ':' ) if length $prefix > 13;
@@ -6855,9 +6848,7 @@ sub log_irule_limit( $$$$$$$$@ ) {
     }
 
     if ( $config{LOGFORMAT} =~ /^\s*$/ ) {
-	if ( $level =~ '^ULOG' ) {
-	    $prefix = "$level";
-	} elsif  ( $level =~ /^NFLOG/ ) {
+	if  ( $level =~ /^NFLOG/ ) {
 	    $prefix = "$level";
 	} else {
 	    my $flags = $globals{LOGPARMS};
@@ -6902,9 +6893,7 @@ sub log_irule_limit( $$$$$$$$@ ) {
 	    warning_message "Log Prefix shortened to \"$prefix\"";
 	}
 
-	if ( $level =~ '^ULOG' ) {
-	    $prefix = "$level --ulog-prefix \"$prefix\"";
-	} elsif  ( $level =~ /^NFLOG/ ) {
+	if  ( $level =~ /^NFLOG/ ) {
 	    $prefix = "$level --nflog-prefix \"$prefix\"";
 	} elsif ( $level =~ '^LOGMARK' ) {
 	    $prefix = join( '', substr( $prefix, 0, 12 ) , ':' ) if length $prefix > 13;

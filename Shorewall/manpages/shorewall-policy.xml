@@ -279,6 +279,11 @@
           separate log through use of ulogd (<ulink
           url="http://www.netfilter.org/projects/ulogd/index.html">http://www.netfilter.org/projects/ulogd/index.html</ulink>).</para>
 
+          <note>
+            <para>Support for ULOG was removed in Shorewall 5.2.2 as Netfilter
+            has dropped support for ULOG.</para>
+          </note>
+
           <para>For a description of logging, see <ulink
           url="/shorewall_logging.html">shorewall-logging(5)</ulink>.</para>
 

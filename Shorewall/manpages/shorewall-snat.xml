@@ -221,9 +221,10 @@
               role="bold">ULOG</emphasis>[(<replaceable>ulog-parameters</replaceable>)]</term>
 
               <listitem>
-                <para>IPv4 only. Added in Shorewall 5.1.9. Queues matching
-                packets to a back end logging daemon via a netlink socket then
-                continues to the next rule. See <ulink
+                <para>IPv4 only. Added in Shorewall 5.1.9 and removed in
+                Shorewall 5.2.2. Queues matching packets to a back end logging
+                daemon via a netlink socket then continues to the next rule.
+                See <ulink
                 url="shorewall-logging.html">shorewall-logging(5)</ulink>.</para>
 
                 <para>Similar to<emphasis role="bold">
@@ -288,7 +289,7 @@
 
           <para>Beginning with Shorewall 5.1.12, SNAT may be performed in the
           nat table's INPUT chain by specifying $FW rather than one or more
-          interfaces. </para>
+          interfaces.</para>
 
           <para>Each interface must match an entry in <ulink
           url="/manpages/shorewall-interfaces.html">shorewall-interfaces</ulink>(5).
