@@ -2781,7 +2781,7 @@ sub process_rule ( $$$$$$$$$$$$$$$$$$$$ ) {
 	      LOG => sub { fatal_error 'LOG requires a log level' unless supplied $loglevel; } ,
 
 	      HELPER => sub { 
-		  fatal_error "HELPER requires require that the helper be specified in the HELPER column" if $helper eq '-';
+		  fatal_error "HELPER requires that a helper be specified in the HELPER column" if $helper eq '-';
 		  fatal_error "HELPER rules may only appear in the NEW section" unless $section == NEW_SECTION;
 		  $action = ''; } ,
 
