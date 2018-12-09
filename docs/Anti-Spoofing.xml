@@ -85,7 +85,7 @@
     server. It then sends a packet addressed to itself and from the server.
     Such packets are sent back out the same interface that received them
     (<firstterm>hairpin</firstterm>). In cases where the
-    <option>routerfilter</option> option can't be used, Shorewall 4.4.20 and
+    <option>routefilter</option> option can't be used, Shorewall 4.4.20 and
     later will set up hairpinning traps (see the SFILTER_DISPOSITION and
     SFILTER_LOG_LEVEL options in <ulink
     url="manpages/shorewall.conf.html">shorewall.conf</ulink> (5)).</para>
