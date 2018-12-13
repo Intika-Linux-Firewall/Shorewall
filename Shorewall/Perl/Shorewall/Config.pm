@@ -522,13 +522,17 @@ our %capdesc = ( NAT_ENABLED     => 'NAT',
 		 CAPVERSION      => 'Capability Version',
 		 KERNELVERSION   => 'Kernel Version',
 	       );
-
+#
+# Keeps track of which capabilities were used or required - Key is capability name
+#
 our %used;
 
 use constant {
                USED     => 1,
 	       REQUIRED => 2 };
-
+#
+# Common Protocols
+#
 use constant {
 	       ICMP                => 1,
 	       TCP                 => 6,
@@ -540,7 +544,7 @@ use constant {
 	       UDPLITE             => 136,
 	     };
 #
-# Optimization masks
+# Optimization masks (OPTIMIZE option)
 #
 use constant {
 	       OPTIMIZE_POLICY_MASK    => 0x02 , # Call optimize_policy_chains()
@@ -549,7 +553,9 @@ use constant {
                OPTIMIZE_MASK           => 0x1E , # Do optimizations beyond level 1
 	       OPTIMIZE_ALL            => 0x1F , # Maximum value for documented categories.
 	     };
-
+#
+# Map helpers to protocols
+#
 our %helpers = ( amanda          => UDP,
 		 ftp             => TCP,
 		 irc             => TCP,
@@ -624,7 +630,7 @@ our %config_files = ( #accounting      => 1,
 #
 our @auditoptions = qw( BLACKLIST_DISPOSITION MACLIST_DISPOSITION TCP_FLAGS_DISPOSITION );
 #
-# Directories to search for configuration files
+# Directories to search for configuration files (CONFIG_PATH option)
 #
 our @config_path;
 #
@@ -647,10 +653,12 @@ our %compiler_params;
 # Action parameters
 #
 our %actparams;
-our $parmsmodified;
-our $usedcaller;
-our $inline_matches;
-
+our $parmsmodified;          # True of the current action has modified its parameters
+our $usedcaller;             # True if $CALLER has been acceseed in the current action
+our $inline_matches;         # Inline matches from the current rule
+#
+# File handling
+#
 our $currentline;            # Current config file line image
 our $rawcurrentline;         # Current config file line with no variable expansion
 our $currentfile;            # File handle reference
@@ -746,10 +754,11 @@ our $ifstack;
 #    [0] - Keyword (IF, ELSEIF, ELSE or ENDIF)
 #    [1] - True if the outermost IF evaluated to false
 #    [2] - True if the the last unterminated IF evaluated to false
+#    [3] = The line number of the directive
 #
 # From .shorewallrc
 #
-our ( %shorewallrc, %shorewallrc1 );
+our ( %shorewallrc, %shorewallrc1 ); # Shorewallrc setting from local system and from remote firewall respectively
 #
 # read_a_line options
 #
@@ -1288,7 +1297,7 @@ sub initialize( $;$$$) {
     $compiletime =~ s/ +/ /g;
 }
 
-my @abbr = qw( Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec );
+my @moabbr = qw( Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec );
 
 sub add_ipset( $ ) {
     $ipsets{$_[0]} = 1;
@@ -1388,7 +1397,7 @@ sub info_message
 
     if ( $log ) {
 	@localtime = localtime;
-	printf $log '%s %2d %02d:%02d:%02d ', $abbr[$localtime[4]], @localtime[3,2,1,0];
+	printf $log '%s %2d %02d:%02d:%02d ', $moabbr[$localtime[4]], @localtime[3,2,1,0];
     }
 
     if ( $confess ) {
@@ -1416,7 +1425,7 @@ sub warning_message
 
     if ( $log ) {
 	@localtime = localtime;
-	printf $log '%s %2d %02d:%02d:%02d ', $abbr[$localtime[4]], @localtime[3,2,1,0];
+	printf $log '%s %2d %02d:%02d:%02d ', $moabbr[$localtime[4]], @localtime[3,2,1,0];
     }
 
     if ( $confess ) {
@@ -1541,7 +1550,7 @@ sub fatal_error	{
 
     if ( $log ) {
 	our @localtime = localtime;
-	printf $log '%s %2d %02d:%02d:%02d ', $abbr[$localtime[4]], @localtime[3,2,1,0];
+	printf $log '%s %2d %02d:%02d:%02d ', $moabbr[$localtime[4]], @localtime[3,2,1,0];
 
 	if ( $confess ) {
 	    print $log longmess( "   ERROR: @_$currentlineinfo\n" );
@@ -1564,6 +1573,9 @@ sub fatal_error	{
     }
 }
 
+#
+# This one is used for reporting syntax errors in embedded Perl code
+#
 sub fatal_error1 {
     handle_first_entry if $first_entry;
 
@@ -1571,7 +1583,7 @@ sub fatal_error1 {
 
     if ( $log ) {
 	our @localtime = localtime;
-	printf $log '%s %2d %02d:%02d:%02d ', $abbr[$localtime[4]], @localtime[3,2,1,0];
+	printf $log '%s %2d %02d:%02d:%02d ', $moabbr[$localtime[4]], @localtime[3,2,1,0];
 
 	if ( $debug ) {
 	    print $log longmess( "   ERROR: @_\n" );
@@ -1681,7 +1693,7 @@ sub emit {
 
     if ( $script || $debug ) {
 	#
-	# 'compile' as opposed to 'check'
+	# 'compile' (as opposed to 'check') or debugging (CLI 'trace' command)
 	#
 	for ( @_ ) {
 	    unless ( /^\s*$/ ) {
@@ -1842,12 +1854,15 @@ sub progress_message {
 
 	    @localtime = localtime unless $havelocaltime;
 
-	    printf $log '%s %2d %02d:%02d:%02d ', $abbr[$localtime[4]], @localtime[3,2,1,0];
+	    printf $log '%s %2d %02d:%02d:%02d ', $moabbr[$localtime[4]], @localtime[3,2,1,0];
 	    print $log "${leading}${line}\n";
 	}
     }
 }
 
+#
+# This one doesn't compress out superfluous white space
+#
 sub progress_message_nocompress {
     my $havelocaltime = 0;
 
@@ -1861,7 +1876,7 @@ sub progress_message_nocompress {
 
 	@localtime = localtime unless $havelocaltime;
 
-	printf $log '%s %2d %02d:%02d:%02d ', $abbr[$localtime[4]], @localtime[3,2,1,0];
+	printf $log '%s %2d %02d:%02d:%02d ', $moabbr[$localtime[4]], @localtime[3,2,1,0];
 	print $log "@_\n";
     }
 }
@@ -1882,7 +1897,7 @@ sub progress_message2 {
 
 	@localtime = localtime unless $havelocaltime;
 
-	printf $log '%s %2d %02d:%02d:%02d ', $abbr[$localtime[4]], @localtime[3,2,1,0];
+	printf $log '%s %2d %02d:%02d:%02d ', $moabbr[$localtime[4]], @localtime[3,2,1,0];
 	print $log "@_\n";
     }
 }
@@ -1903,7 +1918,7 @@ sub progress_message3 {
 
 	@localtime = localtime unless $havelocaltime;
 
-	printf $log '%s %2d %02d:%02d:%02d ', $abbr[$localtime[4]], @localtime[3,2,1,0];
+	printf $log '%s %2d %02d:%02d:%02d ', $moabbr[$localtime[4]], @localtime[3,2,1,0];
 	print $log "@_\n";
     }
 }
@@ -2074,7 +2089,7 @@ sub set_debug( $$ ) {
 #
 sub find_file($)
 {
-    my ( $filename, $nosearch ) = @_;
+    my ( $filename ) = @_;
 
     return $filename if $filename =~ '/';
 
@@ -2091,8 +2106,12 @@ sub find_file($)
     "$config_path[0]$filename";
 }
 
+#
+# Search the CONFIG_PATH for a file that is writable. Ignore directories where sample/default files are installed,
+# because users have a bad habit of including those in the CONFIG_PATH
+#
 sub find_writable_file($) {
-    my ( $filename, $nosearch ) = @_;
+    my ( $filename ) = @_;
 
     return $filename if $filename =~ '/';
 
@@ -2114,6 +2133,9 @@ sub supplied( $ ) {
     defined $val && $val ne '';
 }
 
+#
+# This one is used for determining if an action argument has been passed (excludes '-')
+#
 sub passed( $ ) {
     my $val = shift;
 
@@ -2132,7 +2154,7 @@ sub split_list( $$;$ ) {
 }
 
 #
-# This version handles parenthetical list elements with embedded commas. It removes the parentheses
+# This version handles parenthetical list elements containing embedded commas. It removes the parentheses
 #
 sub split_list1( $$;$ ) {
     my ($list, $type, $keepparens ) = @_;
@@ -2516,7 +2538,7 @@ sub split_line2( $$;$$$ ) {
 }
 
 #
-# Same as above, only it splits the raw current line
+# Same as above, only it splits the raw current line (line prior to variable expansion)
 #
 sub split_rawline2( $$;$$$ ) {
     my $savecurrentline = $currentline;
@@ -2624,6 +2646,7 @@ sub do_open_file( $ ) {
 # - Maximum value allowed in ?FORMAT directives
 # - ?COMMENT allowed in this file
 # - Ignore ?COMMENT in ths file
+# - Default file format
 #
 sub open_file( $;$$$$ ) {
     my ( $fname, $mf, $ca, $nc, $cf ) = @_;
@@ -2716,7 +2739,7 @@ sub clear_currentfilename() {
 }
 
 #
-# Process an ?IF, ?ELSIF, ?ELSE or ?END directive
+# Utility functions for processing compiler directives
 #
 
 #
@@ -2743,7 +2766,7 @@ sub directive_warning( $$$$ ) {
 
 	if ( $log ) {
 	    @localtime = localtime;
-	    printf $log '%s %2d %02d:%02d:%02d ', $abbr[$localtime[4]], @localtime[3,2,1,0];
+	    printf $log '%s %2d %02d:%02d:%02d ', $moabbr[$localtime[4]], @localtime[3,2,1,0];
 	    print $log  "   WARNING: $_[0]\n";
 	}
 
@@ -2768,7 +2791,7 @@ sub directive_info( $$$$ ) {
 
 	if ( $log ) {
 	    @localtime = localtime;
-	    printf $log '%s %2d %02d:%02d:%02d ', $abbr[$localtime[4]], @localtime[3,2,1,0];
+	    printf $log '%s %2d %02d:%02d:%02d ', $moabbr[$localtime[4]], @localtime[3,2,1,0];
 	    print $log  "   INFO: $_[0]\n";
 	}
 
@@ -3520,7 +3543,7 @@ sub shorewall {
 # We do this processing in read_a_line() rather than in the higher-level routines because
 # Embedded Shell/Perl scripts are processed out of read_a_line(). If we were to defer announcement
 # until we get back to the caller of read_a_line(), we could issue error messages about parsing and
-# running scripts in the file before we'd even indicated that we are processing it.
+# running scripts in the file before we'd even reported that we are processing it.
 #
 sub first_entry( $ ) {
     $first_entry = shift;
@@ -3697,6 +3720,7 @@ sub push_action_params( $$$$$$ ) {
 # Return:
 #   1 if the popped parameters were modified
 #   2 if the action used @CALLER
+#   3 if both
 #
 sub pop_action_params( $ ) {
     my $oldparms       = shift;
@@ -3707,6 +3731,10 @@ sub pop_action_params( $ ) {
     $return;
 }
 
+#
+# This is called when a DEFAULTS line is found in an action body. It supplies default values
+# for those paramaters that were not passed, or that were passed as '-'.
+#
 sub default_action_params {
     my $action = shift;
     my ( $val, $i );
@@ -3720,6 +3748,9 @@ sub default_action_params {
     fatal_error "Too Many arguments to action $action" if defined $actparams{$i};
 }
 
+#
+# This function allows embedded Perl in actions to retreive the action paramaters
+#
 sub get_action_params( $ ) {
     my $num = shift;
 
@@ -3735,6 +3766,9 @@ sub get_action_params( $ ) {
     @return;
 }
 
+#
+# Helper for A_* actions
+#
 sub setup_audit_action( $ ) {
     my ( $action ) = @_;
 
@@ -3754,26 +3788,44 @@ sub get_action_logging() {
     @actparams{ 'loglevel', 'logtag' };
 }
 
+#
+# Allow embedded Perl in Actions to get the name of the action chain
+#
 sub get_action_chain() {
     $actparams{0};
 }
 
+#
+# Get the action name from an action file
+#
 sub get_action_chain_name() {
     $actparams{chain};
 }
-
+#
+# This allows an action to make subsequent log messages refer to the invoker of the action rather than the 
+# action itself
+#
 sub set_action_name_to_caller() {
     $actparams{chain} = $actparams{caller};
 }
 
+#
+# Get the current action's disposition
+#
 sub get_action_disposition() {
     $actparams{disposition};
 }
 
+#
+# Set the current action disposition for subsequent logging
+#
 sub set_action_disposition($) {
     $actparams{disposition} = $_[0];
 }
 
+#
+# Alter the value of one of the current actions parameters
+#
 sub set_action_param( $$ ) {
     my $i = shift;
 
@@ -3840,6 +3892,9 @@ sub expand_variables( \$ ) {
     }
 }
 
+#
+# Expand variables from shorewallrc in the current passed line
+#
 sub expand_shorewallrc_variables( \$ ) {
     my ( $lineref, $count ) = ( $_[0], 0 );
     #                         $1      $2   $3                  -     $4
@@ -3883,7 +3938,7 @@ sub handle_first_entry() {
 #   - Handle embedded SHELL and PERL scripts
 #   - Expand shell variables from %params and %ENV.
 #   - Handle INCLUDE <filename>
-#   - Handle ?IF, ?ELSE, ?ENDIF
+#   - Handle ?SECTION
 #
 
 sub read_a_line($) {
@@ -4006,6 +4061,9 @@ sub read_a_line($) {
     }
 }
 
+#
+# Process the passed shorewallrc file, populating %shorewallrc
+#
 sub process_shorewallrc( $$ ) {
     my ( $shorewallrc , $product ) = @_;
 
@@ -4026,6 +4084,12 @@ sub process_shorewallrc( $$ ) {
 	fatal_error "Failed to open $shorewallrc: $!";
     }
 
+    #
+    # Older files may contain VARDIR= rather than VARLIB= to specify the directory
+    # where each product maintains its own state directory. This was confusing,
+    # because in the shell context, VARDIR points to the current product's state
+    # directory.
+    #
     if ( supplied $shorewallrc{VARDIR} ) {
 	if ( ! supplied $shorewallrc{VARLIB} ) {
 	    $shorewallrc{VARLIB} =  $shorewallrc{VARDIR};
@@ -4088,12 +4152,19 @@ sub default_yes_no ( $$;$ ) {
     $result;
 }
 
+#
+# This one is used for options that are supported by IPv4 but not IPv6. It issues a
+# warning message if the option is specified in shorewall6.conf.
+#
 sub default_yes_no_ipv4 ( $$ ) {
     my ( $var, $val ) = @_;
     default_yes_no( $var, $val );
     warning_message "$var=Yes is ignored for IPv6" if $family == F_IPV6 && $config{$var};
 }
 
+#
+# This function handles options that have a numeric value.
+#
 sub numeric_option( $$$ ) {
     my ( $option, $default, $min ) = @_;
 
@@ -4111,6 +4182,9 @@ sub numeric_option( $$$ ) {
     $config{$option} = $val;
 }
 
+#
+# Returns a 32-bit value with the low order n bits set, where n is the passed argument.
+#
 sub make_mask( $ ) {
     0xffffffff >> ( 32 - $_[0] );
 }
@@ -4284,7 +4358,7 @@ sub default_log_level( $$ ) {
 }
 
 #
-# Check a tri-valued variable
+# Check a tri-valued option ("on", "of" and "keep")
 #
 sub check_trivalue( $$ ) {
     my ( $var, $default) = @_;
@@ -4420,7 +4494,8 @@ sub determine_kernelversion() {
 }
 
 #
-# Capability Reporting and detection.
+# Capability Reporting and detection. Each of the following functions detect the
+# availability of the related capability.
 #
 sub Nat_Enabled() {
     qt1( "$iptables $iptablesw -t nat -L -n" );
@@ -5130,7 +5205,7 @@ sub have_capability( $;$ ) {
 
     $setting = $capabilities{ $capability } = detect_capability( $capability ) unless defined $setting;
 
-    $used{$capability} = $required ? 2 : 1 if $setting;
+    $used{$capability} = $required ? REQUIRED : USED if $setting;
 
     $setting;
 }
@@ -5326,6 +5401,9 @@ sub ensure_config_path() {
     }
 
     if ( $shorewall_dir ) {
+	#
+	# A directory has been specified -- place it at the front of the CONFIG_PATH
+	#
 	$shorewall_dir = getcwd if $shorewall_dir =~ m|^(\./*)+$|;
 	$shorewall_dir .= '/' unless $shorewall_dir =~ m|/$|;
 	unshift @config_path, $shorewall_dir if $shorewall_dir ne $config_path[0];
@@ -5360,7 +5438,8 @@ sub conditional_quote( $ ) {
 }
 
 #
-# Update the shorewall[6].conf file. Save the current file with a .bak suffix.
+# 'update' default values are sometimes different from the normal defaut value, to provide
+# backward compatibility.
 #
 sub update_default($$) {
     my ( $var, $val ) = @_;
@@ -5381,6 +5460,9 @@ sub transfer_permissions( $$ ) {
     }
 }
 
+#
+# Update the shorewall[6].conf file. Save the current file with a .bak suffix.
+#
 sub update_config_file( $ ) {
     my ( $annotate ) = @_;
 
@@ -5779,7 +5861,7 @@ sub unsupported_yes_no_warning( $ ) {
 }
 
 #
-# Process the params file
+# Process the params file. Actually processing is done by the 'getparams' program in $LIBEXECDIR/shorewall/.
 #
 sub get_params( $ ) {
     my $export = $_[0];
@@ -7183,6 +7265,9 @@ sub generate_aux_config() {
     finalize_aux_config;
 }
 
+#
+# Generate a report of the fwmark layout
+#
 sub dump_mark_layout() {
     sub dumpout( $$$$$ ) {
 	my ( $name, $bits, $min, $max, $mask ) = @_;
