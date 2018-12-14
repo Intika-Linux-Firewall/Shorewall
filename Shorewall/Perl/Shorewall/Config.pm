@@ -677,6 +677,7 @@ our $comments_allowed;       # True if [?]COMMENT is allowed in the current file
 our $nocomment;              # When true, ignore [?]COMMENT in the current file
 our $sr_comment;             # When true, $comment should only be applied to the current rule
 our $warningcount;           # Used to suppress duplicate warnings about missing COMMENT support
+our $ulogcount;              # Used to suppress duplicate warnings about ULOG support
 our $directive_callback;     # Function to call in compiler_directive
 
 our $shorewall_dir;          # Shorewall Directory; if non-empty, search here first for files.
@@ -837,6 +838,7 @@ sub initialize( $;$$$) {
     $comment       = '';
     $sr_comment    = '';
     $warningcount  = 0;
+    $ulogcount     = 0;
     #
     # Misc Globals
     #
@@ -4287,6 +4289,10 @@ sub validate_level( $;$ ) {
 
 	if ( $value =~ /^(NFLOG|ULOG)$/ ) {
 	    my $olevel  = $value;
+
+	    if ( $value eq 'ULOG' ) {
+		warning_message "ULOG is deprecated in favor of NFLOG. Support for ULOG will be removed in a future release" unless $ulogcount++;
+	    }
 
 	    if ( $qualifier =~ /^[(](.*)[)]$/ ) {
 		my @options = split /,/, $1;
