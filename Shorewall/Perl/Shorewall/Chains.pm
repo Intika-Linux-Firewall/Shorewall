@@ -2325,7 +2325,7 @@ sub invalid_log($$) {
 # Name of the untracked chain between an ordered pair of zones
 #
 sub untracked_log($$) {
-    '&' . &rules_log(@_);
+    '=' . &rules_log(@_);
 }
 
 #
