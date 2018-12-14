@@ -5350,8 +5350,8 @@ sub do_ratelimit( $$ ) {
     my @rates = split_list3 $rates, 'rate';
 
     if ( @rates == 2 ) {
-	$rates[0] = 's:' . $rates[0] unless $rates[0] =~ /^s:/;
-	$rates[1] = 'd:' . $rates[1] unless $rates[1] =~ /^d:/;
+	$rates[0] = 's:' . $rates[0] unless $rates[0] =~ /^s(?:\/\d+)?:/;
+	$rates[1] = 'd:' . $rates[1] unless $rates[1] =~ /^d(?:\/\d+)?:/;
     } elsif ( @rates > 2 ) {
 	fatal error "Only two rates may be specified";
     }
