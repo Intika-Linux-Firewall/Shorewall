@@ -431,13 +431,14 @@ our $VERSION = 'MODULEVERSION';
 #      Untracked       - =<z1-z2>
 #
 our %chain_table;
-our $raw_table;
-our $nat_table;
-our $mangle_table;
-our $filter_table;
-our $export;
-our %renamed;
-our %nfobjects;
+our $raw_table;         # Reference to $chain_table{raw}
+our $nat_table;         # Reference to $chain_table{nat}
+our $mangle_table;      # Reference to $chain_table{mangle}
+our $filter_table;      # Reference to $chain_table{filter}
+
+our $export;            # True if we are compiling for export
+our %renamed;           # Maps chain renaming during optimization
+our %nfobjects;         # Records nfacct objects
 
 #
 # Target Types
@@ -465,10 +466,10 @@ use constant { STANDARD     =>      0x1,       #defined by Netfilter
 	       IPTABLES     => 0x100000,       #IPTABLES or IP6TABLES
 	       TARPIT       => 0x200000,       #TARPIT
 
-	       FILTER_TABLE =>  0x1000000,
-	       MANGLE_TABLE =>  0x2000000,
-	       RAW_TABLE    =>  0x4000000,
-	       NAT_TABLE    =>  0x8000000,
+	       FILTER_TABLE =>  0x1000000,     #Target allowed in the filter table
+	       MANGLE_TABLE =>  0x2000000,     #Target allowed in the mangle table
+	       RAW_TABLE    =>  0x4000000,     #Target allowed in the raw table
+	       NAT_TABLE    =>  0x8000000,     #Target allowed in the nat table
 	   };
 #
 # Valid Targets -- value is a combination of one or more of the above
@@ -687,15 +688,15 @@ our %ipset_exists;
 #
 # The following constants and hash are used to classify keys in a rule hash
 #
-use constant { UNIQUE      => 1,
-	       TARGET      => 2,
-	       EXCLUSIVE   => 4,
-	       MATCH       => 8,
-	       CONTROL     => 16,
-	       COMPLEX     => 32,
-	       NFACCT      => 64,
-	       EXPENSIVE   => 128,
-	       RECENT      => 256,
+use constant { UNIQUE      => 1,       # Simple header matches - only allowed once per rule
+	       TARGET      => 2,       # Rule target or its options
+	       EXCLUSIVE   => 4,       # 'state' or 'conntrack --ctstate'
+	       MATCH       => 8,       # Currently means 'policy ...'
+	       CONTROL     => 16,      # Unsed internally by the compiler - does not contribute to the iptables rule
+	       COMPLEX     => 32,      # Currently means 'contrack --cstate'
+	       NFACCT      => 64,      # nfacct match
+	       EXPENSIVE   => 128,     # Has high rule-processing cost in the kernel
+	       RECENT      => 256,     # recent match
 	   };
 
 our %opttype = ( rule          => CONTROL,
@@ -741,6 +742,9 @@ our %opttype = ( rule          => CONTROL,
 		 targetopts    => TARGET,
 	       );
 
+#
+# These allow the user to specify long option names in raw ip[6]tables input
+#
 our %aliases = ( protocol        => 'p',
 		 source          => 's',
 		 destination     => 'd',
@@ -760,7 +764,7 @@ our %isocodes;
 
 use constant { ISODIR => '/usr/share/xt_geoip/LE' };
 
-our %switches;
+our %switches;   # Recoreds switches (conditions)
 
 #
 # Rather than initializing globals in an INIT block or during declaration,
@@ -786,7 +790,9 @@ sub initialize( $$$ ) {
     $filter_table  = $chain_table{filter};
     %renamed       = ();
     #
-    # Used to sequence chain names in each table.
+    # Used to sequence chain names in each table. $hard is true on the initial call to this function and
+    # false, when this function is called a second time to re-initialize before generating stopped ip[6]tables-
+    # restore input
     #
     %chainseq = () if $hard;
     #
@@ -1746,6 +1752,10 @@ sub add_rule($$;$) {
 #
 # New add_rule implementation
 #
+
+#
+# Push a set of matches into an irule (a rule using the new hash representation)
+#
 sub push_matches {
 
     my $ruleref = shift;
@@ -1912,6 +1922,9 @@ sub compare_values( $$ ) {
     }
 }
 
+#
+# Add an irule with matches but no target
+#
 sub add_irule( $;@ ) {
     my ( $chainref, @matches ) = @_;
 
