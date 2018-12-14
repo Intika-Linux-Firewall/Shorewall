@@ -277,7 +277,7 @@
       shell variable simplifies future changes. Here's what I had at one
       time:</para>
 
-      <programlisting>gateway:/etc/shorewall# grep -v ^\# * | egrep '\$LOG|LOGFILE'
+      <programlisting>gateway:/etc/shorewall# grep -v ^\# * | egrep '\$LOG|ULOG|LOGFILE'
 params:LOG=NFLOG
 policy:loc              $FW             REJECT          $LOG
 policy:net              all             DROP            $LOG            10/sec:40
@@ -302,8 +302,8 @@ gateway:/etc/shorewall#                                               </programl
       <quote><command>logwatch</command></quote> and
       <quote><command>dump</command></quote> commands.</para>
 
-      <para>The NFLOG target is a successor to ULOG. NFLOG may be followed by
-      a list of up to three numbers in parentheses.</para>
+      <para>The NFLOG target is a successor to ULOG. Both ULOG and NFLOG may
+      be followed by a list of up to three numbers in parentheses.</para>
 
       <itemizedlist>
         <listitem>
@@ -384,8 +384,8 @@ sync=1</programlisting>
         <term>ULOG (ipt_ULOG)</term>
 
         <listitem>
-          <para>ULOG logging as described ablve. Only available for IPv4 and
-          removed in Shorewall 5.2.2.</para>
+          <para>ULOG logging as described ablve. Only available for
+          IPv4.</para>
         </listitem>
       </varlistentry>
 
@@ -401,10 +401,10 @@ sync=1</programlisting>
     <para>The currently-available and currently-selected IPv4 and IPv6
     backends are shown in /proc/sys/net/netfilter/nf_log:</para>
 
-    <programlisting>$ cat /proc/net/netfilter/nf_log
+    <programlisting>cat /proc/net/netfilter/nf_log
  0 NONE (nfnetlink_log)
  1 NONE (nfnetlink_log)
- 2 nf_log_ipv4 (nf_log_ipv4,nfnetlink_log)
+ 2 ipt_ULOG (ipt_ULOG,ipt_LOG,nfnetlink_log)
  3 NONE (nfnetlink_log)
  4 NONE (nfnetlink_log)
  5 NONE (nfnetlink_log)
@@ -412,10 +412,9 @@ sync=1</programlisting>
  7 NONE (nfnetlink_log)
  8 NONE (nfnetlink_log)
  9 NONE (nfnetlink_log)
-10 nf_log_ipv6 (nf_log_ipv6,nfnetlink_log)
+10 ip6t_LOG (ip6t_LOG,nfnetlink_log)
 11 NONE (nfnetlink_log)
-12 NONE (nfnetlink_log)
-$</programlisting>
+12 NONE (nfnetlink_log)</programlisting>
 
     <para>The magic numbers (0-12) are Linux address family numbers (AF_INET
     is 2 and AF_INET6 is 10).</para>

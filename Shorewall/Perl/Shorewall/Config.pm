@@ -456,6 +456,7 @@ our %capdesc = ( NAT_ENABLED     => 'NAT',
 		 TIME_MATCH      => 'Time Match',
 		 GOTO_TARGET     => 'Goto Support',
 		 LOG_TARGET      => 'LOG Target',
+		 ULOG_TARGET     => 'ULOG Target',
 		 NFLOG_TARGET    => 'NFLOG Target',
 		 LOGMARK_TARGET  => 'LOGMARK Target',
 		 IPMARK_TARGET   => 'IPMARK Target',
@@ -1101,6 +1102,7 @@ sub initialize( $;$$$) {
 	       TIME_MATCH => undef,
 	       GOTO_TARGET => undef,
 	       LOG_TARGET => undef,
+	       ULOG_TARGET => undef,
 	       NFLOG_TARGET => undef,
 	       LOGMARK_TARGET => undef,
 	       IPMARK_TARGET => undef,
@@ -1279,6 +1281,7 @@ sub initialize( $;$$$) {
 	$globals{PRODUCT}       = 'shorewall';
 	$config{IPTABLES}       = undef;
 	$config{ARPTABLES}      = undef;
+	$validlevels{ULOG}      = 'ULOG';
     } else {
 	$globals{SHAREDIR}      = "$shorewallrc{SHAREDIR}/shorewall6";
 	$globals{PRODUCT}       = 'shorewall6';
@@ -4282,23 +4285,25 @@ sub validate_level( $;$ ) {
 	    require_capability( "${value}_TARGET", "Log level $level", 's' );
 	}
 
-	if ( $value eq 'NFLOG' ) {
+	if ( $value =~ /^(NFLOG|ULOG)$/ ) {
 	    my $olevel  = $value;
 
 	    if ( $qualifier =~ /^[(](.*)[)]$/ ) {
 		my @options = split /,/, $1;
-		my $index   = 0;
+		my $prefix  = lc $olevel;
+		my $index   = $prefix eq 'ulog' ? 3 : 0;
 
 		level_error( $rawlevel , $option ) if @options > 3;
 
 		for ( @options ) {
 		    if ( supplied( $_ ) ) {
 			level_error( $rawlevel , $option ) unless /^\d+/;
-			$olevel .= " --nflog-$suffixes[$index] $_";
+			$olevel .= " --${prefix}-$suffixes[$index] $_";
 		    }
 
 		    $index++;
 		}
+
 	    } elsif ( $qualifier =~ /^ --/ ) {
 		return $rawlevel;
 	    } else {
@@ -4949,6 +4954,10 @@ sub Log_Target() {
     qt1( "$iptables $iptablesw -A $sillyname -j LOG" );
 }
 
+sub Ulog_Target() {
+    qt1( "$iptables $iptablesw -A $sillyname -j ULOG" );
+}
+
 sub NFLog_Target() {
     qt1( "$iptables $iptablesw -A $sillyname -j NFLOG" );
 }
@@ -5134,6 +5143,7 @@ our %detect_capability =
       LENGTH_MATCH => \&Length_Match,
       LOGMARK_TARGET => \&Logmark_Target,
       LOG_TARGET => \&Log_Target,
+      ULOG_TARGET => \&Ulog_Target,
       NFLOG_TARGET => \&NFLog_Target,
       NFLOG_SIZE => \&NFLog_Size,
       MANGLE_ENABLED => \&Mangle_Enabled,
@@ -5298,6 +5308,7 @@ sub determine_capabilities() {
 	$capabilities{TIME_MATCH}      = detect_capability( 'TIME_MATCH' );
 	$capabilities{GOTO_TARGET}     = detect_capability( 'GOTO_TARGET' );
 	$capabilities{LOG_TARGET}      = detect_capability( 'LOG_TARGET' );
+	$capabilities{ULOG_TARGET}     = detect_capability( 'ULOG_TARGET' );
 	$capabilities{NFLOG_TARGET}    = detect_capability( 'NFLOG_TARGET' );
 	$capabilities{LOGMARK_TARGET}  = detect_capability( 'LOGMARK_TARGET' );
 	$capabilities{FLOW_FILTER}     = detect_capability( 'FLOW_FILTER' );
@@ -6861,7 +6872,9 @@ sub get_configuration( $$$ ) {
     }
 
     if ( supplied( $val = $config{LOG_BACKEND} ) ) {
-	if ( $val eq 'netlink' ) {
+	if ( $family == F_IPV4 && $val eq 'ULOG' ) {
+	    $val = 'ipt_ULOG';
+	} elsif ( $val eq 'netlink' ) {
 	    $val = 'nfnetlink_log';
 	} elsif ( $val eq 'LOG' ) {
 	    $val = $family == F_IPV4 ? 'ipt_LOG' : 'ip6t_LOG';

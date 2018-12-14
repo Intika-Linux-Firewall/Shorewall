@@ -334,10 +334,9 @@
             <listitem>
               <para><option>ULOG</option></para>
 
-              <para>IPv4 only. Added in Shoreawll 4.6.0 and removed in
-              Shorewall 5.2.2. Queues the packet to a backend logging daemon
-              using the ULOG netfilter target with the specified
-              <replaceable>ulog-parameters</replaceable>.</para>
+              <para>IPv4 only. Added in Shoreawll 4.6.0. Queues the packet to
+              a backend logging daemon using the ULOG netfilter target with
+              the specified <replaceable>ulog-parameters</replaceable>.</para>
             </listitem>
           </itemizedlist>
 

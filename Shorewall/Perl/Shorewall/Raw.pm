@@ -94,7 +94,7 @@ sub process_conntrack_rule( $$$$$$$$$$ ) {
 
     my $level = '';
 
-    if ( $action =~ /^NFLOG/ ) {
+    if ( $action =~ /^(?:NFLOG|ULOG)/ ) {
 	$action = join( ":" , 'LOG', $action );
     }
 

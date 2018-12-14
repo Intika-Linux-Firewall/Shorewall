@@ -749,8 +749,7 @@ bar:debug</programlisting>
               <listitem>
                 <para>Either a syslog level or a ULOG or NFLOG target
                 expression (e.g., "NFLOG(1,0,1)"). Specifies how you want the
-                logging done. Support for ULOG was removed in Shorewall
-                5.2.2.</para>
+                logging done.</para>
               </listitem>
             </varlistentry>
 
