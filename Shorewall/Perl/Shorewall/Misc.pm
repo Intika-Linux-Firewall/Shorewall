@@ -1724,9 +1724,9 @@ sub add_interface_jumps {
 	    add_ijump( $filter_table->{input_chain $bridge },
 		       j => $inputref ,
 		       imatch_source_dev( $interface, 1 )
-		    ) unless $input_jump_added{$interface}   || ! use_input_chain $interface, $inputref;
+		) unless $input_jump_added{$interface}   || ! use_interface_chain( $interface, 'use_input_chain' );
 
-	    unless ( $output_jump_added{$interface} || ! use_output_chain $interface, $outputref ) {
+	    unless ( $output_jump_added{$interface} || ! use_interface_chain( $interface, 'use_output_chain') ) {
 		add_ijump( $filter_table->{output_chain $bridge} ,
 			   j => $outputref ,
 			   imatch_dest_dev( $interface, 1 ) )
@@ -1735,10 +1735,10 @@ sub add_interface_jumps {
 	} else {
 	    add_ijump ( $filter_table->{FORWARD}, j => 'ACCEPT', imatch_source_dev( $interface) , imatch_dest_dev( $interface) ) unless $interfaceref->{nets} || ! $interfaceref->{options}{bridge};
 
-	    add_ijump( $filter_table->{FORWARD} , j => $forwardref , imatch_source_dev( $interface ) ) if use_forward_chain( $interface, $forwardref ) && ! $forward_jump_added{$interface}++;
-	    add_ijump( $filter_table->{INPUT}   , j => $inputref ,   imatch_source_dev( $interface ) ) if use_input_chain( $interface, $inputref )     && ! $input_jump_added{$interface}++;
+	    add_ijump( $filter_table->{FORWARD} , j => $forwardref , imatch_source_dev( $interface ) ) if use_forward_chain( $interface, $forwardref )         && ! $forward_jump_added{$interface}++;
+	    add_ijump( $filter_table->{INPUT}   , j => $inputref ,   imatch_source_dev( $interface ) ) if use_interface_chain( $interface, 'use_input_chain' ) && ! $input_jump_added{$interface}++;
 
-	    if ( use_output_chain $interface, $outputref ) {
+	    if ( use_interface_chain( $interface, 'use_output_chain' ) ) {
 		add_ijump $filter_table->{OUTPUT} , j => $outputref , imatch_dest_dev( $interface ) unless get_interface_option( $interface, 'port' ) || $output_jump_added{$interface}++;
 	    }
 	}
@@ -1927,7 +1927,7 @@ sub add_output_jumps( $$$$$$$$ ) {
     my @ipsec_out_match   = match_ipsec_out $zone , $hostref;
     my @zone_interfaces   = keys %{zone_interfaces( $zone )};
 
-    if ( @vservers || use_output_chain( $interface, $interfacechainref ) || ( @{$interfacechainref->{rules}} && ! $chain1ref ) || @zone_interfaces > 1 ) {
+    if ( @vservers || use_interface_chain( $interface, 'use_output_chain' ) || ( @{$interfacechainref->{rules}} && ! $chain1ref ) || @zone_interfaces > 1 ) {
 	#
 	# - There are vserver zones (so OUTPUT will have multiple source; or
 	# - We must use the interface output chain; or
@@ -2061,7 +2061,7 @@ sub add_input_jumps( $$$$$$$$$ ) {
     my @source            = imatch_source_net $net;
     my @ipsec_in_match    = match_ipsec_in  $zone , $hostref;
 
-    if ( @vservers || use_input_chain( $interface, $interfacechainref ) || ! $chain2 || ( @{$interfacechainref->{rules}} && ! $chain2ref ) ) {
+    if ( @vservers || use_interface_chain( $interface, 'use_input_chain' ) || ! $chain2 || ( @{$interfacechainref->{rules}} && ! $chain2ref ) ) {
 	#
 	# - There are vserver zones (so INPUT will have multiple destinations; or
 	# - We must use the interface input chain; or

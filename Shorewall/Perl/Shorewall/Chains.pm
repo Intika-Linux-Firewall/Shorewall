@@ -186,13 +186,12 @@ our %EXPORT_TAGS = (
 				       input_chain
 				       input_option_chain
 				       zone_input_chain
-				       use_input_chain
+				       use_interface_chain
 				       output_chain
 				       output_option_chain
 				       prerouting_chain
 				       postrouting_chain
 				       zone_output_chain
-				       use_output_chain
 				       masq_chain
 				       syn_flood_chain
 				       mac_chain
@@ -2431,10 +2430,11 @@ sub zone_input_chain($) {
 }
 
 #
-# Returns true if we're to use the interface's input chain
+# Returns true if we're to use the interface's input or chain, depending on the second argument
+# (use_input_chain or use_output_chain).
 #
-sub use_input_chain($$) {
-    my ( $interface, $chainref ) = @_;
+sub use_interface_chain($$) {
+    my ( $interface, $which ) = @_;
     my $interfaceref = find_interface($interface);
     my $nets = $interfaceref->{nets};
     #
@@ -2462,17 +2462,11 @@ sub use_input_chain($$) {
     #                                            the zone has  multiple interfaces
     #                                            and this interface has option rules
     #
-    return 1 if $interfaceref->{options}{use_input_chain} && keys %{ zone_interfaces( $zone ) } > 1;
+    return 1 if $interfaceref->{options}{$which} && keys %{ zone_interfaces( $zone ) } > 1;
     #
     # Interface associated with a single zone -- use the zone's input chain if it has one
     #
-    return 0 if $chainref;
-    #
-    # Use the <zone>->fw rules chain if it is referenced.
-    #
-    $chainref = $filter_table->{rules_chain( $zone, firewall_zone )};
-
-    ! ( $chainref->{referenced} || $chainref->{is_policy} )
+    return 0;
 }
 
 #
@@ -2507,41 +2501,6 @@ sub postrouting_chain($)
 #
 sub zone_output_chain($) {
     $_[0] . '_output';
-}
-
-#
-# Returns true if we're to use the interface's output chain
-#
-sub use_output_chain($$) {
-    my ( $interface, $chainref)  = @_;
-    my $interfaceref = find_interface($interface);
-    my $nets = $interfaceref->{nets};
-    #
-    # We must use the interfaces's chain if the interface is associated with multiple Zones
-    #
-    return 1 if ( keys %{interface_zones $interface} ) > 1;
-    #
-    # Use interface's chain if there are multiple nets on the interface
-    #
-    return 1 if $nets > 1;
-    #
-    # Use interface's chain if it is a bridge with ports
-    #
-    return 1 if $interfaceref->{ports};
-    #
-    # Don't need it if it isn't associated with any zone
-    #
-    return 0 unless $nets;
-    #
-    # Interface associated with a single zone -- use the zone's output chain if it has one
-    #
-    return 0 if $chainref;
-    #
-    # Use the fw-><zone> rules chain if it is referenced.
-    #
-    $chainref = $filter_table->{rules_chain( firewall_zone , $interfaceref->{zone} )};
-
-    ! ( $chainref->{referenced} || $chainref->{is_policy} )
 }
 
 #
