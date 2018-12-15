@@ -1917,18 +1917,18 @@ sub setup_providers() {
 
 	push_indent;
 
+	emit "undo_routing";
+	emit "restore_default_route $config{USE_DEFAULT_RT}";
+
 	if ( $pseudoproviders ) {
 	    emit '';
 	    emit "start_$providers{$_}->{what}_$_" for @providers;
-	    emit '';
 	}
-
-	emit "undo_routing";
-	emit "restore_default_route $config{USE_DEFAULT_RT}";
 
 	my $standard_routes = @{$providers{main}{routes}} || @{$providers{default}{routes}};
 
 	if ( $config{NULL_ROUTE_RFC1918} ) {
+	    emit '';
 	    setup_null_routing;
 	    emit "\nrun_ip route flush cache" unless $standard_routes;
 	}
