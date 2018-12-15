@@ -199,7 +199,7 @@
       <listitem>
         <para><ulink url="shorewall-ecn.html">/etc/shorewall/ecn</ulink> -
         disable Explicit Congestion Notification (ECN - RFC 3168) to remote
-        hosts or networks. Superceded by ECN entries in
+        hosts or networks. Superseded by ECN entries in
         <filename>/etc/shorewall/mangle</filename> in Shorewall 5.0.6.</para>
       </listitem>
 
@@ -720,7 +720,7 @@ DNAT { source=net dest=loc:10.0.0.1 proto=tcp dport=80 mark=88 }</programlisting
   <refsect1>
     <title>Time Columns</title>
 
-    <para>Several of the files include a TIME colum that allows you to specify
+    <para>Several of the files include a TIME column that allows you to specify
     times when the rule is to be applied. Contents of this column is a list of
     <replaceable>timeelement</replaceable>s separated by apersands
     (&amp;).</para>
