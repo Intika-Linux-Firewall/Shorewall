@@ -5,4 +5,4 @@
 #
 ##############################################################################################################################################################
 #ACTION		SOURCE		DEST		PROTO	DPORT	SPORT	ORIGDEST	RATE	USER	MARK	CONNLIMIT	TIME	HEADERS	SWITCH	HELPER
-PARAM		-			-			tcp		8333
+PARAM		-		-		tcp	8333

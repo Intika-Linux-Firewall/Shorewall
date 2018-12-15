@@ -5,4 +5,4 @@
 #
 ##############################################################################################################################################################
 #ACTION		SOURCE		DEST		PROTO	DPORT	SPORT	ORIGDEST	RATE	USER	MARK	CONNLIMIT	TIME	HEADERS	SWITCH	HELPER
-PARAM		-			-			tcp,udp	111
+PARAM		-		-		tcp,udp	111
