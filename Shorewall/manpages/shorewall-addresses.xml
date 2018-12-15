@@ -36,7 +36,7 @@
 
           <para>In IPv6, the format is <emphasis>a:b:c:d:e:f:g:h</emphasis>
           where <emphasis>a</emphasis> through <emphasis>h</emphasis> consist
-          of 1 to 4 hexidecimal digits (leading zeros may be omitted). a
+          of 1 to 4 hexadecimal digits (leading zeros may be omitted). a
           single series of 0 addresses may be omitted. For example
           2001:227:e857:1:0:0:0:0:1 may be written 2001:227:e857:1::1.</para>
         </listitem>
