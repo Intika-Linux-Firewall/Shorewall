@@ -500,7 +500,7 @@
           each listed directory is to be searched. AUTOMAKE=1 only searches
           each directory itself and is equivalent to AUTOMAKE=Yes. AUTOMAKE=2
           will search each directory and its immediate sub-directories;
-          AUTOMAKE=3 will search each diretory, each of its immediate
+          AUTOMAKE=3 will search each directory, each of its immediate
           sub-directories, and each of their immediate sub-directories,
           etc.</para>
         </listitem>
