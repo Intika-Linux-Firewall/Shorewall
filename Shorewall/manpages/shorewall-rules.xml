@@ -1900,19 +1900,21 @@
           <simplelist>
             <member>[<emphasis role="bold">-</emphasis>|[{<emphasis
             role="bold">s</emphasis>|<emphasis
-            role="bold">d</emphasis>}[/<replaceable>vlsm</replaceable>]:[[<replaceable>name</replaceable>][(<replaceable>ht-buckets</replaceable>,<replaceable>ht-max</replaceable>)]:]<emphasis>rate</emphasis><emphasis
+            role="bold">d</emphasis>}[/<replaceable>vlsm</replaceable>]:[<replaceable>name</replaceable>[(<replaceable>ht-buckets</replaceable>,<replaceable>ht-max</replaceable>)]:]<emphasis>rate</emphasis><emphasis
             role="bold">/</emphasis>{<emphasis
             role="bold">sec</emphasis>|<emphasis
             role="bold">min</emphasis>|<emphasis
             role="bold">hour</emphasis>|<emphasis
             role="bold">day</emphasis>}[:<emphasis>burst</emphasis>]</member>
 
-            <member>[<replaceable>name</replaceable>1:]<emphasis>rate1</emphasis><emphasis
+            <member>[<emphasis
+            role="bold">s</emphasis>[/<replaceable>vlsm1</replaceable>]:][<replaceable>name</replaceable>1[(<replaceable>ht-buckets1</replaceable>,<replaceable>ht-max1</replaceable>)]:]<emphasis>rate1</emphasis><emphasis
             role="bold">/</emphasis>{<emphasis
             role="bold">sec</emphasis>|<emphasis
             role="bold">min</emphasis>|<emphasis
             role="bold">hour</emphasis>|<emphasis
-            role="bold">day</emphasis>}[:<emphasis>burst1</emphasis>],[<replaceable>name</replaceable>2:]<emphasis>rate2</emphasis><emphasis
+            role="bold">day</emphasis>}[:<emphasis>burst1</emphasis>],[<emphasis
+            role="bold">d</emphasis>[/<replaceable>vlsm2</replaceable>:][<replaceable>name</replaceable>2[(<replaceable>ht-buckets2</replaceable>,<replaceable>ht-max2</replaceable>)]:]<emphasis>rate2</emphasis><emphasis
             role="bold">/</emphasis>{<emphasis
             role="bold">sec</emphasis>|<emphasis
             role="bold">min</emphasis>|<emphasis
