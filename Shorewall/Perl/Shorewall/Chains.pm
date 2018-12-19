@@ -2725,6 +2725,12 @@ sub add_expanded_jump( $$$$ ) {
     add_reference( $chainref, $toref ) while --$splitcount > 0;
 }
 
+#
+# Utility function used by add_ijump() and add_ijump_extended().
+# Returns a reference to the added rule. Return may be reference
+# to the dummy rule if the chain was already complete (last rule
+# is a simple jump to a terminating target).
+#
 sub add_ijump_internal( $$$$$;@ ) {
     my ( $fromref, $jump, $to, $expandports, $origin, @matches ) = @_;
 
@@ -2772,16 +2778,26 @@ sub add_ijump_internal( $$$$$;@ ) {
     $expandports ? handle_port_ilist( $fromref, $ruleref, 1 ) : push_irule( $fromref, $ruleref );
 }
 
+#
+# Add an jump to the end of a chain
+#
 sub add_ijump( $$$;@ ) {
     my ( $fromref, $jump, $to, @matches ) = @_;
     add_ijump_internal( $fromref, $jump, $to, 0, '', @matches );
 }
 
+#
+# Like add_ijump() but also accepts an origin of the jump (the config file and line number
+# that caused the jump to be generated).
+#
 sub add_ijump_extended( $$$$;@ ) {
     my ( $fromref, $jump, $to, $origin, @matches ) = @_;
     add_ijump_internal( $fromref, $jump, $to, 0, $origin, @matches );
 }
 
+#
+# Insert a jump at a zero-relative index into a chain.
+#
 sub insert_ijump( $$$$;@ ) {
     my ( $fromref, $jump, $to, $index, @matches ) = @_;
 
@@ -2853,6 +2869,9 @@ sub delete_jumps ( $$ ) {
     }
 }
 
+#
+# Reset the passed flag(s) in the passed chain
+#
 sub reset_optflags( $$ ) {
     my ( $chain, $flags ) = @_;
 
@@ -2865,6 +2884,9 @@ sub reset_optflags( $$ ) {
     $chainref;
 }
 
+#
+# Set the passed flag(s) in the passed chain
+#
 sub set_optflags( $$ ) {
     my ( $chain, $flags ) = @_;
 
@@ -2979,6 +3001,10 @@ sub accounting_chainrefs() {
     grep $_->{accounting} , values %$filter_table;
 }
 
+#
+# Ensure the existance of a chain in the mangle table and return
+# a reference to its chain table entry
+#
 sub ensure_mangle_chain($;$$) {
     my ( $chain, $number, $restriction ) = @_;
 
@@ -2989,6 +3015,10 @@ sub ensure_mangle_chain($;$$) {
     $chainref;
 }
 
+#
+# Ensure the existance of a chain in the nat table and return
+# a reference to its chain table entry
+
 sub ensure_nat_chain($) {
     my $chain = $_[0];
 
@@ -2997,6 +3027,10 @@ sub ensure_nat_chain($) {
     $chainref;
 }
 
+#
+# Ensure the existance of a chain in the raw table and return
+# a reference to its chain table entry
+#
 sub ensure_raw_chain($) {
     my $chain = $_[0];
 
@@ -3020,12 +3054,18 @@ sub new_builtin_chain($$$)
     $chainref;
 }
 
+#
+# Create a chain in the filter table, returning a reference to its chain table entry
+#
 sub new_standard_chain($) {
     my $chainref = new_chain 'filter' ,$_[0];
     $chainref->{referenced} = 1;
     $chainref;
 }
 
+#
+# Create a new action chain, returning a reference to its chain table entry
+#
 sub new_action_chain($$) {
     my $chainref = &new_chain( @_ );
     $chainref->{referenced} = 1;
@@ -3033,12 +3073,18 @@ sub new_action_chain($$) {
     $chainref;
 }
 
+#
+# Create a chain in the nat table, returning a reference to its chain table entry
+#
 sub new_nat_chain($) {
     my $chainref = new_chain 'nat' ,$_[0];
     $chainref->{referenced} = 1;
     $chainref;
 }
 
+#
+# Create a new manual chain, returning a reference to its chain table entry
+#
 sub new_manual_chain($) {
     my $chain = $_[0];
     fatal_error "Chain name ($chain) too long" if length $chain > 29;
@@ -3049,6 +3095,9 @@ sub new_manual_chain($) {
     $chainref;
 }
 
+#
+# Ensure the existance of a manual chain and return a reference to its chain table entry
+#
 sub ensure_manual_chain($) {
     my $chain = $_[0];
     my $chainref = $filter_table->{$chain} || new_manual_chain($chain);
@@ -3058,6 +3107,9 @@ sub ensure_manual_chain($) {
 
 sub log_irule_limit( $$$$$$$$@ );
 
+#
+# Ensure the existance of the blacklist logging chain (blacklog)
+#
 sub ensure_blacklog_chain( $$$$$ ) {
     my ( $target, $disposition, $level, $tag, $audit ) = @_;
 
@@ -3076,6 +3128,9 @@ sub ensure_blacklog_chain( $$$$$ ) {
     'blacklog';
 }
 
+#
+# Ensure the existance of the audited blacklist logging chain (A_blacklog)
+#
 sub ensure_audit_blacklog_chain( $$$ ) {
     my ( $target, $disposition, $level ) = @_;
 
@@ -3097,7 +3152,6 @@ sub ensure_audit_blacklog_chain( $$$ ) {
 #
 # Create and populate the passed AUDIT chain if it doesn't exist. Return chain name
 #
-
 sub ensure_audit_chain( $;$$$ ) {
     my ( $target, $action, $tgt, $table ) = @_;
 
@@ -3134,7 +3188,6 @@ sub ensure_audit_chain( $;$$$ ) {
 #
 # Return the appropriate target based on whether the second argument is 'audit'
 #
-
 sub require_audit($$;$) {
     my ($action, $audit, $tgt ) = @_;
 
@@ -5050,7 +5103,9 @@ sub do_proto( $$$;$ )
     $output;
 }
 
-
+#
+# Generate a mac address match
+#
 sub do_mac( $ ) {
     my $mac = $_[0];
 
@@ -5063,6 +5118,9 @@ sub do_mac( $ ) {
     "-m mac ${invert}--mac-source $mac ";
 }
 
+#
+# Version of do_proto() that generates an irule match rather than an iptables text match
+#
 sub do_iproto( $$$ )
 {
     my ($proto, $ports, $sports ) = @_;
@@ -5258,6 +5316,9 @@ sub do_iproto( $$$ )
     @output;
 }
 
+#
+# Generate a mac address match in irule format.
+#
 sub do_imac( $ ) {
     my $mac = $_[0];
 
@@ -5320,7 +5381,6 @@ sub verify_small_mark( $ ) {
 #
 # Generate an appropriate -m [conn]mark match string for the contents of a MARK column
 #
-
 sub do_test ( $$ )
 {
     my ($testval, $mask) = @_;
@@ -5475,6 +5535,9 @@ sub do_connlimit( $ ) {
     }
 }
 
+#
+# Create a calendar match
+#
 sub do_time( $ ) {
     my ( $time ) = @_;
 
@@ -5513,6 +5576,11 @@ sub do_time( $ ) {
     $result;
 }
 
+#
+# Resolve a user/group name to the appropriate numeric id. Only do the resolution
+# if we are not compiling for export, since remote name->id mapping is likely to
+# be different.
+#
 sub resolve_id( $$ ) {
     my ( $id, $type ) = @_;
 
@@ -5575,8 +5643,6 @@ sub do_user( $ ) {
 
 #
 # Create a "-m tos" match for the passed TOS
-#
-# This helper is also used during tos file processing
 #
 sub decode_tos( $$ ) {
     my ( $tos, $set ) = @_;
@@ -6114,6 +6180,9 @@ sub get_interface_address( $;$ );
 
 sub get_interface_gateway ( $;$$ );
 
+#
+# Verify and record a runtime address variable
+#
 sub record_runtime_address( $$;$$ ) {
     my ( $addrtype, $interface, $protect, $provider ) = @_;
 
@@ -6604,6 +6673,9 @@ sub match_ipsec_in( $$ ) {
     @match;
 }
 
+#
+# Match Dest IPSEC
+#
 sub match_ipsec_out( $$ ) {
     my ( $zone , $hostref ) = @_;
     my @match;
@@ -6628,7 +6700,7 @@ sub match_ipsec_out( $$ ) {
 }
 
 #
-# Handle a unidirectional IPSEC Options
+# Handle unidirectional IPSEC Options
 #
 sub do_ipsec_options($$$)
 {
@@ -6705,7 +6777,7 @@ sub do_ipsec($$) {
 }
 
 #
-# Generate a log message
+# Generate a logging rule
 #
 sub log_rule_limit( $$$$$$$$;$ ) {
     my ($level, $chainref, $chn, $dispo, $limit, $tag, $command, $matches, $origin ) = @_;
@@ -6901,6 +6973,9 @@ sub log_irule_limit( $$$$$$$$@ ) {
     }
 }
 
+#
+# Wrappers for the above that use the global default log limit
+#
 sub log_rule( $$$$ ) {
     my ( $level, $chainref, $disposition, $matches ) = @_;
 
@@ -8488,7 +8563,7 @@ sub add_interface_options( $ ) {
 # We may have to generate part of the input at run-time. The rules array in each chain
 # table entry may contain both rules or shell source, determined by the contents of the 'mode'
 # member. We alternate between writing the rules into the temporary file to be passed to
-# iptables-restore (CAT_MODE) and and writing shell source into the generated script (CMD_MODE).
+# iptables-restore (CAT_MODE) and writing shell source into the generated script (CMD_MODE).
 #
 # The following two functions are responsible for the mode transitions.
 #
@@ -9068,7 +9143,7 @@ sub create_nfobjects() {
 }
 #
 #
-# Generate the netfilter input
+# Generate the input to ip[6]tables-restore or to 'ip[6]tables -R'
 #
 sub create_netfilter_load( $ ) {
     my $test = shift;
