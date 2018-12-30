@@ -222,6 +222,9 @@ use constant { IN_OUT     => 1,
 	       IN         => 2,
 	       OUT        => 3 };
 
+#
+# Zone types
+#
 use constant { FIREWALL => 1,
 	       IP       => 2,
 	       BPORT    => 4,
@@ -231,6 +234,9 @@ use constant { FIREWALL => 1,
 	       LOCAL    => 64,
 	   };
 
+#
+# Interface option classification
+#
 use constant { SIMPLE_IF_OPTION   => 1,
 	       BINARY_IF_OPTION   => 2,
 	       ENUM_IF_OPTION     => 3,
@@ -247,11 +253,17 @@ use constant { SIMPLE_IF_OPTION   => 1,
 	       IF_OPTION_WILDOK   => 64
 	   };
 
+#
+# 'ignore' option flags
+#
 use constant { NO_UPDOWN   => 1, 
 	       NO_SFILTER  => 2 };
 
 our %validinterfaceoptions;
 
+#
+# Interface options that are implemented in /proc
+#
 our %procinterfaceoptions=( accept_ra   => 1,
 			    arp_filter  => 1,
 			    arp_ignore  => 1,
@@ -263,6 +275,9 @@ our %procinterfaceoptions=( accept_ra   => 1,
 			    sourceroute => 1,
 			  );
 
+#
+# Options that are not allowed with unmanaged interfaces
+#
 our %prohibitunmanaged = (
 			  blacklist      => 1,
 			  bridge         => 1,
@@ -281,9 +296,14 @@ our %prohibitunmanaged = (
 			  upnp           => 1,
 			  upnpclient     => 1,
 			 );
-
+#
+# Default values for options that admit an optional value
+#
 our %defaultinterfaceoptions = ( routefilter => 1 , wait => 60, accept_ra => 1 , ignore => 3, routeback => 1 );
 
+#
+# Maximum value for options that accept a range of values
+#
 our %maxoptionvalue = ( routefilter => 2, mss => 100000 , wait => 120 , ignore => NO_UPDOWN | NO_SFILTER, accept_ra => 2 );
 
 our %validhostoptions;
@@ -701,7 +721,7 @@ sub determine_zones()
 }
 
 #
-# Return true of we have any ipsec zones
+# Return true If we have any ipsec zones
 #
 sub haveipseczones() {
     for my $zoneref ( values %zones ) {
@@ -872,6 +892,9 @@ sub single_interface( $ ) {
     @keys == 1 ? $keys[0] : '';
 }
 
+#
+# This function adds an interface:network pair to a zone
+#
 sub add_group_to_zone($$$$$$)
 {
     my ($zone, $type, $interface, $networks, $options, $inherit_options) = @_;
@@ -976,6 +999,9 @@ sub find_zone( $ ) {
     $zoneref;
 }
 
+#
+# Access functions for zone members
+#
 sub zone_type( $ ) {
     find_zone( $_[0] )->{type};
 }
@@ -990,26 +1016,44 @@ sub zone_mark( $ ) {
     $zoneref->{mark};
 }
 
+#
+# Returns the zone table entry for the passed zone name
+#
 sub defined_zone( $ ) {
     $zones{$_[0]};
 }
 
+#
+# Returns a list of all defined zones
+#
 sub all_zones() {
     @zones;
 }
 
+#
+# Returns a list of zones in the firewall itself (the firewall zone and vserver zones)
+#
 sub on_firewall_zones() {
    grep ( ( $zones{$_}{type} & ( FIREWALL | VSERVER ) )  ,  @zones );
 }
 
+#
+# Returns a list of zones excluding the firewall and vserver zones
+#
 sub off_firewall_zones() {
    grep ( ! ( $zones{$_}{type} & ( FIREWALL | VSERVER ) )  ,  @zones );
 }
 
+#
+# Returns a list of zones excluding the firewall zones
+#
 sub non_firewall_zones() {
    grep ( ! ( $zones{$_}{type} & FIREWALL ) ,  @zones );
 }
 
+#
+# Returns the list of zones that don't contain sub-zones
+#
 sub all_parent_zones() {
     #
     # Although the firewall zone is technically a parent zone, we let the caller decide
@@ -1018,22 +1062,37 @@ sub all_parent_zones() {
     grep ( ! @{$zones{$_}{parents}} , off_firewall_zones );
 }
 
+#
+# Returns a list of complex zones (ipsec or with multiple interface:subnets)
+#
 sub complex_zones() {
     grep( $zones{$_}{complex} , @zones );
 }
 
+#
+# Returns a list of vserver zones
+#
 sub vserver_zones() {
     grep ( $zones{$_}{type} & VSERVER, @zones );
 }
 
+#
+# Returns the name of the firewall zone
+#
 sub firewall_zone() {
     $firewall_zone;
 }
 
+#
+# Returns a list of loopback zones
+#
 sub loopback_zones() {
     @loopback_zones;
 }
 
+#
+# Returns a list of local zones
+#
 sub local_zones() {
     @local_zones;
 }
