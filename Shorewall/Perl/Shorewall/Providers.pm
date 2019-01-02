@@ -62,23 +62,61 @@ our @routemarked_interfaces;
 our %provider_interfaces;
 our @load_providers;
 
-our $balancing;
-our $fallback;
-our $balanced_providers;
-our $fallback_providers;
-our $metrics;
-our $first_default_route;
-our $first_fallback_route;
-our $maxload;
-our $tproxies;
+our $balancing;               # True, if there are balanced providers
+our $fallback;                # True, if there are fallback providers
+our $balanced_providers;      # Count of balanced providers
+our $fallback_providers;      # Count of fallback providers
+our $metrics;                 # True, if using statistical balancing
+our $first_default_route;     # True, until we generate the first 'via' clause for balanced providers
+our $first_fallback_route;    # True, until we generate the first 'via' clause for fallback providers
+our $maxload;                 # Sum of 'load' values
+our $tproxies;                # Count of tproxy providers
 
-our %providers;
+our %providers;               # Provider table
+#
+# %provider_table { <provider> => { provider	      => <provider name>,
+#				    number	      => <provider number>,
+#				    id		      => <name> or <number> depending on USE_RT_NAMES,
+#				    rawmark	      => <specified mark value>,
+#				    mark	      => <mark, in hex>,
+#				    interface	      => <logical interface>,
+#				    physical	      => <physical interface>,
+#				    optional	      => {0|1},
+#				    wildcard	      => <from interface>,
+#				    gateway	      => <gateway>,
+#				    gatewaycase	      => { 'detect', 'none', or 'specified' },
+#				    shared	      => <true, if multiple providers through this interface>,
+#				    copy	      => <contents of the COPY column>,
+#				    balance	      => <balance count>,
+#				    pref	      => <route rules preference (priority) value>,
+#				    mtu		      => <mtu>,
+#				    noautosrc	      => {0|1} based on [no]autosrc setting,
+#				    track	      => {0|1} based on 'track' setting,
+#				    loose	      => {0|1} based on 'loose' setting,
+#				    duplicate	      => <contents of the DUPLICATE column>,
+#				    address	      => If {shared} above, then the local IP address.
+#							 Otherwise, the value of the 'src' option,
+#				    mac		      => Mac address of gateway, if {shared} above,
+#				    tproxy	      => {0|1},
+#				    load	      => <load % for statistical balancing>,
+#				    pseudo	      => {0|1}. 1 means this is an optional interface and not
+#							 a real provider,
+#				    what	      => 'provider' or 'interface' depending on {pseudo} above,
+#				    hostroute	      => {0|1} based on [no]hostroute setting,
+#				    rules	      => ( <routing rules> ),
+#				    persistent_rules  => ( <persistent routing rules> ),
+#				    routes	      => ( <routes> ),
+#				    persistent_routes => ( <persistent routes> ),
+#				    persistent	      => {0|1} depending on 'persistent' setting,
+#				    routedests	      => { <subnet> => 1 , ... }, (used for duplicate destination detection),
+#				    origin	      => <filename and linenumber where provider/interface defined>
+#		   }
 
-our @providers;
+our @providers;    # Provider names. Only declared names are included in this array. 
 
-our $family;
+our $family;       # Address family
 
-our $lastmark;
+our $lastmark;     # Highest assigned mark
 
 use constant { ROUTEMARKED_SHARED => 1, ROUTEMARKED_UNSHARED => 2 };
 
