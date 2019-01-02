@@ -387,8 +387,10 @@
                 distributions but <emphasis role="bold">nohostroute</emphasis>
                 (below) is appropriate for recent distributions. <emphasis
                 role="bold">hostroute</emphasis> may interfere with Zebra's
-                ability to add routes on some distributions such as Debian
-                7.</para>
+                ability to add routes on some distributions such as Debian 7.
+                This option defaults to on when BALANCE_PROVIDERS=Yes, in
+                <ulink
+                url="/manpages/shorewall.conf.html">shorewall.conf(5)</ulink>.</para>
               </listitem>
             </varlistentry>
 
@@ -404,7 +406,9 @@
                 older distributions but is appropriate for recent
                 distributions. <emphasis role="bold">nohostroute</emphasis>
                 allows Zebra's to correctly add routes on some distributions
-                such as Debian 7.</para>
+                such as Debian 7. This option defaults to off when
+                BALANCE_PROVIDERS=Yes, in <ulink
+                url="/manpages/shorewall.conf.html">shorewall.conf(5)</ulink>.</para>
               </listitem>
             </varlistentry>
 
