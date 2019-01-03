@@ -874,6 +874,7 @@ detect_dynamic_gateway() { # $1 = interface
     GATEWAYS=
     local gateway
     local file
+    local nmcli
 
     gateway=$(run_findgw_exit $1);
 
@@ -896,6 +897,14 @@ detect_dynamic_gateway() { # $1 = interface
 	    gateway=$(grep 'option routers' "${file}" | tail -n 1 | while read j1 j2 gateway; do echo "${gateway%\;}" ; return 0; done)
 	fi
     done
+
+    if [ -z "$gateway" -a -n "$(mywhich nmcli)" ]; then
+	if [ $g_family = 4 ]; then
+	    gateway=$(nmcli --fields DHCP4.OPTION,IP4.GATEWAY device show ${1} 2> /dev/null | sed -rn '/( routers = |IP4.GATEWAY:.*[1-9])/{s/.* //;p;q}')
+	else
+	    gateway=$(nmcli --terse --fields IP6.GATEWAY device show ${1} 2> /dev/null | cut -f2- -d':')
+	fi
+    fi
 
     [ -n "$gateway" ] && echo $gateway
 }
