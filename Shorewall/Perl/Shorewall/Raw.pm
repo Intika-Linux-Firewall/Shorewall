@@ -3,7 +3,7 @@
 #
 #     This program is under GPL [http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt]
 #
-#     (c) 2009-2018 - Tom Eastep (teastep@shorewall.net)
+#     (c) 2009-2019 - Tom Eastep (teastep@shorewall.net)
 #
 #       Complete documentation is available at http://shorewall.net
 #
@@ -70,6 +70,13 @@ sub process_conntrack_rule( $$$$$$$$$$ ) {
 
     my $zone;
     my $restriction = PREROUTE_RESTRICT;
+    my $raw_matches = get_inline_matches(0);
+    my $prerule = '';
+
+    if ( $raw_matches =~ /s*+/ ) {
+	$prerule = $raw_matches;
+	$raw_matches = '';
+    }
 
     if ( $chainref ) {
 	$restriction = OUTPUT_RESTRICT if $chainref->{name} eq 'OUTPUT';
@@ -206,10 +213,11 @@ sub process_conntrack_rule( $$$$$$$$$$ ) {
 
     expand_rule( $chainref ,
 		 $restriction ,
-		 '',
+		 $prerule,
 		 do_proto( $proto, $ports, $sports ) . 
 		 do_user ( $user ) . 
-		 do_condition( $switch , $chainref->{name} ),
+		 do_condition( $switch , $chainref->{name} ) .
+		 $raw_matches ,
 		 $source ,
 		 $dest ,
 		 '' ,
@@ -316,7 +324,7 @@ sub setup_conntrack($) {
 				     { source => 0, dest => 1, proto => 2, dport => 3, sport => 4, user => 5, switch => 6 } );
 		    $action = 'NOTRACK';
 		} else {
-		    ( $action, $source, $dest, $protos, $ports, $sports, $user, $switch ) = split_line1 'Conntrack File', { action => 0, source => 1, dest => 2, proto => 3, dport => 4, sport => 5, user => 6, switch => 7 };
+		    ( $action, $source, $dest, $protos, $ports, $sports, $user, $switch ) = split_line2( 'Conntrack File', { action => 0, source => 1, dest => 2, proto => 3, dport => 4, sport => 5, user => 6, switch => 7 }, undef, undef, 1 );
 		}
 
 		$empty = 0;

@@ -18,7 +18,7 @@
     <pubdate><?dbtimestamp format="Y/m/d"?></pubdate>
 
     <copyright>
-      <year>2001-2017</year>
+      <year>2001-2019</year>
 
       <holder>Thomas M. Eastep</holder>
     </copyright>
@@ -56,7 +56,7 @@
     Shorewall</ulink> is required reading for being able to use this article
     effectively. For information about setting up your first Shorewall-based
     firewall, see the <ulink url="GettingStarted.html">Quickstart
-    Guides</ulink>.</para>
+    Guides</ulink>.in</para>
   </section>
 
   <section id="Files">
@@ -852,7 +852,8 @@ INLINE               net              $FW ;; -m recent --rcheck 10 --hitcount 5 
           column=value specifications. In Shorewall 5.0.0 and later, inline
           matches are allowed in mangle, masq and rules following two adjacent
           semicolons (";;"). If alternate input is present, the adjacent
-          semicolons should follow that input.</para>
+          semicolons should follow that input. In Shorewall 5.2.2, this
+          support was extended to the conntrack file.</para>
 
           <caution>
             <para>INLINE_MATCHES=Yes is deprecated and will no longer be
