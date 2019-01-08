@@ -874,7 +874,6 @@ detect_dynamic_gateway() { # $1 = interface
     GATEWAYS=
     local gateway
     local file
-    local nmcli
 
     gateway=$(run_findgw_exit $1);
 
