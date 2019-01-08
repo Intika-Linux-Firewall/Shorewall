@@ -73,7 +73,7 @@ sub process_conntrack_rule( $$$$$$$$$$ ) {
     my $raw_matches = get_inline_matches(0);
     my $prerule = '';
 
-    if ( $raw_matches =~ /s*+/ ) {
+    if ( $raw_matches =~ /^s*+/ ) {
 	$prerule = $raw_matches;
 	$raw_matches = '';
     }

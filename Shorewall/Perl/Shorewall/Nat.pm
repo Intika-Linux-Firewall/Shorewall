@@ -90,7 +90,7 @@ sub process_one_masq1( $$$$$$$$$$$ )
     #
     # Handle early matches
     #
-    if ( $inlinematches =~ s/s*\+// ) {
+    if ( $inlinematches =~ s/^s*\+// ) {
 	$prerule = $inlinematches;
 	$inlinematches = '';
     }

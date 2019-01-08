@@ -2609,7 +2609,7 @@ sub process_rule ( $$$$$$$$$$$$$$$$$$$$ ) {
     #
     # Handle early matches
     #
-    if ( $raw_matches =~ s/s*\+// ) {
+    if ( $raw_matches =~ s/^s*\+// ) {
 	$prerule = $raw_matches;
 	$raw_matches = '';
     }
@@ -4889,7 +4889,7 @@ sub process_mangle_rule1( $$$$$$$$$$$$$$$$$$$ ) {
     #
     # Handle early matches
     #
-    if ( $raw_matches =~ s/s*\+// ) {
+    if ( $raw_matches =~ s/^s*\+// ) {
 	$prerule = $raw_matches;
 	$raw_matches = '';
     }
