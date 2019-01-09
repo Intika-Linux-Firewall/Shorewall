@@ -3,7 +3,7 @@
 #
 #     This program is under GPL [http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt]
 #
-#     (c) 2007-2017 - Tom Eastep (teastep@shorewall.net)
+#     (c) 2007-2019 - Tom Eastep (teastep@shorewall.net)
 #
 #       Complete documentation is available at http://shorewall.net
 #
@@ -201,6 +201,13 @@ sub process_accounting_rule1( $$$$$$$$$$$ ) {
     my $prerule = '';
     my $rule2 = 0;
     my $jump  = 0;
+    my $raw_matches = get_inline_matches(1);
+
+    if ( $raw_matches =~ s/^\s*+// ) {
+	$prerule = $raw_matches;
+    } else {
+	$rule .= $raw_matches;
+    }
 
     unless ( $action eq 'COUNT' ) {
 	if ( $action eq 'DONE' ) {
@@ -242,9 +249,7 @@ sub process_accounting_rule1( $$$$$$$$$$$ ) {
 		    $rule .= do_nfacct( $_ );
 		}
 	    }
-	} elsif ( $action eq 'INLINE' ) {
-	    $rule .= get_inline_matches(1);
-	} else {
+	} elsif ( $action ne 'INLINE' ) {
 	    ( $action, my $cmd ) = split /:/, $action;
 
 	    if ( $cmd ) {
