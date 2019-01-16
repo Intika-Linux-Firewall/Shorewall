@@ -304,7 +304,7 @@ our %defaultinterfaceoptions = ( routefilter => 1 , wait => 60, accept_ra => 1 ,
 #
 # Maximum value for options that accept a range of values
 #
-our %maxoptionvalue = ( routefilter => 2, mss => 100000 , wait => 120 , ignore => NO_UPDOWN | NO_SFILTER, accept_ra => 2 );
+our %maxoptionvalue = ( routefilter => 2, mss => 100000 , wait => 300 , ignore => NO_UPDOWN | NO_SFILTER, accept_ra => 2 );
 
 our %validhostoptions;
 
