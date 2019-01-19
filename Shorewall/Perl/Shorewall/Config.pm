@@ -684,6 +684,7 @@ our $shorewall_dir;          # Shorewall Directory; if non-empty, search here fi
 
 our $debug;                  # Global debugging flag
 our $confess;                # If true, use Carp to report errors with stack trace.
+our $update;                 # True if this is an update
 
 our $family;                 # Protocol family (4 or 6)
 our $export;                 # True when compiling for export
@@ -1191,6 +1192,7 @@ sub initialize( $;$$$) {
 
     $debug = 0;
     $confess = 0;
+    $update = 0;
 
     %params = ();
 
@@ -4021,9 +4023,9 @@ sub read_a_line($) {
 	    #
 	    handle_first_entry if $first_entry;
 	    #
-	    # Save Raw Image
+	    # Save Raw Image if we are updating
 	    #
-	    $rawcurrentline = $currentline;
+	    $rawcurrentline = $currentline if $update;
 	    #
 	    # Expand Shell Variables using %params and %actparams
 	    #
@@ -5696,8 +5698,8 @@ EOF
 #
 # Small functions called by get_configuration. We separate them so profiling is more useful
 #
-sub process_shorewall_conf( $$ ) {
-    my ( $update, $annotate ) = @_;
+sub process_shorewall_conf( $ ) {
+    my ( $annotate ) = @_;
     my $file   = find_file "$product.conf";
     my @vars;
 
@@ -6278,7 +6280,7 @@ sub convert_to_version_5_2() {
 #
 sub get_configuration( $$$ ) {
 
-    my ( $export, $update, $annotate ) = @_;
+    ( my $export, $update, my $annotate ) = @_;
 
     $globals{EXPORT} = $export;
 
@@ -6340,7 +6342,7 @@ sub get_configuration( $$$ ) {
 
     get_params( $export );
 
-    process_shorewall_conf( $update, $annotate );
+    process_shorewall_conf( $annotate );
 
     ensure_config_path;
 
