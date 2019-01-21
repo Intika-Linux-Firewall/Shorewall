@@ -68,32 +68,35 @@
         <term><emphasis role="bold">SOURCE</emphasis> -
         <emphasis>zone</emphasis>[,...[+]]|<emphasis
         role="bold">$FW</emphasis>|<emphasis
-        role="bold">all</emphasis>|<emphasis
-        role="bold">all+</emphasis></term>
+        role="bold">all[+][!<replaceable>ezone</replaceable>[,...]]</emphasis></term>
 
         <listitem>
           <para>Source zone. Must be the name of a zone defined in <ulink
           url="/manpages/shorewall-zones.html">shorewall-zones</ulink>(5),
           $FW, "all" or "all+".</para>
 
-          <para>Support for "all+" was added in Shorewall 4.5.17. "all" does
-          not override the implicit intra-zone ACCEPT policy while "all+"
-          does.</para>
+          <para>Support for <emphasis role="bold">all+</emphasis> was added in
+          Shorewall 4.5.17. <emphasis role="bold">all</emphasis> does not
+          override the implicit intra-zone ACCEPT policy while <emphasis
+          role="bold">all+</emphasis> does.</para>
 
           <para>Beginning with Shorewall 5.0.12, multiple zones may be listed
           separated by commas. As above, if '+' is specified after two or more
           zone names, then the policy overrides the implicit intra-zone ACCEPT
           policy if the same <replaceable>zone</replaceable> appears in both
           the SOURCE and DEST columns.</para>
+
+          <para>Beginning with Shorewall 5.2.3, a comma-separated list of
+          excluded zones preceded by "!" may follow <emphasis
+          role="bold">all</emphasis> or <emphasis
+          role="bold">all+.</emphasis></para>
         </listitem>
       </varlistentry>
 
       <varlistentry>
         <term><emphasis role="bold">DEST</emphasis> -
         <emphasis>zone</emphasis>[,...[+]]|<emphasis
-        role="bold">$FW</emphasis>|<emphasis
-        role="bold">all</emphasis>|<emphasis
-        role="bold">all+</emphasis></term>
+        role="bold">$FW</emphasis>|all[+][!<replaceable>ezone</replaceable>[,...]]</term>
 
         <listitem>
           <para>Destination zone. Must be the name of a zone defined in <ulink
@@ -112,6 +115,11 @@
           zone names, then the policy overrides the implicit intra-zone ACCEPT
           policy if the same <replaceable>zone</replaceable> appears in both
           the SOURCE and DEST columns.</para>
+
+          <para>Beginning with Shorewall 5.2.3, a comma-separated list of
+          excluded zones preceded by "!" may follow <emphasis
+          role="bold">all</emphasis> or <emphasis
+          role="bold">all+</emphasis>.</para>
         </listitem>
       </varlistentry>
 

@@ -672,14 +672,42 @@ sub process_a_policy1($$$$$$$) {
 
     my ( $client, $server, $originalpolicy, $loglevel, $synparams, $connlimit, $intrazone ) = @_;
 
-    my $clientwild = ( "\L$client" =~ /^all(\+)?$/ );
+    my $clientwild = ( "\L$client" =~ /^all(\+)?(?:!(.+))?$/ );
+    my $clientexclude;
+    my %clientexcluded;
 
-    $intrazone  ||= $clientwild && $1;
+    if ( $clientwild ) {
+	$intrazone ||= $1;
+
+	if ( $clientexclude = $2 ) {
+	    for my $client ( split_list( $clientexclude, 'zone' ) ) {
+		fatal_error "Undefined zone ($client)" unless defined_zone( $client );
+		$clientexcluded{$client} = 1;
+	    }
+
+	    $client = 'all';
+	}
+    }
 
     fatal_error "Undefined zone ($client)" unless $clientwild || defined_zone( $client );
 
-    my $serverwild = ( "\L$server" =~ /^all(\+)?/ );
-    $intrazone   ||= ( $serverwild && $1 );
+    my $serverwild = ( "\L$server" =~ /^all(\+)?(?:!(.+))?/ );
+    my $serverexclude;
+    my %serverexcluded;
+
+
+    if ( $serverwild ) {
+	$intrazone ||= $1;
+
+	if ( $serverexclude = $2 ) {
+	    for my $server ( split_list( $serverexclude, 'zone' ) ) {
+		fatal_error "Undefined zone ($server)" unless defined_zone( $server );
+		$serverexcluded{$server} = 1;
+	    }
+
+	    $server = 'all';
+	}
+    }
 
     fatal_error "Undefined zone ($server)" unless $serverwild || defined_zone( $server );
 
@@ -762,20 +790,20 @@ sub process_a_policy1($$$$$$$) {
 
     if ( $clientwild ) {
 	if ( $serverwild ) {
-	    for my $zone ( @zonelist ) {
-		for my $zone1 ( @zonelist ) {
+	    for my $zone ( grep( ! $clientexcluded{$_}, @zonelist ) ) {
+		for my $zone1 ( grep( ! $serverexcluded{zone}, @zonelist ) ) {
 		    set_policy_chain $zone, $zone1, $chainref, $policy, $intrazone;
 		    print_policy $zone, $zone1, $originalpolicy, $chain;
 		}
 	    }
 	} else {
-	    for my $zone ( all_zones ) {
+	    for my $zone ( grep( ! $clientexcluded{$_}, all_zones ) ) {
 		set_policy_chain $zone, $server, $chainref, $policy, $intrazone;
 		print_policy $zone, $server, $originalpolicy, $chain;
 	    }
 	}
     } elsif ( $serverwild ) {
-	for my $zone ( @zonelist ) {
+	for my $zone ( grep( ! $serverexcluded{$_}, @zonelist ) ) {
 	    set_policy_chain $client, $zone, $chainref, $policy, $intrazone;
 	    print_policy $client, $zone, $originalpolicy, $chain;
 	}
