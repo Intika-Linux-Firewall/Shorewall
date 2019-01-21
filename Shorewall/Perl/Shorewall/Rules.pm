@@ -816,7 +816,9 @@ sub process_a_policy() {
 
     if ( $clientlist || $serverlist ) {
 	for my $client ( split_list( $clients, 'zone' ) ) {
+	    fatal_error "'all' is not allowed in a source zone list" if $clientlist && $client =~ /^all\b/;
 	    for my $server ( split_list( $servers, 'zone' ) ) {
+		fatal_error "'all' is not allowed in a destination zone list" if $serverlist && $server =~ /^all\b/;
 		process_a_policy1( $client, $server, $policy, $loglevel, $synparams, $connlimit, $intrazone ) if $intrazone || $client ne $server;
 	    }
 	}
