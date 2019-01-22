@@ -993,19 +993,18 @@
 
                 <variablelist>
                   <varlistentry>
-                    <term>all[+][-]</term>
+                    <term>all[+]</term>
 
                     <listitem>
                       <para><emphasis role="bold">all</emphasis>, without the
-                      "-" means "All Zones, including the firewall zone". If
-                      the "-" is included, the firewall zone is omitted.
+                      "-" means "All Zones, including the firewall zone".
                       Normally all omits intra-zone traffic, but intra-zone
                       traffic can be included specifying "+".</para>
                     </listitem>
                   </varlistentry>
 
                   <varlistentry>
-                    <term>any[+][-]</term>
+                    <term>any[+]</term>
 
                     <listitem>
                       <para><emphasis role="bold">any</emphasis> is equivalent
@@ -1260,6 +1259,15 @@
             </varlistentry>
 
             <varlistentry>
+              <term>all+!dmz</term>
+
+              <listitem>
+                <para>All but the <emphasis role="bold">dmz</emphasis> zone
+                and applies to intrazone traffic.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
               <term>net:^CN</term>
 
               <listitem>
@@ -1349,19 +1357,18 @@
 
                 <variablelist>
                   <varlistentry>
-                    <term>all[+][-]</term>
+                    <term>all[+]</term>
 
                     <listitem>
                       <para><emphasis role="bold">all</emphasis>, without the
-                      "-" means "All Zones, including the firewall zone". If
-                      the "-" is included, the firewall zone is omitted.
+                      "-" means "All Zones, including the firewall zone".
                       Normally all omits intra-zone traffic, but intra-zone
                       traffic can be included specifying "+".</para>
                     </listitem>
                   </varlistentry>
 
                   <varlistentry>
-                    <term>any[+][-]</term>
+                    <term>any[+]</term>
 
                     <listitem>
                       <para><emphasis role="bold">any</emphasis> is equivalent
@@ -1573,7 +1580,7 @@
           <para>If the DEST <replaceable>zone</replaceable> is a bport zone,
           then either:<orderedlist numeration="loweralpha">
               <listitem>
-                <para>the SOURCE must be <option>all[+][-]</option>, or</para>
+                <para>the SOURCE must be <option>all[+]</option>, or</para>
               </listitem>
 
               <listitem>
