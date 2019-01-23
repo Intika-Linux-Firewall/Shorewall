@@ -292,6 +292,8 @@ our $mangle;
 
 our $sticky;
 
+our $excludefw;
+
 our $divertref; # DIVERT chain
 
 our %validstates = ( NEW                => 0,
@@ -364,6 +366,10 @@ sub initialize( $ ) {
     # All actions mentioned in /etc/shorewall[6]/actions and /usr/share/shorewall[6]/actions.std
     #
     %actions           = ();
+    #
+    # Count of 'all[+]=' encountered
+    #
+    $excludefw         = 0;
     #
     # Action variants actually used. Key is <action>:<loglevel>:<tag>:<caller>:<params>; value is corresponding chain name
     #
@@ -3689,6 +3695,7 @@ sub next_section() {
 #
 sub build_zone_list( $$$\$\$ ) {
     my ($fw, $input, $which, $intrazoneref, $wildref ) = @_;
+    my $original_input = $input;
     my $any = ( $input =~ s/^any/all/ );
     my $exclude;
     my $rest;
@@ -3717,9 +3724,25 @@ sub build_zone_list( $$$\$\$ ) {
 	    if ( $input eq 'all+' ) {
 		$$intrazoneref = 1;
 	    } elsif ( ( $input eq 'all+-' ) || ( $input eq 'all-+' ) ) {
+		unless ( $excludefw++ ) {
+		    if ( $any ) {
+			warning message "$original_input is deprecated in favor of 'any+!\$FW'";
+		    } else {
+			warning message "$original_input is deprecated in favor of 'all+!\$FW'";
+		    }
+		}
+
 		$$intrazoneref = 1;
 		$exclude{$fw} = 1;
 	    } elsif ( $input eq 'all-' ) {
+		unless ( $excludefw++ ) {
+		    if ( $any ) {
+			warning message "any- is deprecated in favor of 'any!\$FW'";
+		    } else {
+			warning message "all- is deprecated in favor of 'all!\$FW'" unless $excludefw++;
+		    }
+		}
+
 		$exclude{$fw} = 1;
 	    } else {
 		fatal_error "Invalid $which ($input)";

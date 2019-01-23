@@ -1259,11 +1259,11 @@
             </varlistentry>
 
             <varlistentry>
-              <term>all+!dmz</term>
+              <term>all+!$FW</term>
 
               <listitem>
-                <para>All but the <emphasis role="bold">dmz</emphasis> zone
-                and applies to intrazone traffic.</para>
+                <para>All but the firewall zone and applies to intrazone
+                traffic.</para>
               </listitem>
             </varlistentry>
 
