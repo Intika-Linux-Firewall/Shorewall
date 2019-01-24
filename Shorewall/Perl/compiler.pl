@@ -34,6 +34,8 @@
 #         --debug                     # Print stack trace on warnings and fatal error.
 #         --log=<filename>            # Log file
 #         --log_verbosity=<number>    # Log Verbosity range -1 to 2
+#         --test                      # Used by the regression library to omit versions and time/dates
+#                                     # from the generated script
 #         --family=<number>           # IP family; 4 = IPv4 (default), 6 = IPv6
 #         --preview                   # Preview the ruleset.
 #         --shorewallrc=<path>        # Path to global shorewallrc file.

@@ -47,13 +47,13 @@ our @EXPORT = qw( compiler );
 our @EXPORT_OK = qw( $export );
 our $VERSION = 'MODULEVERSION';
 
-our $export;
+our $export;          # True when compiling for export
 
-our $test;
+our $test;            # True when running regression tests
 
-our $family;
+our $family;          # IP address family (4 or 6)
 
-our $have_arptables;
+our $have_arptables;  # True if we have arptables rules
 
 #
 # Initilize the package-globals in the other modules
