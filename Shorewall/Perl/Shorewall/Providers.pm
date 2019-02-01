@@ -170,7 +170,6 @@ sub setup_route_marking() {
     #
     # Clear the mark -- we have seen cases where the mark is non-zero even in the raw table chains!
     #
-
     if ( $config{ZERO_MARKS} ) {
 	add_ijump( $mangle_table->{$_}, j => 'MARK', targetopts => '--set-mark 0' ) for qw/PREROUTING OUTPUT/;
     }
@@ -715,7 +714,6 @@ sub process_a_provider( $ ) {
     $mark = ( $lastmark += ( 1 << $config{PROVIDER_OFFSET} ) ) if $mark eq '-' && $track;
 
     if ( $mark ne '-' ) {
-
 	require_capability( 'MANGLE_ENABLED' , 'Provider marks' , '' );
 
 	if ( $tproxy && ! $local ) {
