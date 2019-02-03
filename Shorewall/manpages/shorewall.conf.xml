@@ -1382,7 +1382,10 @@ net     all  DROP   info</programlisting>then the chain name is 'net-all'
           of modules loaded by shorewall to those listed in
           <filename>/var/lib/shorewall[6]/helpers</filename> and those that
           are actually used. When not set, or set to the empty value,
-          LOAD_HELPERS_ONLY=No is assumed.</para>
+          LOAD_HELPERS_ONLY=No is assumed in Shorewall versions 5.2.2 and
+          earlier. Beginning with Shorewall 5.2.3, the LOAD_HELPERS_ONLY
+          option is removed, and the behavior is as if LOAD_HELPERS_ONLY=Yes
+          had been specified.</para>
         </listitem>
       </varlistentry>
 

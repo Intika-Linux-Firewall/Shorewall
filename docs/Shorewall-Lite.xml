@@ -386,6 +386,10 @@
         <filename>modules</filename> or <filename>helpers</filename> file
         found on the CONFIG_PATH on the Administrative System during
         compilation will be used.</para>
+
+        <para>In Shorewall 5.2.3, the LOAD_HELPERS_ONLY option was removed and
+        the behavior is that which was formerly obtained by setting
+        LOAD_HELPERS_ONLY=Yes.</para>
       </section>
 
       <section id="Converting">

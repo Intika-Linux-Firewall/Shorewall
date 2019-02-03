@@ -38,6 +38,12 @@
     <filename>helpers</filename> file is used when
     LOAD_HELPERS_ONLY=Yes</para>
 
+    <important>
+      <para>Beginning with Shorewall 5.2.3, the LOAD_HELPERS_ONLY option has
+      been removed and the behavior is the same as if LOAD_HELPERS_ONLY=Yes
+      was specified.</para>
+    </important>
+
     <para>Each record in the files has the following format:</para>
 
     <cmdsynopsis>

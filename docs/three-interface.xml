@@ -799,6 +799,12 @@ root@lists:~# </programlisting>
     <para><inlinegraphic fileref="images/BD21298_.gif" format="GIF"/></para>
 
     <para>Modify the setting of LOAD_HELPER_ONLY as necessary.</para>
+
+    <important>
+      <para>In Shorewall 5.2.3, the LOAD_HELPERS_ONLY option was removed, and
+      the behavior is the same as if LOAD_HELPERS_ONLY=Yes was
+      specified.</para>
+    </important>
   </section>
 
   <section id="DNAT">

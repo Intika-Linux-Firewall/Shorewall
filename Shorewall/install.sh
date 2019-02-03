@@ -467,17 +467,6 @@ if [ -z "$first_install" ]; then
 fi
 
 #
-# Install the Modules file
-#
-run_install $OWNERSHIP -m 0644 modules ${DESTDIR}${SHAREDIR}/${PRODUCT}/modules
-echo "Modules file installed as ${DESTDIR}${SHAREDIR}/${PRODUCT}/modules"
-
-for f in modules.*; do
-    run_install $OWNERSHIP -m 0644 $f ${DESTDIR}${SHAREDIR}/${PRODUCT}/$f
-    echo "Modules file $f installed as ${DESTDIR}${SHAREDIR}/${PRODUCT}/$f"
-done
-
-#
 # Install the Module Helpers file
 #
 run_install $OWNERSHIP -m 0644 helpers ${DESTDIR}${SHAREDIR}/${PRODUCT}/helpers

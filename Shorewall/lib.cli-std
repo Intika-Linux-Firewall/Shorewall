@@ -300,19 +300,6 @@ get_config() {
 	    ;;
     esac
 
-    case $LOAD_HELPERS_ONLY in
-	Yes|yes)
-	    ;;
-	No|no)
-	    LOAD_HELPERS_ONLY=
-	    ;;
-	*)
-	    if [ -n "$LOAD_HELPERS_ONLY" ]; then
-		fatal_error "Invalid LOAD_HELPERS_ONLY setting ($LOAD_HELPERS_ONLY)"
-	    fi
-	    ;;
-    esac
-
     if [ -n "$WORKAROUNDS" ]; then
 	case $WORKAROUNDS in
 	    [Yy]es)

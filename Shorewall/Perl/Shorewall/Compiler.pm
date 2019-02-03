@@ -384,7 +384,7 @@ sub generate_script_3() {
     save_progress_message 'Initializing...';
 
     if ( $export || $config{EXPORTMODULES} ) {
-	my $fn = find_file( $config{LOAD_HELPERS_ONLY} ? 'helpers' : 'modules' );
+	my $fn = find_file( 'helpers' );
 
 	if ( -f $fn && ( $config{EXPORTMODULES} || ( $export && ! $fn =~ "^$globals{SHAREDIR}/" ) ) ) {
 	    emit 'echo MODULESDIR=\"$MODULESDIR\" > ${VARDIR}/.modulesdir';

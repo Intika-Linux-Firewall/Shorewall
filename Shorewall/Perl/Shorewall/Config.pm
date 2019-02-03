@@ -396,7 +396,7 @@ our %renamed = ( AUTO_COMMENT => 'AUTOCOMMENT', BLACKLIST_LOGLEVEL => 'BLACKLIST
 #
 # Config options and global settings that are to be copied to output script
 #
-our @propagateconfig = qw/ DISABLE_IPV6 MODULESDIR LOAD_HELPERS_ONLY LOCKFILE SUBSYSLOCK LOG_VERBOSITY RESTART/;
+our @propagateconfig = qw/ DISABLE_IPV6 MODULESDIR LOCKFILE SUBSYSLOCK LOG_VERBOSITY RESTART/;
 #
 # From parsing the capabilities file or detecting capabilities
 #
@@ -732,18 +732,19 @@ our %converted = (
 #
 # Eliminated options
 #
-our %eliminated = ( LOGRATE          => 1,
-		    LOGBURST         => 1,
-		    EXPORTPARAMS     => 1,
-		    LEGACY_FASTSTART => 1,
-		    IPSECFILE        => 1,
-		    WIDE_TC_MARKS    => 1,
-		    HIGH_ROUTE_MARKS => 1,
-		    BLACKLISTNEWONLY => 1,
-		    CHAIN_SCRIPTS    => 1,
-                    MODULE_SUFFIX    => 1,
-                    MAPOLDACTIONS    => 1,
-		    INLINE_MATCHES   => 1,
+our %eliminated = ( LOGRATE	      => 1,
+		    LOGBURST	      => 1,
+		    EXPORTPARAMS      => 1,
+		    LEGACY_FASTSTART  => 1,
+		    IPSECFILE	      => 1,
+		    WIDE_TC_MARKS     => 1,
+		    HIGH_ROUTE_MARKS  => 1,
+		    BLACKLISTNEWONLY  => 1,
+		    CHAIN_SCRIPTS     => 1,
+		    MODULE_SUFFIX     => 1,
+		    MAPOLDACTIONS     => 1,
+		    INLINE_MATCHES    => 1,
+		    LOAD_HELPERS_ONLY => 1,
 		  );
 #
 # Variables involved in ?IF, ?ELSE ?ENDIF processing
@@ -981,7 +982,6 @@ sub initialize( $;$$$) {
 	  OPTIMIZE_ACCOUNTING => undef,
 	  ACCOUNTING_TABLE => undef,
 	  DYNAMIC_BLACKLIST => undef,
-	  LOAD_HELPERS_ONLY => undef,
 	  REQUIRE_INTERFACE => undef,
 	  FORWARD_CLEAR_MARK => undef,
 	  COMPLETE => undef,
@@ -4453,7 +4453,7 @@ sub load_kernel_modules( ) {
 	push @moduledirectories, $_ if -d $_;
     }
 
-    if ( $moduleloader &&  @moduledirectories && open_file( $config{LOAD_HELPERS_ONLY} ? 'helpers' : 'modules' ) ) {
+    if ( $moduleloader &&  @moduledirectories && open_file( 'helpers' ) ) {
 	my %loadedmodules;
 
 	$loadedmodules{$_}++ for split_list( $config{DONT_LOAD}, 'module' );
@@ -5252,111 +5252,6 @@ sub determine_capabilities() {
 	    qt1( "$iptables $iptablesw -A $sillyname -m state --state ESTABLISHED,RELATED -j ACCEPT");;
 
     $globals{KLUDGEFREE} = $capabilities{KLUDGEFREE} = detect_capability 'KLUDGEFREE';
-
-    unless ( $config{ LOAD_HELPERS_ONLY } ) {
-	#
-	# Using 'detect_capability()' is a bit less efficient than calling the individual detection
-	# functions but it ensures that %detect_capability is initialized properly.
-	#
-	$capabilities{NAT_ENABLED}     = detect_capability( 'NAT_ENABLED' );
-	$capabilities{PERSISTENT_SNAT} = detect_capability( 'PERSISTENT_SNAT' );
-	$capabilities{NAT_INPUT_CHAIN} = detect_capability( 'NAT_INPUT_CHAIN' );
-	$capabilities{MANGLE_ENABLED}  = detect_capability( 'MANGLE_ENABLED' );
-
-	if ( $capabilities{CONNTRACK_MATCH} = detect_capability( 'CONNTRACK_MATCH' ) ) {
-	    $capabilities{NEW_CONNTRACK_MATCH} = detect_capability( 'NEW_CONNTRACK_MATCH' );
-	    $capabilities{OLD_CONNTRACK_MATCH} = detect_capability( 'OLD_CONNTRACK_MATCH' );
-	} else {
-	    $capabilities{NEW_CONNTRACK_MATCH} = '';
-	    $capabilities{OLD_CONNTRACK_MATCH} = '';
-	}
-
-	$capabilities{ MULTIPORT } = detect_capability( 'MULTIPORT' );
-	$capabilities{XMULTIPORT}   = detect_capability( 'XMULTIPORT' );
-	$capabilities{EMULTIPORT}   = detect_capability( 'EMULTIPORT' );
-	$capabilities{POLICY_MATCH} = detect_capability( 'POLICY_MATCH' );
-
-	if ( $capabilities{PHYSDEV_MATCH} = detect_capability( 'PHYSDEV_MATCH' ) ) {
-	    $capabilities{PHYSDEV_BRIDGE} = detect_capability( 'PHYSDEV_BRIDGE' );
-	} else {
-	    $capabilities{PHYSDEV_BRIDGE} = '';
-	}
-
-	$capabilities{IPRANGE_MATCH}   = detect_capability( 'IPRANGE_MATCH' );
-	$capabilities{RECENT_MATCH}    = detect_capability( 'RECENT_MATCH' );
-	$capabilities{REAP_OPTION}     = detect_capability( 'REAP_OPTION' );
-	$capabilities{OWNER_MATCH}     = detect_capability( 'OWNER_MATCH' );
-	$capabilities{OWNER_NAME_MATCH}
-                                       = detect_capability( 'OWNER_NAME_MATCH' );
-	$capabilities{CONNMARK_MATCH}  = detect_capability( 'CONNMARK_MATCH' );
-	$capabilities{XCONNMARK_MATCH} = detect_capability( 'XCONNMARK_MATCH' );
-	$capabilities{IPP2P_MATCH}     = detect_capability( 'IPP2P_MATCH' );
-	$capabilities{OLD_IPP2P_MATCH} = detect_capability( 'OLD_IPP2P_MATCH' );
-	$capabilities{LENGTH_MATCH}    = detect_capability( 'LENGTH_MATCH' );
-	$capabilities{ENHANCED_REJECT} = detect_capability( 'ENHANCED_REJECT' );
-	$capabilities{COMMENTS}        = detect_capability( 'COMMENTS' );
-	$capabilities{OLD_HL_MATCH}    = detect_capability( 'OLD_HL_MATCH' );
-	$capabilities{HASHLIMIT_MATCH} = detect_capability( 'HASHLIMIT_MATCH' );
-	$capabilities{MARK}            = detect_capability( 'MARK' );
-	$capabilities{XMARK}           = detect_capability( 'XMARK' );
-	$capabilities{EXMARK}          = detect_capability( 'EXMARK' );
-	$capabilities{CONNMARK}        = detect_capability( 'CONNMARK' );
-	$capabilities{XCONNMARK}       = detect_capability( 'XCONNMARK' );
-	$capabilities{CLASSIFY_TARGET} = detect_capability( 'CLASSIFY_TARGET' );
-	$capabilities{IPMARK_TARGET}   = detect_capability( 'IPMARK_TARGET' );
-	$capabilities{TPROXY_TARGET}   = detect_capability( 'TPROXY_TARGET' );
-	$capabilities{MANGLE_FORWARD}  = detect_capability( 'MANGLE_FORWARD' );
-	$capabilities{RAW_TABLE}       = detect_capability( 'RAW_TABLE' );
-	$capabilities{IPSET_MATCH}     = detect_capability( 'IPSET_MATCH' );
-	$capabilities{ADDRTYPE}        = detect_capability( 'ADDRTYPE' );
-	$capabilities{TCPMSS_MATCH}    = detect_capability( 'TCPMSS_MATCH' );
-	$capabilities{NFQUEUE_TARGET}  = detect_capability( 'NFQUEUE_TARGET' );
-	$capabilities{REALM_MATCH}     = detect_capability( 'REALM_MATCH' );
-	$capabilities{CONNLIMIT_MATCH} = detect_capability( 'CONNLIMIT_MATCH' );
-	$capabilities{TIME_MATCH}      = detect_capability( 'TIME_MATCH' );
-	$capabilities{GOTO_TARGET}     = detect_capability( 'GOTO_TARGET' );
-	$capabilities{LOG_TARGET}      = detect_capability( 'LOG_TARGET' );
-	$capabilities{ULOG_TARGET}     = detect_capability( 'ULOG_TARGET' );
-	$capabilities{NFLOG_TARGET}    = detect_capability( 'NFLOG_TARGET' );
-	$capabilities{LOGMARK_TARGET}  = detect_capability( 'LOGMARK_TARGET' );
-	$capabilities{FLOW_FILTER}     = detect_capability( 'FLOW_FILTER' );
-	$capabilities{FWMARK_RT_MASK}  = detect_capability( 'FWMARK_RT_MASK' );
-	$capabilities{MARK_ANYWHERE}   = detect_capability( 'MARK_ANYWHERE' );
-	$capabilities{ACCOUNT_TARGET}  = detect_capability( 'ACCOUNT_TARGET' );
-	$capabilities{HEADER_MATCH}    = detect_capability( 'HEADER_MATCH' );
-	$capabilities{AUDIT_TARGET}    = detect_capability( 'AUDIT_TARGET' );
-	$capabilities{IPSET_V5}        = detect_capability( 'IPSET_V5' );
-	$capabilities{CONDITION_MATCH} = detect_capability( 'CONDITION_MATCH' );
-	$capabilities{IPTABLES_S}      = detect_capability( 'IPTABLES_S' );
-	$capabilities{BASIC_FILTER}    = detect_capability( 'BASIC_FILTER' );
-	$capabilities{BASIC_EMATCH}    = detect_capability( 'BASIC_EMATCH' );
-	$capabilities{CT_TARGET}       = detect_capability( 'CT_TARGET' );
-	$capabilities{STATISTIC_MATCH} = detect_capability( 'STATISTIC_MATCH' );
-	$capabilities{IMQ_TARGET}      = detect_capability( 'IMQ_TARGET' );
-	$capabilities{DSCP_MATCH}      = detect_capability( 'DSCP_MATCH' );
-	$capabilities{DSCP_TARGET}     = detect_capability( 'DSCP_TARGET' );
-	$capabilities{GEOIP_MATCH}     = detect_capability( 'GEOIP_MATCH' );
-	$capabilities{RPFILTER_MATCH}  = detect_capability( 'RPFILTER_MATCH' );
-	$capabilities{NFACCT_MATCH}    = detect_capability( 'NFACCT_MATCH' );
-	$capabilities{CHECKSUM_TARGET} = detect_capability( 'CHECKSUM_TARGET' );
-	$capabilities{ARPTABLESJF}     = detect_capability( 'ARPTABLESJF' );
-	$capabilities{MASQUERADE_TGT}  = detect_capability( 'MASQUERADE_TGT' );
-	$capabilities{UDPLITEREDIRECT} = detect_capability( 'UDPLITEREDIRECT' );
-	$capabilities{NEW_TOS_MATCH}   = detect_capability( 'NEW_TOS_MATCH' );
-	$capabilities{TARPIT_TARGET}   = detect_capability( 'TARPIT_TARGET' );
-	$capabilities{IFACE_MATCH}     = detect_capability( 'IFACE_MATCH' );
-	$capabilities{TCPMSS_TARGET}   = detect_capability( 'TCPMSS_TARGET' );
-	$capabilities{CPU_FANOUT}      = detect_capability( 'CPU_FANOUT' );
-	$capabilities{NETMAP_TARGET}   = detect_capability( 'NETMAP_TARGET' );
-	$capabilities{NFLOG_SIZE}      = detect_capability( 'NFLOG_SIZE' );
-	$capabilities{RESTORE_WAIT_OPTION}
-				       = detect_capability( 'RESTORE_WAIT_OPTION' );
-
-	unless ( have_capability 'CT_TARGET' ) {
-	    $capabilities{HELPER_MATCH} = detect_capability 'HELPER_MATCH';
-	}
-
-    }
 }
 
 #
@@ -6350,11 +6245,6 @@ sub get_configuration( $$$ ) {
 
     unshift @INC, @config_path;
 
-    #
-    # get_capabilities requires that the true settings of these options be established
-    #
-    default_yes_no 'LOAD_HELPERS_ONLY'          , 'Yes';
-
     if ( ! $export && $> == 0 ) {
 	get_capabilities($have_capabilities);
     }
@@ -6406,8 +6296,6 @@ sub get_configuration( $$$ ) {
 	$helpers_enabled{$_} = 0 for keys %helpers_enabled;
 	$capabilities{$_}    = 0 for grep /_HELPER/ , keys %capabilities;
     }
-
-    report_capabilities unless $config{LOAD_HELPERS_ONLY};
 
     #
     # Now initialize the used capabilities hash
@@ -7146,8 +7034,6 @@ sub get_configuration( $$$ ) {
     }
 
     convert_to_version_5_2 if $update;
-
-    cleanup_iptables if $sillyname && ! $config{LOAD_HELPERS_ONLY};
 }
 
 #

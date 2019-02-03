@@ -426,17 +426,17 @@ echo "Capability file builder installed in ${DESTDIR}${LIBEXECDIR}/$PRODUCT/shor
 if [ -f modules ]; then
     install_file modules ${DESTDIR}${SHAREDIR}/$PRODUCT/modules 0600
     echo "Modules file installed as ${DESTDIR}${SHAREDIR}/$PRODUCT/modules"
+
+    for f in modules.*; do
+	install_file $f ${DESTDIR}${SHAREDIR}/$PRODUCT/$f 0644
+	echo "Module file $f installed as ${DESTDIR}${SHAREDIR}/$PRODUCT/$f"
+    done
 fi
 
 if [ -f helpers ]; then
     install_file helpers ${DESTDIR}${SHAREDIR}/$PRODUCT/helpers 0600
     echo "Helper modules file installed as ${DESTDIR}${SHAREDIR}/$PRODUCT/helpers"
 fi
-
-for f in modules.*; do
-    install_file $f ${DESTDIR}${SHAREDIR}/$PRODUCT/$f 0644
-    echo "Module file $f installed as ${DESTDIR}${SHAREDIR}/$PRODUCT/$f"
-done
 
 #
 # Install the Man Pages

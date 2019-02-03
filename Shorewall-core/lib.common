@@ -411,7 +411,7 @@ load_kernel_modules() # $1 = Yes, if we are to save moduleinfo in $VARDIR
 	[ -d $directory ] && moduledirectories="$moduledirectories $directory"
     done
 
-    [ -n "$LOAD_HELPERS_ONLY" ] && modules=$(find_file helpers) || modules=$(find_file modules)
+    modules=$(find_file helpers)
 
     if [ -f $modules -a -n "$moduledirectories" ]; then
 	[ -d /sys/module/ ] || MODULES=$(lsmod | cut -d ' ' -f1)
