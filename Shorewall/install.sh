@@ -1241,6 +1241,14 @@ if [ $PRODUCT = shorewall ]; then
     rm -f ${DESTDIR}${SHAREDIR}/${PRODUCT}/deprecated/macro.SMTPTraps
 fi
 
+#
+# Remove unneeded modules files
+#
+
+if [ -n "$first_install" ]; then
+    rm -f ${DESTDIR}${SHAREDIR}/${PRODUCT}/modules*
+fi
+
 if [ $configure -eq 1 -a -z "$DESTDIR" -a -n "$first_install" -a -z "${cygwin}${mac}" ]; then
     if [ -n "$SERVICEDIR" ]; then
 	if systemctl enable ${PRODUCT}.service; then
