@@ -5,7 +5,7 @@
   <!--$Id: template.xml 5908 2007-04-12 23:04:36Z teastep $-->
 
   <articleinfo>
-    <title>Shorewall 5.0 Manpages</title>
+    <title>Shorewall 5.* Manpages</title>
 
     <authorgroup>
       <author>
@@ -18,7 +18,7 @@
     <pubdate><?dbtimestamp format="Y/m/d"?></pubdate>
 
     <copyright>
-      <year>2007-2017</year>
+      <year>2007-2019</year>
 
       <holder>Thomas M. Eastep</holder>
     </copyright>
@@ -53,6 +53,10 @@
         <member><ulink url="manpages/shorewall-actions.html">actions</ulink> -
         Declare user-defined actions.</member>
 
+        <member><ulink
+        url="/manpages/shorewall-addresses.html">addresses</ulink> - Describes
+        how IP address and ports are specified in Shorewall</member>
+
         <member><ulink url="manpages/shorewall-arprules.html">arprules</ulink>
         - (Added in Shorewall 4.5.12) Define arpfilter rules.</member>
 
@@ -70,6 +74,9 @@
         <member><ulink
         url="manpages/shorewall-exclusion.html">exclusion</ulink> - Excluding
         hosts from a network or zone</member>
+
+        <member><ulink url="/manpages/shorewall-files.html">files</ulink> -
+        Describes the shorewall configuration files</member>
 
         <member><ulink url="manpages/shorewall-hosts.html">hosts</ulink> -
         Define multiple zones accessed through a single interface</member>
@@ -96,7 +103,11 @@
         Define Masquerade/SNAT (deprecated)</member>
 
         <member><ulink url="manpages/shorewall-modules.html">modules</ulink> -
-        Specify which kernel modules to load.</member>
+        Specify which kernel modules to load (Removed in Shorewall
+        5.2.3)</member>
+
+        <member><ulink url="/manpages/shorewall-names.html">names</ulink> -
+        Describes object naming in Shorewall configuration files</member>
 
         <member><ulink url="manpages/shorewall-nat.html">nat</ulink> - Define
         one-to-one NAT.</member>
