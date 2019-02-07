@@ -3726,9 +3726,9 @@ sub build_zone_list( $$$\$\$ ) {
 	    } elsif ( ( $input eq 'all+-' ) || ( $input eq 'all-+' ) ) {
 		unless ( $excludefw++ ) {
 		    if ( $any ) {
-			warning message "$original_input is deprecated in favor of 'any+!\$FW'";
+			warning_message "$original_input is deprecated in favor of 'any+!\$FW'";
 		    } else {
-			warning message "$original_input is deprecated in favor of 'all+!\$FW'";
+			warning_message "$original_input is deprecated in favor of 'all+!\$FW'";
 		    }
 		}
 
@@ -3737,9 +3737,9 @@ sub build_zone_list( $$$\$\$ ) {
 	    } elsif ( $input eq 'all-' ) {
 		unless ( $excludefw++ ) {
 		    if ( $any ) {
-			warning message "any- is deprecated in favor of 'any!\$FW'";
+			warning_message "any- is deprecated in favor of 'any!\$FW'";
 		    } else {
-			warning message "all- is deprecated in favor of 'all!\$FW'" unless $excludefw++;
+			warning_message "all- is deprecated in favor of 'all!\$FW'" unless $excludefw++;
 		    }
 		}
 
