@@ -10,7 +10,9 @@
     <pubdate><?dbtimestamp format="Y/m/d"?></pubdate>
 
     <copyright>
-      <year>2003-2009</year>
+      <year>2003-2013</year>
+
+      <year>2019</year>
 
       <holder>Thomas M. Eastep</holder>
     </copyright>
@@ -88,45 +90,51 @@
         </row>
 
         <row rowsep="0" valign="middle">
-          <entry>Tom's 2005 LinuxFest NW Presentation: <ulink
+          <entry>Tom's 2005 LinuxFest NW Presentation - "Shorewall and Native
+          IPsec" : <ulink
           url="http://www.shorewall.net/LinuxFest2005.pdf">http://www.shorewall.net/LinuxFest2005.pdf</ulink></entry>
         </row>
 
         <row>
-          <entry>Tom's 2006 LinuxFest NW Presentation: <ulink
+          <entry>Tom's 2006 LinuxFest NW Presentation - "OpenVPN" : <ulink
           url="http://www.shorewall.net/LinuxFest2006.pdf">http://www.shorewall.net/LinuxFest2006.pdf</ulink></entry>
         </row>
 
         <row>
-          <entry>Tom's 2007 LinuxFest NW Presentation: <ulink
+          <entry>Tom's 2007 LinuxFest NW Presentation - "Xen and the Art of
+          Consolidation" : <ulink
           url="http://www.shorewall.net/Linuxfest-2007.pdf">http://www.shorewall.net/Linuxfest-2007.pdf</ulink></entry>
         </row>
 
         <row>
-          <entry>Tom's 2008 LinuxFest NW Presentation: <ulink
+          <entry>Tom's 2008 LinuxFest NW Presentation - "Kernel-mode Virtual
+          Machine (KVM)" : <ulink
           url="http://www.shorewall.net/Linuxfest-2008.pdf">http://www.shorewall.net/Linuxfest-2008.pdf</ulink></entry>
         </row>
 
         <row>
-          <entry>Tom's 2009 LinuxFest NW Presentation: <ulink
+          <entry>Tom's 2009 LinuxFest NW Presentation - "Introduction to IPv6"
+          : <ulink
           url="http://www.shorewall.net/Linuxfest-2009.pdf">http://www.shorewall.net/LinuxFestNW-2009.pdf</ulink></entry>
         </row>
 
         <row>
-          <entry>Tom's 2010 LinuxFest NW Presentation: <ulink
+          <entry>Tom's 2010 LinuxFest NW Presentation - "Managing Multiple
+          Internet Connections with Shorewall" : <ulink
           url="http://www.shorewall.net/LinuxfestNW-2010.pdf">http://www.shorewall.net/LinuxFestNW-2010.pdf</ulink></entry>
         </row>
 
         <row>
-          <entry>Tom's 2011 LinuxFest NW Presentation: <ulink
+          <entry>Tom's 2011 LinuxFest NW Presentation - "LXC - Linux
+          Containers" : <ulink
           url="http://www.shorewall.net/Linuxfest2011.pdf">http://www.shorewall.net/LinuxFest2011.pdf</ulink></entry>
         </row>
 
         <row>
-          <entry>Tom's 2013 SeaGL Presentation: <ulink
+          <entry>Tom's 2013 SeaGL Presentation - "AN INTRODUCTION TO LINUX
+          POLICY ROUTING" : <ulink
           url="http://www.shorewall.net/SeaGL2013.pdf">http://www.shorewall.net/SeaGL2013.pdf</ulink></entry>
         </row>
-
       </tbody>
     </tgroup>
   </informaltable>

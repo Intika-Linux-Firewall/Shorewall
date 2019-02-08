@@ -283,8 +283,8 @@
 
         <listitem>
           <para><filename>/usr/share/shorewall/modules</filename> — Specifies
-          the kernel modules to be loaded during shorewall
-          start/restart.</para>
+          the kernel modules to be loaded during shorewall start/restart
+          (removed in Shorewall 5.2.3).</para>
         </listitem>
 
         <listitem>
@@ -802,9 +802,9 @@ DNAT { source=net dest=loc:10.0.0.1 proto=tcp dport=80 mark=88 }</programlisting
         <term>INLINE</term>
 
         <listitem>
-          <para>INLINE, added in Shorewall 4. is available in the mangle, masq
-          and rules files and allows you to specify ip[6]table text following
-          a semicolon to the right of the column-oriented
+          <para>INLINE, added in Shorewall 4. is available in the mangle, snat
+          (masq) and rules files and allows you to specify ip[6]table text
+          following two semicolons to the right of the column-oriented
           specifications.</para>
 
           <para>INLINE takes one optional parameter which, if present, must be
@@ -856,9 +856,9 @@ INLINE               net              $FW ;; -m recent --rcheck 10 --hitcount 5 
           support was extended to the conntrack file.</para>
 
           <caution>
-            <para>INLINE_MATCHES=Yes is deprecated and will no longer be
-            supported in Shorewall 5.2 and beyond. Use two adjacent semicolons
-            to introduce inline matches.</para>
+            <para>INLINE_MATCHES=Yes is deprecated and is not supported in
+            Shorewall 5.2 and beyond. Use two adjacent semicolons to introduce
+            inline matches.</para>
           </caution>
 
           <para>Example from the masq file that spits outgoing SNAT between
