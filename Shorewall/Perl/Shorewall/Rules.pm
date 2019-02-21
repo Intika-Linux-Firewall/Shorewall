@@ -836,11 +836,15 @@ sub process_a_policy() {
 
     my ( $intrazone, $clientlist, $serverlist );
 
-    if ( $clientlist = ( $clients =~ /,/ ) ) {
+    if ( $clients =~ /^all(\+)?!/ ) {
+	$intrazone = $1;
+    } elsif ( $clientlist = ( $clients =~ /,/ ) ) {
 	$intrazone = ( $clients =~ s/\+$// );
     }
 
-    if ( $serverlist = ( $servers =~ /,/ ) ) {
+    if ( $servers =~ /^all(\+)?!/ ) {
+	$intrazone = $1;
+    } elsif ( $serverlist = ( $servers =~ /,/ ) ) {
 	$intrazone ||= ( $servers =~ s/\+$// );
     }	
 
@@ -857,7 +861,7 @@ sub process_a_policy() {
 	    }
 	}
     } else {
-	process_a_policy1( $clients, $servers, $policy, $loglevel, $synparams, $connlimit, 0 );
+	process_a_policy1( $clients, $servers, $policy, $loglevel, $synparams, $connlimit, $intrazone );
     }
 }
 
