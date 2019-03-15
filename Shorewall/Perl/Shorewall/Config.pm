@@ -4075,14 +4075,16 @@ sub process_shorewallrc( $$ ) {
     my ( $shorewallrc , $product ) = @_;
 
     $shorewallrc{PRODUCT} = $product;
+    $variables{PRODUCT}   = $product;
 
     if ( open_file $shorewallrc ) {
-	while ( read_a_line( STRIP_COMMENTS | SUPPRESS_WHITESPACE | CHECK_GUNK ) ) {
+	while ( read_a_line( STRIP_COMMENTS | SUPPRESS_WHITESPACE | CHECK_GUNK | EXPAND_VARIABLES ) ) {
 	    if ( $currentline =~ /^([a-zA-Z]\w*)=(.*)$/ ) {
 		my ($var, $val) = ($1, $2);
 		$val = $1 if $val =~ /^\"([^\"]*)\"$/;
 		expand_shorewallrc_variables($val) if supplied $val;
 		$shorewallrc{$var} = $val;
+		$variables{$var}   = $val;
 	    } else {
 		fatal_error "Unrecognized shorewallrc entry";
 	    }
